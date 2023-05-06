@@ -1,28 +1,58 @@
 package club.piglin.brimstone
 
+import club.piglin.brimstone.profiles.ProfileHandler
+import club.piglin.brimstone.utils.Settings
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
+import com.mongodb.MongoClient
+import com.mongodb.MongoClientException
+import com.mongodb.MongoClientURI
+import me.lucko.helper.plugin.ExtendedJavaPlugin
 import org.bukkit.Bukkit
-import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
 
-class Brimstone : JavaPlugin() {
+class Brimstone : ExtendedJavaPlugin() {
     companion object {
         @JvmStatic
         lateinit var instance: Brimstone
-        lateinit var Log: Logger
+        lateinit var log: Logger
     }
 
     lateinit var protocolManager: ProtocolManager
+    lateinit var dataSource: MongoClient
+    lateinit var profileHandler: ProfileHandler
 
-    override fun onEnable() {
-        instance = this
-        Log = Bukkit.getLogger()
+    override fun load() {
         protocolManager = ProtocolLibrary.getProtocolManager()
-        Log.info("The plugin has successfully loaded.")
     }
 
-    override fun onDisable() {
-        Log.info("The plugin has successfully unloaded.")
+    override fun enable() {
+        instance = this
+        log = Bukkit.getLogger()
+        Settings
+        setupDataSource()
+        profileHandler = ProfileHandler()
+        log.info("The plugin has successfully loaded.")
+    }
+
+    fun setupDataSource() {
+        val uri = Settings.data.getString("database.uri")
+        if (uri == null) {
+            log.severe("No database URI set. Please set it in the config.")
+            return
+        }
+        var client: MongoClient? = null
+        try {
+            client = MongoClient(MongoClientURI(uri))
+        } catch (e: MongoClientException) {
+            e.printStackTrace()
+        }
+        if (client != null) {
+            this.dataSource = client
+        }
+    }
+
+    override fun disable() {
+        log.info("The plugin has successfully unloaded.")
     }
 }
