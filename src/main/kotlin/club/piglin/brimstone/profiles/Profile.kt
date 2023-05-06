@@ -11,7 +11,8 @@ class Profile(
     val firstJoin: Long = System.currentTimeMillis(),
     var lastLoginLocationX: Double = -35.5,
     var lastLoginLocationY: Double = 34.5,
-    var lastLoginLocationZ: Double = -87.5
+    var lastLoginLocationZ: Double = -87.5,
+    var gold: Double = 0.0
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId

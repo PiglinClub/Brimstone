@@ -1,6 +1,7 @@
 package club.piglin.brimstone
 
 import club.piglin.brimstone.profiles.ProfileHandler
+import club.piglin.brimstone.scoreboard.Scoreboard
 import club.piglin.brimstone.utils.Settings
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
@@ -32,6 +33,9 @@ class Brimstone : ExtendedJavaPlugin() {
         Settings
         setupDataSource()
         profileHandler = ProfileHandler()
+
+        Bukkit.getPluginManager().registerEvents(Scoreboard(), this)
+
         log.info("The plugin has successfully loaded.")
     }
 

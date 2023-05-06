@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm").version("1.6.10")
-    id("com.github.johnrengelman.shadow") version "4.0.4"
-    java
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'java'
 }
 
 repositories {
@@ -18,4 +18,9 @@ dependencies {
     implementation("me.lucko:helper:5.6.13")
     implementation("me.lucko:helper-profiles:1.2.0")
     implementation("org.mongodb:mongodb-driver:3.12.11")
+    implementation("fr.mrmicky:fastboard:1.2.1")
+}
+
+shadowJar {
+    relocate 'fr.mrmicky.fastboard', 'club.piglin.brimstone'
 }

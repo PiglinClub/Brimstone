@@ -40,9 +40,13 @@ class ProfileHandler {
                     }
                     .thenAcceptAsync {
                         it.get().name = event.player.name
+                        it.get().lastLogin = System.currentTimeMillis()
                         saveProfile(it.get())
                         updateCache(it.get())
+                        event.player.teleportAsync(it.get().getLastLocation())
+                        Brimstone.log.info("[Profile] ${event.player.name} joined, loading & saving ${event.player.name}'s profile")
                     }
+
             }
         Events.subscribe(PlayerQuitEvent::class.java, EventPriority.MONITOR)
             .handler { event ->
@@ -57,6 +61,7 @@ class ProfileHandler {
                         it.get().lastLoginLocationZ = event.player.location.z
                         saveProfile(it.get())
                         updateCache(it.get())
+                        Brimstone.log.info("[Profile] ${event.player.name} quit, saving ${event.player.name}'s profile")
                     }
             }
         Brimstone.log.info("[Profile] Now monitoring for profile data.")
@@ -72,6 +77,7 @@ class ProfileHandler {
                 .append("lastLoginLocationX", profile.lastLoginLocationX)
                 .append("lastLoginLocationY", profile.lastLoginLocationY)
                 .append("lastLoginLocationZ", profile.lastLoginLocationZ)
+                .append("gold", profile.gold)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -97,11 +103,12 @@ class ProfileHandler {
                         p = Profile(
                             uniqueId,
                             (document["name"] as String),
-                            System.currentTimeMillis(),
-                            (document["firstLogin"] as Long) ?: System.currentTimeMillis(),
-                            (document["lastLoginLocationX"] as Double) ?: -35.5,
-                            (document["lastLoginLocationY"] as Double) ?: 34.5,
-                            (document["lastLoginLocationZ"] as Double) ?: -87.5
+                            ((document["lastLogin"] as Date?)?.time) ?: System.currentTimeMillis(),
+                            ((document["firstJoin"] as Date?)?.time) ?: System.currentTimeMillis(),
+                            (document["lastLoginLocationX"] as Double?) ?: -35.5,
+                            (document["lastLoginLocationY"] as Double?) ?: 34.5,
+                            (document["lastLoginLocationZ"] as Double?) ?: -87.5,
+                            (document["gold"] as Double?) ?: 0.0
                         )
                     } else {
                         p = Profile(
