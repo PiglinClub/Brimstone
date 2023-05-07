@@ -44,7 +44,7 @@ class ProfileHandler {
                         saveProfile(it.get())
                         updateCache(it.get())
                         event.player.teleportAsync(it.get().getLastLocation())
-                        Brimstone.log.info("[Profile] ${event.player.name} joined, loading & saving ${event.player.name}'s profile")
+                        Brimstone.log.info("[Profiles] ${event.player.name} joined, loading & saving ${event.player.name}'s profile")
                     }
 
             }
@@ -61,10 +61,10 @@ class ProfileHandler {
                         it.get().lastLoginLocationZ = event.player.location.z
                         saveProfile(it.get())
                         updateCache(it.get())
-                        Brimstone.log.info("[Profile] ${event.player.name} quit, saving ${event.player.name}'s profile")
+                        Brimstone.log.info("[Profiles] ${event.player.name} quit, saving ${event.player.name}'s profile")
                     }
             }
-        Brimstone.log.info("[Profile] Now monitoring for profile data.")
+        Brimstone.log.info("[Profiles] Now monitoring for profile data.")
     }
 
     fun saveProfile(profile: Profile) {
@@ -77,6 +77,8 @@ class ProfileHandler {
                 .append("lastLoginLocationX", profile.lastLoginLocationX)
                 .append("lastLoginLocationY", profile.lastLoginLocationY)
                 .append("lastLoginLocationZ", profile.lastLoginLocationZ)
+                .append("xp", profile.xp)
+                .append("level", profile.level)
                 .append("gold", profile.gold)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
@@ -108,7 +110,9 @@ class ProfileHandler {
                             (document["lastLoginLocationX"] as Double?) ?: -35.5,
                             (document["lastLoginLocationY"] as Double?) ?: 34.5,
                             (document["lastLoginLocationZ"] as Double?) ?: -87.5,
-                            (document["gold"] as Double?) ?: 0.0
+                            (document["gold"] as Double?) ?: 0.0,
+                            (document["xp"] as Double?) ?: 0.0,
+                            (document["level"] as Int?) ?: 0
                         )
                     } else {
                         p = Profile(

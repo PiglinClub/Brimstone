@@ -34,7 +34,7 @@ class Brimstone : ExtendedJavaPlugin() {
         setupDataSource()
         profileHandler = ProfileHandler()
 
-        Bukkit.getPluginManager().registerEvents(Scoreboard(), this)
+        Bukkit.getServer().pluginManager.registerEvents(Scoreboard(), this)
 
         log.info("The plugin has successfully loaded.")
     }

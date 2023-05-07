@@ -12,7 +12,9 @@ class Profile(
     var lastLoginLocationX: Double = -35.5,
     var lastLoginLocationY: Double = 34.5,
     var lastLoginLocationZ: Double = -87.5,
-    var gold: Double = 0.0
+    var gold: Double = 0.0,
+    var xp: Double = 0.0,
+    var level: Int = 0
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
