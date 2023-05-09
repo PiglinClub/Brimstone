@@ -12,6 +12,7 @@ class Profile(
     var lastLoginLocationX: Double = -35.5,
     var lastLoginLocationY: Double = 34.5,
     var lastLoginLocationZ: Double = -87.5,
+    var lastLoginWorld: String = "world",
     var gold: Double = 0.0,
     var xp: Double = 0.0,
     var level: Int = 0
@@ -21,6 +22,6 @@ class Profile(
     }
 
     fun getLastLocation(): Location {
-        return Location(Bukkit.getWorld("world_nether"), lastLoginLocationX, lastLoginLocationY, lastLoginLocationZ)
+        return Location(Bukkit.getWorld(lastLoginWorld), lastLoginLocationX, lastLoginLocationY, lastLoginLocationZ)
     }
 }

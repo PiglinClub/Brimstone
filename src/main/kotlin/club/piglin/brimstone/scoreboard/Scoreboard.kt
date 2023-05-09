@@ -43,11 +43,11 @@ class Scoreboard : Listener {
                 }
                 board.updateLines(
                     " ",
-                    "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
-                    "$progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
-                    " ",
                     "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${profile.gold}g",
-                    " "
+                    "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
+                    " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
+                    " ",
+                    ""
                 )
             }
         }, 0L, 20L)

@@ -59,6 +59,7 @@ class ProfileHandler {
                         it.get().lastLoginLocationX = event.player.location.x
                         it.get().lastLoginLocationY = event.player.location.y
                         it.get().lastLoginLocationZ = event.player.location.z
+                        it.get().lastLoginWorld = event.player.world.name
                         saveProfile(it.get())
                         updateCache(it.get())
                         Brimstone.log.info("[Profiles] ${event.player.name} quit, saving ${event.player.name}'s profile")
@@ -77,6 +78,7 @@ class ProfileHandler {
                 .append("lastLoginLocationX", profile.lastLoginLocationX)
                 .append("lastLoginLocationY", profile.lastLoginLocationY)
                 .append("lastLoginLocationZ", profile.lastLoginLocationZ)
+                .append("lastLoginWorld", profile.lastLoginWorld)
                 .append("xp", profile.xp)
                 .append("level", profile.level)
                 .append("gold", profile.gold)
@@ -107,9 +109,10 @@ class ProfileHandler {
                             (document["name"] as String),
                             ((document["lastLogin"] as Date?)?.time) ?: System.currentTimeMillis(),
                             ((document["firstJoin"] as Date?)?.time) ?: System.currentTimeMillis(),
-                            (document["lastLoginLocationX"] as Double?) ?: -35.5,
-                            (document["lastLoginLocationY"] as Double?) ?: 34.5,
-                            (document["lastLoginLocationZ"] as Double?) ?: -87.5,
+                            (document["lastLoginLocationX"] as Double?) ?: 0.0,
+                            (document["lastLoginLocationY"] as Double?) ?: 100.0,
+                            (document["lastLoginLocationZ"] as Double?) ?: 0.0,
+                            (document["lastLoginWorld"] as String?) ?: "world",
                             (document["gold"] as Double?) ?: 0.0,
                             (document["xp"] as Double?) ?: 0.0,
                             (document["level"] as Int?) ?: 0

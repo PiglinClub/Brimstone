@@ -19,6 +19,7 @@ dependencies {
     implementation("me.lucko:helper-profiles:1.2.0")
     implementation("org.mongodb:mongodb-driver:3.12.11")
     implementation("fr.mrmicky:fastboard:1.2.1")
+    implementation files('libs/craftbukkit-1.19.4-R0.1-SNAPSHOT.jar')
 }
 
 shadowJar {
