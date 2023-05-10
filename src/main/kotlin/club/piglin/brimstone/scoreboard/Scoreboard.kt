@@ -4,15 +4,38 @@ import club.piglin.brimstone.Brimstone
 import fr.mrmicky.fastboard.FastBoard
 import me.lucko.helper.Schedulers
 import net.md_5.bungee.api.ChatColor
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
+import kotlin.math.floor
 import kotlin.math.round
 
 
 class Scoreboard : Listener {
+    fun timeToString(ticks: Long): String {
+        var t = ticks
+        val hours = floor(t / 3600.toDouble()).toInt()
+        t -= hours * 3600
+        val minutes = floor(t / 60.toDouble()).toInt()
+        t -= minutes * 60
+        val seconds = t.toInt()
+        val output = StringBuilder()
+        if (hours > 0) {
+            output.append(hours).append('h')
+            if (minutes == 0) {
+                output.append(minutes).append('m')
+            }
+        }
+        if (minutes > 0) {
+            output.append(minutes).append('m')
+        }
+        output.append(seconds).append('s')
+        return output.toString()
+    }
+
     init {
         Schedulers.sync().runRepeating(Runnable {
             for ((uuid, board) in boards) {
@@ -41,13 +64,33 @@ class Scoreboard : Listener {
                 } else {
                     "${ChatColor.of("#4fe5ff")}${ChatColor.RESET}▉▉▉▉▉▉▉▉▉▉"
                 }
-                board.updateLines(
-                    " ",
-                    "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${profile.gold}g",
-                    "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
-                    " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
-                    " "
-                )
+
+                if (profile.town == null) {
+                    board.updateLines(
+                        " ",
+                        "${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
+                        "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${profile.gold}g",
+                        "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
+                        " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
+                        " "
+                    )
+                } else {
+
+                    val town = Brimstone.instance.townHandler.getTown(profile.town!!)!!
+                    board.updateLines(
+                        " ",
+                        "${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
+                        "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${profile.gold}g",
+                        "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
+                        " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
+                        " ",
+                        " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
+                        "  ${ChatColor.RESET}Next Fee Due: ${ChatColor.YELLOW}${timeToString((town.nextFee - System.currentTimeMillis()) / 1000)}",
+                        "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}/25",
+                        "  ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.claims.size}",
+                        " "
+                    )
+                }
             }
         }, 0L, 20L)
     }

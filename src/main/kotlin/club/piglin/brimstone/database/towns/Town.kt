@@ -31,6 +31,7 @@ class Town(
         } else {
             return
         }
+        Brimstone.instance.townHandler.saveTown(this)
     }
 
     fun addPlayer(player: OfflinePlayer) {
@@ -39,6 +40,7 @@ class Town(
         list.add(player.uniqueId)
         this.members = list
         profile.town = uniqueId
+        Brimstone.instance.townHandler.saveTown(this)
     }
 
     fun addClaim(c: Chunk): Claim {
@@ -55,6 +57,7 @@ class Town(
             .append("z", chunk.z)
         )
         this.claims = list
+        Brimstone.instance.townHandler.saveTown(this)
         return chunk
     }
 

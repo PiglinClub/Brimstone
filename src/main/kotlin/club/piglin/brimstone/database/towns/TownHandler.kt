@@ -3,6 +3,7 @@ package club.piglin.brimstone.database.towns
 import club.piglin.brimstone.Brimstone
 import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.FindOneAndReplaceOptions
 import me.lucko.helper.Events
 import me.lucko.helper.Schedulers
 import me.lucko.helper.profiles.plugin.external.caffeine.cache.Cache
@@ -30,7 +31,12 @@ class TownHandler {
                     }
                     .thenAcceptAsync {
                         if (it.town != null) {
-                            lookupTown(it.town!!)
+                            val t = lookupTown(it.town!!)
+                            if (t.get() == null) {
+                                it.town = null
+                                return@thenAcceptAsync
+                            }
+                            saveTown(t.get())
                         }
                     }
             }
@@ -50,7 +56,21 @@ class TownHandler {
         }
     }
 
-    private fun updateCache(town: Town) {
+    fun saveTown(town: Town) {
+        with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("towns")) {
+            val filter = Filters.eq("uuid", town.uniqueId)
+            val document = Document("uuid", town.uniqueId)
+                .append("name", town.name)
+                .append("owner", town.owner)
+                .append("members", town.members)
+                .append("claims", town.claims)
+                .append("gold", town.gold)
+                .append("nextFee", town.nextFee)
+            this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
+        }
+    }
+
+    fun updateCache(town: Town) {
         val existing: Town? = this.townsMap.getIfPresent(town.uniqueId)
         if (existing == null) {
             this.townsMap.put(town.uniqueId, town)

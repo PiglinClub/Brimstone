@@ -114,7 +114,7 @@ class ProfileHandler {
                             (document["gold"] as Double?) ?: 0.0,
                             (document["xp"] as Double?) ?: 0.0,
                             (document["level"] as Int?) ?: 0,
-                            (document["town"] as UUID?) ?: null
+                            (document["town"] as UUID?)
                         )
                     } else {
                         p = Profile(

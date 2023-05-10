@@ -1,5 +1,6 @@
 package club.piglin.brimstone.database.profiles
 
+import club.piglin.brimstone.utils.Chat
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import java.util.*
@@ -20,6 +21,17 @@ class Profile(
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
+    }
+
+    fun addExp(amount: Double) {
+        xp += amount
+        if (xp >= 1000.0) {
+            xp -= 1000.0
+            level += 1
+            if (level % 5 == 0) {
+                Chat.broadcast("&a${name} has leveled up to &eLevel ${level}&a!")
+            }
+        }
     }
 
     fun getLastLocation(): Location {
