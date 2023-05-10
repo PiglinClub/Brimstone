@@ -88,13 +88,13 @@ abstract class Menu {
         return 9 * y + x
     }
 
-    open fun getTitle(player: Player?): String {
+    open fun getTitle(player: Player): String {
         return staticTitle
     }
 
-    abstract fun getButtons(var1: Player?): Map<Int, Button?>
-    open fun onOpen(player: Player?) {}
-    open fun onClose(player: Player?) {}
+    abstract fun getButtons(player: Player): Map<Int, Button?>
+    open fun onOpen(player: Player) {}
+    open fun onClose(player: Player) {}
     val placeholderItem: Button
         get() = Button.placeholder(Material.BLACK_STAINED_GLASS_PANE)
 

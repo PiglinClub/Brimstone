@@ -13,11 +13,11 @@ class ViewAllPagesMenu @ConstructorProperties(value = ["menu"]) constructor(@Non
     @Nonnull
     var menu: PaginatedMenu
 
-    override fun getTitle(player: Player?): String {
+    override fun getTitle(player: Player): String {
         return "Jump to page"
     }
 
-    override fun getButtons(player: Player?): Map<Int, Button> {
+    override fun getButtons(player: Player): Map<Int, Button> {
         val buttons: HashMap<Int, Button> = HashMap<Int, Button>()
         buttons[0] = BackButton(menu)
         var index = 10

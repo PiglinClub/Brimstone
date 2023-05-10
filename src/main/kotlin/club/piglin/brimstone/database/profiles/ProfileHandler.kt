@@ -1,4 +1,4 @@
-package club.piglin.brimstone.profiles
+package club.piglin.brimstone.database.profiles
 
 import club.piglin.brimstone.Brimstone
 import com.mongodb.MongoException
@@ -82,6 +82,7 @@ class ProfileHandler {
                 .append("xp", profile.xp)
                 .append("level", profile.level)
                 .append("gold", profile.gold)
+                .append("town", profile.town)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -115,7 +116,8 @@ class ProfileHandler {
                             (document["lastLoginWorld"] as String?) ?: "world",
                             (document["gold"] as Double?) ?: 0.0,
                             (document["xp"] as Double?) ?: 0.0,
-                            (document["level"] as Int?) ?: 0
+                            (document["level"] as Int?) ?: 0,
+                            (document["town"] as UUID?) ?: null
                         )
                     } else {
                         p = Profile(

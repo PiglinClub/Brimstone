@@ -9,7 +9,7 @@ abstract class PaginatedMenu : Menu() {
     var page = 1
         private set
 
-    override fun getTitle(player: Player?): String {
+    override fun getTitle(player: Player): String {
         return getPrePaginatedTitle(player) + " - " + page + "/" + getPages(player)
     }
 
@@ -26,7 +26,7 @@ abstract class PaginatedMenu : Menu() {
         } else Math.ceil(buttonAmount.toDouble() / getMaxItemsPerPage(player).toDouble()).toInt()
     }
 
-    override fun getButtons(player: Player?): MutableMap<Int, Button> {
+    override fun getButtons(player: Player): MutableMap<Int, Button> {
         val minIndex = ((page - 1).toDouble() * getMaxItemsPerPage(player).toDouble()).toInt()
         val maxIndex = (page.toDouble() * getMaxItemsPerPage(player).toDouble()).toInt()
         val buttons = HashMap<Int, Button>()

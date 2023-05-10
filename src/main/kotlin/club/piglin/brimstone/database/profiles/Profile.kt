@@ -1,4 +1,4 @@
-package club.piglin.brimstone.profiles
+package club.piglin.brimstone.database.profiles
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -15,7 +15,8 @@ class Profile(
     var lastLoginWorld: String = "world",
     var gold: Double = 0.0,
     var xp: Double = 0.0,
-    var level: Int = 0
+    var level: Int = 0,
+    var town: UUID? = null
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId

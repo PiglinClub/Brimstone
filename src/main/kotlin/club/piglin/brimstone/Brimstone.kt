@@ -1,6 +1,8 @@
 package club.piglin.brimstone
 
-import club.piglin.brimstone.profiles.ProfileHandler
+import club.piglin.brimstone.commands.BalanceCommand
+import club.piglin.brimstone.commands.TownyCommand
+import club.piglin.brimstone.database.profiles.ProfileHandler
 import club.piglin.brimstone.scoreboard.Scoreboard
 import club.piglin.brimstone.utils.Settings
 import com.comphenix.protocol.ProtocolLibrary
@@ -33,6 +35,9 @@ class Brimstone : ExtendedJavaPlugin() {
         Settings
         setupDataSource()
         profileHandler = ProfileHandler()
+
+        this.getCommand("balance")!!.setExecutor(BalanceCommand())
+        this.getCommand("towny")!!.setExecutor(TownyCommand())
 
         Bukkit.getServer().pluginManager.registerEvents(Scoreboard(), this)
 

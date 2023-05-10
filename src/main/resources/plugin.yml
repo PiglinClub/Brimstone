@@ -4,3 +4,15 @@ api-version: 1.13
 main: club.piglin.brimstone.Brimstone
 version: 1.0-SNAPSHOT
 depend: [ProtocolLib]
+commands:
+  towny:
+    description: Main command for Towny-related features
+    aliases:
+      - town
+      - t
+  balance:
+    description: View your own balance.
+    aliases:
+      - bal
+      - coins
+      - gold

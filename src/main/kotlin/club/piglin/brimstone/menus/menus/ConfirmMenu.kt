@@ -14,7 +14,7 @@ class ConfirmMenu @ConstructorProperties(value = ["title", "response"]) construc
     private var response: Callback<Boolean>
 ) :
     Menu() {
-    override fun getButtons(player: Player?): Map<Int, Button> {
+    override fun getButtons(player: Player): Map<Int, Button> {
         val buttons: HashMap<Int, Button> = HashMap<Int, Button>()
         for (i in 0..8) {
             if (i == 3) {
@@ -30,7 +30,7 @@ class ConfirmMenu @ConstructorProperties(value = ["title", "response"]) construc
         return buttons
     }
 
-    override fun getTitle(player: Player?): String {
+    override fun getTitle(player: Player): String {
         return title
     }
 
