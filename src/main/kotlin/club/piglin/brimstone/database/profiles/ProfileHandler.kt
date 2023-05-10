@@ -15,13 +15,10 @@ import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.sql.Timestamp
 import java.util.*
-import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class ProfileHandler {
     private val profilesMap: Cache<UUID, Profile> = Caffeine.newBuilder()
-        .maximumSize(10_000)
-        .expireAfterAccess(6, TimeUnit.HOURS)
         .build()
 
 
