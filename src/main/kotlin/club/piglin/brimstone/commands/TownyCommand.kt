@@ -34,6 +34,10 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
                         return false
                     }
+                    if (profile.town != null) {
+                        Chat.sendMessage(sender, "&cYou already are in a Town. Leave your current town using /towny leave.")
+                        return false
+                    }
                     var name = ""
                     for (i in 1 until args.size) {
                         if (i == (args.size - 1)) name += args[i]
