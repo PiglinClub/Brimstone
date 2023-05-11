@@ -40,6 +40,17 @@ class Town(
         list.add(player.uniqueId)
         this.members = list
         profile.town = uniqueId
+        Brimstone.instance.profileHandler.saveProfile(profile)
+        Brimstone.instance.townHandler.saveTown(this)
+    }
+
+    fun removePlayer(player: OfflinePlayer) {
+        val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
+        val list = ArrayList(this.members)
+        list.remove(player.uniqueId)
+        this.members = list
+        profile.town = null
+        Brimstone.instance.profileHandler.saveProfile(profile)
         Brimstone.instance.townHandler.saveTown(this)
     }
 
