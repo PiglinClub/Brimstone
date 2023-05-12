@@ -71,6 +71,17 @@ class TownyCommand : CommandExecutor {
                     Brimstone.instance.townHandler.saveTown(town)
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
                 }
+                "leave" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                }
             }
         }
         return true
