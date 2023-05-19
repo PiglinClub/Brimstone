@@ -1,6 +1,8 @@
 package club.piglin.brimstone.database.towns
 
 import club.piglin.brimstone.Brimstone
+import com.mongodb.client.model.Filters
+import me.lucko.helper.Schedulers
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.util.*
@@ -19,6 +21,8 @@ class Town(
     var members: List<UUID> = listOf(),
     var gold: Double
 ) {
+
+
     fun depositGold(player: Player, gold: Double) {
         val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
         if (profile.gold >= gold) {
@@ -48,5 +52,19 @@ class Town(
         profile.town = null
         Brimstone.instance.profileHandler.saveProfile(profile)
         Brimstone.instance.townHandler.saveTown(this)
+        val uuid = this.uniqueId
+        if (this.members.isEmpty()) {
+            Schedulers.async().run {
+                with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("towns")) {
+                    val filter = Filters.eq("uuid", uuid)
+                    val document = this.find(filter).first()
+                    if (document != null) {
+                        this.findOneAndDelete(filter)
+                        Brimstone.instance.townHandler.townsMap.invalidate(uuid)
+                        Brimstone.log.info("[Towns] Deleted $uuid due to all members leaving.")
+                    }
+                }
+            }
+        }
     }
 }

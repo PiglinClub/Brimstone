@@ -1,6 +1,7 @@
 package club.piglin.brimstone.commands
 
 import club.piglin.brimstone.Brimstone
+import club.piglin.brimstone.commands.menus.LeaveTownyGUI
 import club.piglin.brimstone.database.towns.Town
 import club.piglin.brimstone.utils.Chat
 import org.bukkit.command.Command
@@ -79,8 +80,9 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cYou currently are not in a Town.")
                         return false
                     }
-
+                    LeaveTownyGUI().openMenu(sender)
                 }
+
             }
         }
         return true

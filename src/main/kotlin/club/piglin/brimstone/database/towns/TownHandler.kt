@@ -14,11 +14,9 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerLoginEvent
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class TownHandler {
-    private val townsMap: Cache<UUID, Town> = Caffeine.newBuilder()
-        .expireAfterAccess(6, TimeUnit.HOURS)
+    val townsMap: Cache<UUID, Town> = Caffeine.newBuilder()
         .build()
 
     fun preload(amount: Int = 10000) {

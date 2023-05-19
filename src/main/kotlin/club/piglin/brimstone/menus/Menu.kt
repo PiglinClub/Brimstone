@@ -49,7 +49,7 @@ abstract class Menu {
         val ep: EntityPlayer = (player as CraftPlayer).handle
         val inv = createInventory(player)
         try {
-            openInventoryMethod!!.invoke(player, inv, ep, "minecraft:chest")
+            player.openInventory(inv)
             update(player)
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -100,16 +100,16 @@ abstract class Menu {
 
     companion object {
         var openInventoryMethod: Method? = null
-            //    private void setupBedrockForm(Player player) {
             get() {
                 if (field == null) {
                     try {
-                        field = CraftHumanEntity::class.java.getDeclaredMethod(
+                        field = (CraftHumanEntity::class.java).getDeclaredMethod(
                             "openCustomInventory",
                             Inventory::class.java,
                             EntityPlayer::class.java,
                             String::class.java
                         )
+
                         field!!.isAccessible = true
                     } catch (ex: NoSuchMethodException) {
                         ex.printStackTrace()
