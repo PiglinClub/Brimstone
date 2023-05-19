@@ -21,7 +21,21 @@ class TownHandler {
         .expireAfterAccess(6, TimeUnit.HOURS)
         .build()
 
+    fun preload(amount: Int = 10000) {
+        Schedulers.async().run {
+            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("towns")) {
+                val towns = this.find().limit(amount)
+                for (town in towns) {
+                    val t = lookupTown(town["uuid"] as UUID)
+                    saveTown(t.get())
+                    Brimstone.log.info("[Towns] Successfully preloaded ${t.get().name} (${t.get().uniqueId})")
+                }
+            }
+        }
+    }
+
     init {
+        preload()
         Events.subscribe(PlayerLoginEvent::class.java, EventPriority.MONITOR)
             .filter { it.result == PlayerLoginEvent.Result.ALLOWED }
             .handler { event ->
@@ -63,9 +77,7 @@ class TownHandler {
                 .append("name", town.name)
                 .append("owner", town.owner)
                 .append("members", town.members)
-                .append("claims", town.claims)
                 .append("gold", town.gold)
-                .append("nextFee", town.nextFee)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -94,9 +106,7 @@ class TownHandler {
                             (document["owner"] as UUID),
                             (document["name"] as String),
                             (document["members"] as List<UUID>),
-                            (document["claims"] as List<Document>),
                             (document["gold"] as Double),
-                            (document["nextFee"] as Long)
                         )
                     } else {
                         return@supply null

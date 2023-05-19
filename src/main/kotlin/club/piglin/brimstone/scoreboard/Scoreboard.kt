@@ -85,9 +85,8 @@ class Scoreboard : Listener {
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
                         " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
-                        "  ${ChatColor.RESET}Next Fee Due: ${ChatColor.YELLOW}${timeToString((town.nextFee - System.currentTimeMillis()) / 1000)}",
                         "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}/25",
-                        "  ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.claims.size}",
+                        "  ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${town.gold}g",
                         " "
                     )
                 }

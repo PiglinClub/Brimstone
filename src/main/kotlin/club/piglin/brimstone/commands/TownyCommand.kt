@@ -61,9 +61,7 @@ class TownyCommand : CommandExecutor {
                         sender.uniqueId,
                         name,
                         listOf(sender.uniqueId),
-                        listOf(),
-                        0.0,
-                        System.currentTimeMillis() + 86400000
+                        0.0
                     )
                     profile.town = town.uniqueId
                     profile.addExp(100.0)
@@ -81,6 +79,7 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cYou currently are not in a Town.")
                         return false
                     }
+
                 }
             }
         }
