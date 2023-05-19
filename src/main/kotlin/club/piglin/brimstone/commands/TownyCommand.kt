@@ -4,6 +4,7 @@ import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.commands.menus.LeaveTownyGUI
 import club.piglin.brimstone.database.towns.Town
 import club.piglin.brimstone.utils.Chat
+import org.bson.Document
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -61,7 +62,11 @@ class TownyCommand : CommandExecutor {
                         UUID.randomUUID(),
                         sender.uniqueId,
                         name,
-                        listOf(sender.uniqueId),
+                        listOf(
+                            Document("uniqueId", sender.uniqueId)
+                                .append("role", "mayor")
+                                .append("joinedAt", System.currentTimeMillis())
+                        ),
                         0.0
                     )
                     profile.town = town.uniqueId

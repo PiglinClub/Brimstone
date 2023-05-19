@@ -3,6 +3,7 @@ package club.piglin.brimstone.database.towns
 import club.piglin.brimstone.Brimstone
 import com.mongodb.client.model.Filters
 import me.lucko.helper.Schedulers
+import org.bson.Document
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.util.*
@@ -14,14 +15,31 @@ class Claim(
     val z: Int
 )
 
+class Member(
+    val uniqueId: UUID,
+    val joinedAt: Long,
+    val role: String
+)
+
 class Town(
     @JvmField val uniqueId: UUID,
     var owner: UUID,
     var name: String? = "Unnamed Town",
-    var members: List<UUID> = listOf(),
+    var members: List<Document> = listOf(),
     var gold: Double
 ) {
-
+    fun getMember(uuid: UUID): Member? {
+        for (document in this.members) {
+            if (document.containsValue(uuid)) {
+                return Member(
+                    uuid,
+                    document.getLong("joinedAt"),
+                    document.getString("role")
+                )
+            }
+        }
+        return null
+    }
 
     fun depositGold(player: Player, gold: Double) {
         val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
@@ -37,7 +55,11 @@ class Town(
     fun addPlayer(player: OfflinePlayer) {
         val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
         val list = ArrayList(this.members)
-        list.add(player.uniqueId)
+        list.add(
+            Document("uniqueId", player.uniqueId)
+                .append("role", "resident")
+                .append("joinedAt", System.currentTimeMillis())
+        )
         this.members = list
         profile.town = uniqueId
         Brimstone.instance.profileHandler.saveProfile(profile)
@@ -47,7 +69,11 @@ class Town(
     fun removePlayer(player: OfflinePlayer) {
         val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
         val list = ArrayList(this.members)
-        list.remove(player.uniqueId)
+        for (member in list) {
+           if (member["uniqueId"] as UUID == player.uniqueId) {
+               list.remove(member)
+           }
+        }
         this.members = list
         profile.town = null
         Brimstone.instance.profileHandler.saveProfile(profile)

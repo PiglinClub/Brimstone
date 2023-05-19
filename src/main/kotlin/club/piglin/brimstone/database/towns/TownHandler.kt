@@ -103,7 +103,7 @@ class TownHandler {
                             uuid,
                             (document["owner"] as UUID),
                             (document["name"] as String),
-                            (document["members"] as List<UUID>),
+                            (document["members"] as List<Document>),
                             (document["gold"] as Double),
                         )
                     } else {
