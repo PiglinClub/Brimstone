@@ -73,6 +73,7 @@ class TownyCommand : CommandExecutor {
                     profile.addExp(100.0)
                     Brimstone.instance.townHandler.updateCache(town)
                     Brimstone.instance.townHandler.saveTown(town)
+                    Brimstone.instance.profileHandler.saveProfile(profile)
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
                 }
                 "leave" -> {

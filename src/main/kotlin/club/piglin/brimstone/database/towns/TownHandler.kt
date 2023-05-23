@@ -38,7 +38,7 @@ class TownHandler {
             .filter { it.result == PlayerLoginEvent.Result.ALLOWED }
             .handler { event ->
                 Promise.start()
-                    .thenApplySync {
+                    .thenApplyAsync {
                         Brimstone.instance.profileHandler.lookupProfile(event.player.uniqueId).get()
                     }
                     .thenAcceptAsync {

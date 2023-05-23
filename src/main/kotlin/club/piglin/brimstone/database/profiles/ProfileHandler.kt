@@ -40,7 +40,6 @@ class ProfileHandler {
                         it.get().lastLogin = System.currentTimeMillis()
                         saveProfile(it.get())
                         updateCache(it.get())
-                        event.player.teleportAsync(it.get().getLastLocation())
                         Brimstone.log.info("[Profiles] ${event.player.name} joined, loading & saving ${event.player.name}'s profile")
                     }
 
