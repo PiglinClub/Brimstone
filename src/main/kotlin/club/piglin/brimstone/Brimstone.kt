@@ -22,7 +22,7 @@ class Brimstone : ExtendedJavaPlugin() {
         lateinit var log: Logger
     }
 
-    lateinit var protocolManager: ProtocolManager
+    private var protocolManager: ProtocolManager? = null
     lateinit var dataSource: MongoClient
     lateinit var profileHandler: ProfileHandler
     lateinit var townHandler: TownHandler

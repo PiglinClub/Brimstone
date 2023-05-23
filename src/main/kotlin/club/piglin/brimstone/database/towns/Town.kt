@@ -18,7 +18,8 @@ class Claim(
 class Member(
     val uniqueId: UUID,
     val joinedAt: Long,
-    val role: String
+    var role: String,
+    var goldDeposited: Double
 )
 
 class Town(
@@ -26,7 +27,8 @@ class Town(
     var owner: UUID,
     var name: String? = "Unnamed Town",
     var members: List<Document> = listOf(),
-    var gold: Double
+    var gold: Double = 0.0,
+    var tax: Double = 0.0
 ) {
     fun getMember(uuid: UUID): Member? {
         for (document in this.members) {
@@ -34,17 +36,38 @@ class Town(
                 return Member(
                     uuid,
                     document.getLong("joinedAt"),
-                    document.getString("role")
+                    document.getString("role"),
+                    document.getDouble("goldDeposited")
                 )
             }
         }
         return null
     }
 
+    fun saveMember(member: Member) {
+        val list = ArrayList(this.members)
+        for ((index, document) in list.withIndex()) {
+            if ((document["uniqueId"] as UUID) == member.uniqueId) {
+                val doc = Document("uniqueId", member.uniqueId)
+                    .append("role", member.role)
+                    .append("joinedAt", member.joinedAt)
+                    .append("goldDeposited", member.goldDeposited)
+                list[index] = doc
+                this.members = list
+                return
+            }
+        }
+    }
+
     fun depositGold(player: Player, gold: Double) {
         val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
         if (profile.gold >= gold) {
             profile.gold -= gold
+            val member = getMember(profile.uniqueId)
+            if (member != null) {
+                member.goldDeposited += gold
+                saveMember(member)
+            }
             this.gold += gold
         } else {
             return
@@ -59,6 +82,7 @@ class Town(
             Document("uniqueId", player.uniqueId)
                 .append("role", "resident")
                 .append("joinedAt", System.currentTimeMillis())
+                .append("goldDeposited", 0.0)
         )
         this.members = list
         profile.town = uniqueId
@@ -69,11 +93,13 @@ class Town(
     fun removePlayer(player: OfflinePlayer) {
         val profile = Brimstone.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
         val list = ArrayList(this.members)
+        val toRemove = ArrayList<Document>()
         for (member in list) {
            if (member["uniqueId"] as UUID == player.uniqueId) {
-               list.remove(member)
+               toRemove.add(member)
            }
         }
+        list.removeAll(toRemove)
         this.members = list
         profile.town = null
         Brimstone.instance.profileHandler.saveProfile(profile)

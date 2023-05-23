@@ -2,9 +2,12 @@ package club.piglin.brimstone.commands
 
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.commands.menus.LeaveTownyGUI
+import club.piglin.brimstone.database.towns.InviteHandler
 import club.piglin.brimstone.database.towns.Town
 import club.piglin.brimstone.utils.Chat
+import net.md_5.bungee.api.ChatColor
 import org.bson.Document
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -75,6 +78,67 @@ class TownyCommand : CommandExecutor {
                     Brimstone.instance.townHandler.saveTown(town)
                     Brimstone.instance.profileHandler.saveProfile(profile)
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
+                }
+                "tax" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny tax <gold>")
+                        return false
+                    }
+                    if (args[2].toDoubleOrNull() !is Double && args[2].toIntOrNull() !is Int) {
+                        Chat.sendMessage(sender, "&cYou need a valid number to set your town tax to.")
+                        return false
+                    }
+                    if (town.getMember(profile.uniqueId)!!.role != "mayor") {
+                        Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
+                        return false
+                    }
+                    town.tax = args[2].toDouble()
+                    Chat.sendMessage(sender, "&aSuccessfully set your town tax to ${ChatColor.of("#ffd417")}${town.tax}g&a, new residents joining your town will now pay that tax.")
+                    Brimstone.instance.townHandler.saveTown(town)
+                }
+                "invite" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny invite <player>")
+                        return false
+                    }
+                    if (town.getMember(profile.uniqueId)!!.role != "officer" &&
+                        town.getMember(profile.uniqueId)!!.role != "mayor") {
+                        Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
+                        return false
+                    }
+                    val target = Bukkit.getPlayer(args[2])
+                    if (target == null) {
+                        Chat.sendMessage(sender, "&cInvalid target, the target must be an online player.")
+                        return false
+                    }
+                    val targetTown = Brimstone.instance.townHandler.getPlayerTown(target)
+                    if (targetTown != null) {
+                        Chat.sendMessage(sender, "&cThis player is already in a town.")
+                        return false
+                    }
+                    Chat.sendMessage(sender, "&aOkay, sending an invite to &e${target.name}&a now...")
+                    InviteHandler.createInvite(town, sender, target)
+                    Chat.sendMessage(sender, "&aSuccessfully sent an invite! They have &e10 minutes&a to accept.")
                 }
                 "leave" -> {
                     val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
