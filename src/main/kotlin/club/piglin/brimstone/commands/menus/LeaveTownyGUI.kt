@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.ClickType
 
 class LeaveTownyGUI : Menu() {
     override fun getTitle(player: Player): String {
-        return "Leave Towny Menu"
+        return "Leave your Town?"
     }
 
     override fun getButtons(player: Player): Map<Int, Button?> {

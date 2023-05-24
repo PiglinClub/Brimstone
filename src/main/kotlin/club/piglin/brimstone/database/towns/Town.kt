@@ -1,9 +1,11 @@
 package club.piglin.brimstone.database.towns
 
 import club.piglin.brimstone.Brimstone
+import club.piglin.brimstone.utils.Chat
 import com.mongodb.client.model.Filters
 import me.lucko.helper.Schedulers
 import org.bson.Document
+import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.util.*
@@ -42,6 +44,16 @@ class Town(
             }
         }
         return null
+    }
+
+    fun sendMessage(message: String) {
+        val list = ArrayList(this.members)
+        for (document in list) {
+            val player = Bukkit.getOfflinePlayer(document["uniqueId"] as UUID)
+            if (player.isOnline) {
+                Chat.sendMessage(player as Player, "&4[Town]&r $message")
+            }
+        }
     }
 
     fun saveMember(member: Member) {
@@ -86,6 +98,7 @@ class Town(
         )
         this.members = list
         profile.town = uniqueId
+        sendMessage("&e${player.name}&a joined your town!")
         Brimstone.instance.profileHandler.saveProfile(profile)
         Brimstone.instance.townHandler.saveTown(this)
     }

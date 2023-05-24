@@ -1,7 +1,9 @@
 package club.piglin.brimstone.database.towns
 
 import club.piglin.brimstone.Brimstone
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.OfflinePlayer
+import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
@@ -45,6 +47,15 @@ class InviteHandler {
             val task = InviteTask(from, inviter, invitee)
             tasks[invitee.uniqueId]!!.add(task)
             task.runTaskTimer(Brimstone.instance, 0L, 20L)
+            if (invitee.isOnline) {
+                (invitee as Player).sendMessage(
+                    MiniMessage.miniMessage().deserialize("<green>You have received an invite to join <yellow>${from.name}</yellow> from <yellow>${invitee.name}</yellow>! (Town tax: <gold>${from.tax}g</gold>)")
+                )
+                invitee.sendMessage(
+                    MiniMessage.miniMessage().deserialize("<green><bold><click:run_command:/towny accept ${from.uniqueId}>ACCEPT</click></bold></green> <red><bold><click:run_command:/towny deny ${from.uniqueId}>DENY</click></bold></red>")
+                )
+
+            }
             Brimstone.log.info("[Invites] Created invite for ${invitee.name} to ${from.name} (${from.uniqueId}).")
         }
 

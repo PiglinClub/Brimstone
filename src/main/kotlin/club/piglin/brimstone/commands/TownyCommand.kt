@@ -69,6 +69,7 @@ class TownyCommand : CommandExecutor {
                             Document("uniqueId", sender.uniqueId)
                                 .append("role", "mayor")
                                 .append("joinedAt", System.currentTimeMillis())
+                                .append("goldDeposited", 0.0)
                         ),
                         0.0
                     )
@@ -94,7 +95,7 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cInvalid usage: /towny tax <gold>")
                         return false
                     }
-                    if (args[2].toDoubleOrNull() !is Double && args[2].toIntOrNull() !is Int) {
+                    if (args[1].toDoubleOrNull() == null && args[1].toIntOrNull() == null) {
                         Chat.sendMessage(sender, "&cYou need a valid number to set your town tax to.")
                         return false
                     }
@@ -102,7 +103,7 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
                         return false
                     }
-                    town.tax = args[2].toDouble()
+                    town.tax = args[1].toDouble()
                     Chat.sendMessage(sender, "&aSuccessfully set your town tax to ${ChatColor.of("#ffd417")}${town.tax}g&a, new residents joining your town will now pay that tax.")
                     Brimstone.instance.townHandler.saveTown(town)
                 }
@@ -126,7 +127,7 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
                         return false
                     }
-                    val target = Bukkit.getPlayer(args[2])
+                    val target = Bukkit.getPlayer(args[1])
                     if (target == null) {
                         Chat.sendMessage(sender, "&cInvalid target, the target must be an online player.")
                         return false
@@ -137,8 +138,77 @@ class TownyCommand : CommandExecutor {
                         return false
                     }
                     Chat.sendMessage(sender, "&aOkay, sending an invite to &e${target.name}&a now...")
+                    if (InviteHandler.tasks[target.uniqueId] != null) {
+                        for (task in InviteHandler.tasks[target.uniqueId]!!) {
+                            if (task.from.uniqueId == town.uniqueId) {
+                                Chat.sendMessage(sender, "&cYou already have an outgoing invite sent to this player.")
+                                return false
+                            }
+                        }
+                    }
+                    town.sendMessage("&e${sender.name}&a invited &e${target.name}&a to join the town!")
                     InviteHandler.createInvite(town, sender, target)
                     Chat.sendMessage(sender, "&aSuccessfully sent an invite! They have &e10 minutes&a to accept.")
+                }
+                "accept" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town != null) {
+                        Chat.sendMessage(sender, "&cYou can't accept invites while in a Town.")
+                        return false
+                    }
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny accept <town_id>")
+                        return false
+                    }
+                    if (InviteHandler.tasks[sender.uniqueId] == null) {
+                        Chat.sendMessage(sender, "&cYou currently have no incoming invites.")
+                        return false
+                    }
+                    for (task in InviteHandler.tasks[sender.uniqueId]!!) {
+                        if (task.from.uniqueId == UUID.fromString(args[1])) {
+                            Chat.sendMessage(sender, "&aOkay, joining &e${task.from.name}&a now!")
+                            if (profile.gold < task.from.tax) {
+                                Chat.sendMessage(sender, "&cYou can't join this town yet as you cannot pay the town tax.")
+                                return false
+                            }
+                            profile.gold -= task.from.tax
+                            Brimstone.instance.townHandler.getTown(task.from.uniqueId)!!.gold += task.from.tax
+                            Brimstone.instance.profileHandler.saveProfile(profile)
+                            Brimstone.instance.townHandler.saveTown(task.from)
+                            Brimstone.instance.townHandler.getTown(task.from.uniqueId)!!.addPlayer(sender)
+                            InviteHandler.removeInvite(task)
+                            return true
+                        }
+                    }
+                    Chat.sendMessage(sender, "&cCould not find a town invite with that ID.")
+                }
+                "deny" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny deny <town_id>")
+                        return false
+                    }
+                    if (InviteHandler.tasks[sender.uniqueId] == null) {
+                        Chat.sendMessage(sender, "&cYou currently have no incoming invites.")
+                        return false
+                    }
+                    for (task in InviteHandler.tasks[sender.uniqueId]!!) {
+                        if (task.from.uniqueId == UUID.fromString(args[1])) {
+                            InviteHandler.removeInvite(task)
+                            task.from.sendMessage("&e${sender.name}&a has declined your invite.")
+                            Chat.sendMessage(sender, "&aSuccessfully denied &e${task.from.name}&a's invite.")
+                            return true
+                        }
+                    }
+                    Chat.sendMessage(sender, "&cCould not find a town invite with that ID.")
                 }
                 "leave" -> {
                     val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
