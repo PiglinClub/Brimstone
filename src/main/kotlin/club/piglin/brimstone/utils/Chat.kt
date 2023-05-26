@@ -1,5 +1,6 @@
 package club.piglin.brimstone.utils
 
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -158,6 +159,10 @@ class Chat {
             if (text != null) {
                 player.sendMessage(text)
             }
+        }
+
+        fun sendComponent(player: CommandSender, message: String) {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(message))
         }
     }
 }

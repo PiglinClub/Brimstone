@@ -4,9 +4,13 @@ import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.database.towns.Member
 import club.piglin.brimstone.menus.Button
 import club.piglin.brimstone.menus.pagination.PaginatedMenu
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -28,7 +32,19 @@ class TownyMembersGUI : PaginatedMenu() {
                 val m = Bukkit.getOfflinePlayer(it.uniqueId)
                 buttons[count.get()] = object : Button() {
                     override fun getButtonItem(player: Player?): ItemStack {
-
+                        val item = ItemStack(Material.PLAYER_HEAD)
+                        val meta = item.itemMeta as SkullMeta
+                        meta.owningPlayer = m
+                        meta.displayName(MiniMessage.miniMessage().deserialize("<reset><green>${m.name}"))
+                        meta.lore(
+                            mutableListOf(
+                                MiniMessage.miniMessage().deserialize("<reset><gray>Joined at: <aqua>${SimpleDateFormat("MM/dd/yyyy 'at' h:mm a").format(Date(it.joinedAt))}"),
+                                MiniMessage.miniMessage().deserialize("<reset><gray>Role: <aqua>${it.role.uppercase()}"),
+                                MiniMessage.miniMessage().deserialize("<reset><gray>Gold deposited: <color:#ffd417>${it.goldDeposited}g")
+                            )
+                        )
+                        item.itemMeta = meta
+                        return item
                     }
 
                     override fun getDescription(var1: Player?): List<String>? {
@@ -39,6 +55,7 @@ class TownyMembersGUI : PaginatedMenu() {
                         return null
                     }
                 }
+                count.getAndIncrement()
             }
             return buttons
         }

@@ -2,6 +2,7 @@ package club.piglin.brimstone.commands
 
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.commands.menus.LeaveTownyGUI
+import club.piglin.brimstone.commands.menus.TownyMembersGUI
 import club.piglin.brimstone.database.towns.InviteHandler
 import club.piglin.brimstone.database.towns.Town
 import club.piglin.brimstone.utils.Chat
@@ -259,7 +260,17 @@ class TownyCommand : CommandExecutor {
                     LeaveTownyGUI().openMenu(sender)
                 }
                 "members" -> {
-
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
+                    TownyMembersGUI().openMenu(sender)
                 }
             }
         }
