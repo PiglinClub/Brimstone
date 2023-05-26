@@ -51,7 +51,7 @@ class Town(
         for (document in list) {
             val player = Bukkit.getOfflinePlayer(document["uniqueId"] as UUID)
             if (player.isOnline) {
-                Chat.sendMessage(player as Player, "&4[Town]&r $message")
+                Chat.sendMessage(player as Player, "&9[Town]&r $message")
             }
         }
     }

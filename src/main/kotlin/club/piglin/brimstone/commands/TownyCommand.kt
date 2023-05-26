@@ -104,8 +104,44 @@ class TownyCommand : CommandExecutor {
                         return false
                     }
                     town.tax = args[1].toDouble()
-                    Chat.sendMessage(sender, "&aSuccessfully set your town tax to ${ChatColor.of("#ffd417")}${town.tax}g&a, new residents joining your town will now pay that tax.")
+                    town.sendMessage("&e${sender.name}&a set the town tax to ${ChatColor.of("#ffd417")}${town.tax}g&a.")
                     Brimstone.instance.townHandler.saveTown(town)
+                }
+                "rename" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny rename <name>")
+                        return false
+                    }
+                    if (town.getMember(profile.uniqueId)!!.role != "mayor") {
+                        Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
+                        return false
+                    }
+                    var name = ""
+                    for (i in 1 until args.size) {
+                        if (i == (args.size - 1)) name += args[i]
+                        else name += args[i] + " "
+                    }
+                    if (name.length > 32) {
+                        Chat.sendMessage(sender, "&cYour Town's name must be less than 32 characters.")
+                        return false
+                    }
+                    if (name.length < 2) {
+                        Chat.sendMessage(sender, "&cYour Town's name must be more than 2 characters.")
+                        return false
+                    }
+                    town.name = name
+                    Brimstone.instance.townHandler.saveTown(town)
+                    town.sendMessage("&e${sender.name}&a renamed the town to &e${town.name}&a!")
                 }
                 "invite" -> {
                     val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
@@ -222,7 +258,9 @@ class TownyCommand : CommandExecutor {
                     }
                     LeaveTownyGUI().openMenu(sender)
                 }
+                "members" -> {
 
+                }
             }
         }
         return true
