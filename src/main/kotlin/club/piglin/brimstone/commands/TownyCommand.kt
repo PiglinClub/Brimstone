@@ -72,6 +72,8 @@ class TownyCommand : CommandExecutor {
                                 .append("joinedAt", System.currentTimeMillis())
                                 .append("goldDeposited", 0.0)
                         ),
+                        0.0,
+                        0.0,
                         0.0
                     )
                     profile.town = town.uniqueId
@@ -271,6 +273,84 @@ class TownyCommand : CommandExecutor {
                     }
                     val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
                     TownyMembersGUI().openMenu(sender)
+                }
+                "withdraw" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny withdraw <gold|all>")
+                        return false
+                    }
+                    if (args[1] == "all") {
+                        val amount = town.gold
+                        town.gold -= amount
+                        profile.gold += amount
+                        town.sendMessage("&e${sender.name}&a withdrew ${ChatColor.of("#ffd417")}${amount}g&a from the town treasury.")
+                        Brimstone.instance.townHandler.saveTown(town)
+                        Brimstone.instance.profileHandler.saveProfile(profile)
+                    } else {
+                        if (args[1].toDoubleOrNull() == null && args[1].toIntOrNull() == null) {
+                            Chat.sendMessage(sender, "&cYou need a valid number to withdraw.")
+                            return false
+                        }
+                        val amount = args[1].toDouble()
+                        if (amount > town.gold) {
+                            Chat.sendMessage(sender, "&cYou're attempting to withdraw more than what your town actually has.")
+                            return false
+                        }
+                        town.gold -= amount
+                        profile.gold += amount
+                        town.sendMessage("&e${sender.name}&a withdrew ${ChatColor.of("#ffd417")}${amount}g&a from the town treasury.")
+                        Brimstone.instance.townHandler.saveTown(town)
+                        Brimstone.instance.profileHandler.saveProfile(profile)
+                    }
+                }
+                "deposit" -> {
+                    val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
+                    if (args.size < 2) {
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny deposit <gold|all>")
+                        return false
+                    }
+                    if (args[1] == "all") {
+                        val amount = profile.gold
+                        town.gold += amount
+                        profile.gold -= amount
+                        town.sendMessage("&e${sender.name}&a deposited ${ChatColor.of("#ffd417")}${amount}g&a into the town treasury.")
+                        Brimstone.instance.townHandler.saveTown(town)
+                        Brimstone.instance.profileHandler.saveProfile(profile)
+                    } else {
+                        if (args[1].toDoubleOrNull() == null && args[1].toIntOrNull() == null) {
+                            Chat.sendMessage(sender, "&cYou need a valid number to withdraw.")
+                            return false
+                        }
+                        val amount = args[1].toDouble()
+                        if (amount > profile.gold) {
+                            Chat.sendMessage(sender, "&cYou're attempting to deposit more than what your profile actually has.")
+                            return false
+                        }
+                        town.gold += amount
+                        profile.gold -= amount
+                        town.sendMessage("&e${sender.name}&a deposited ${ChatColor.of("#ffd417")}${amount}g&a into the town treasury.")
+                        Brimstone.instance.townHandler.saveTown(town)
+                        Brimstone.instance.profileHandler.saveProfile(profile)
+                    }
                 }
             }
         }

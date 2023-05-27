@@ -1,9 +1,11 @@
 package club.piglin.brimstone.database.profiles
 
+import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.utils.Chat
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import java.util.*
+import kotlin.random.Random
 
 class Profile(
     @JvmField val uniqueId: UUID,
@@ -30,6 +32,13 @@ class Profile(
             level += 1
             if (level % 5 == 0) {
                 Chat.broadcast("&a${name} has leveled up to &eLevel ${level}&a!")
+            }
+            if (town != null) {
+                val t = Brimstone.instance.townHandler.getTown(town!!)
+                if (t != null) {
+                    t.power += Random.nextInt(0, 100)
+                    Brimstone.instance.townHandler.saveTown(t)
+                }
             }
         }
     }

@@ -30,7 +30,8 @@ class Town(
     var name: String? = "Unnamed Town",
     var members: List<Document> = listOf(),
     var gold: Double = 0.0,
-    var tax: Double = 0.0
+    var tax: Double = 0.0,
+    var power: Double
 ) {
     fun getMember(uuid: UUID): Member? {
         for (document in this.members) {

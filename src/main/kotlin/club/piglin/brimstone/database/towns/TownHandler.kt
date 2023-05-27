@@ -77,6 +77,7 @@ class TownHandler {
                 .append("members", town.members)
                 .append("gold", town.gold)
                 .append("tax", town.tax)
+                .append("power", town.power)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -106,7 +107,8 @@ class TownHandler {
                             (document["name"] as String),
                             (document["members"] as List<Document>),
                             (document["gold"] as Double),
-                            ((document["tax"] as Double?) ?: 0.0)
+                            ((document["tax"] as Double?) ?: 0.0),
+                            ((document["power"] as Double?) ?: 0.0)
                         )
                     } else {
                         return@supply null
