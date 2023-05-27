@@ -29,7 +29,7 @@ class TownyCommand : CommandExecutor {
         if (args.isEmpty()) {
 
         } else {
-            when (args[0]) {
+            when (args[0].lowercase()) {
                 "create" -> {
                     if (args.size < 2) {
                         Chat.sendMessage(sender, "&cInvalid usage: /towny create <name>")
@@ -81,7 +81,7 @@ class TownyCommand : CommandExecutor {
                     Brimstone.instance.profileHandler.saveProfile(profile)
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
                 }
-                "tax" -> {
+                "joinTax" -> {
                     val profile = Brimstone.instance.profileHandler.getProfile(sender.uniqueId)
                     if (profile == null) {
                         Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
@@ -93,11 +93,11 @@ class TownyCommand : CommandExecutor {
                     }
                     val town = Brimstone.instance.townHandler.getPlayerTown(sender)!!
                     if (args.size < 2) {
-                        Chat.sendMessage(sender, "&cInvalid usage: /towny tax <gold>")
+                        Chat.sendMessage(sender, "&cInvalid usage: /towny joinTax <gold>")
                         return false
                     }
                     if (args[1].toDoubleOrNull() == null && args[1].toIntOrNull() == null) {
-                        Chat.sendMessage(sender, "&cYou need a valid number to set your town tax to.")
+                        Chat.sendMessage(sender, "&cYou need a valid number to set your join tax to.")
                         return false
                     }
                     if (town.getMember(profile.uniqueId)!!.role != "mayor") {
@@ -105,7 +105,7 @@ class TownyCommand : CommandExecutor {
                         return false
                     }
                     town.tax = args[1].toDouble()
-                    town.sendMessage("&e${sender.name}&a set the town tax to ${ChatColor.of("#ffd417")}${town.tax}g&a.")
+                    town.sendMessage("&e${sender.name}&a set the join tax to ${ChatColor.of("#ffd417")}${town.tax}g&a.")
                     Brimstone.instance.townHandler.saveTown(town)
                 }
                 "rename" -> {
@@ -209,7 +209,7 @@ class TownyCommand : CommandExecutor {
                         if (task.from.uniqueId == UUID.fromString(args[1])) {
                             Chat.sendMessage(sender, "&aOkay, joining &e${task.from.name}&a now!")
                             if (profile.gold < task.from.tax) {
-                                Chat.sendMessage(sender, "&cYou can't join this town yet as you cannot pay the town tax.")
+                                Chat.sendMessage(sender, "&cYou can't join this town yet as you cannot pay the town join tax.")
                                 return false
                             }
                             profile.gold -= task.from.tax
