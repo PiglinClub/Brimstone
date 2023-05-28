@@ -289,6 +289,10 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cInvalid usage: /towny withdraw <gold|all>")
                         return false
                     }
+                    if (town.getMember(profile.uniqueId)!!.role != "mayor") {
+                        Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
+                        return false
+                    }
                     if (args[1] == "all") {
                         val amount = town.gold
                         town.gold -= amount
