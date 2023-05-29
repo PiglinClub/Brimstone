@@ -344,6 +344,9 @@ class TownyCommand : CommandExecutor {
                         val amount = profile.gold
                         town.gold += amount
                         profile.gold -= amount
+                        val member = town.getMember(sender.uniqueId)!!
+                        member.goldDeposited += amount
+                        town.saveMember(member)
                         town.sendMessage("&e${sender.name}&a deposited ${ChatColor.of("#ffd417")}${amount}g&a into the town treasury.")
                         Brimstone.instance.townHandler.saveTown(town)
                         Brimstone.instance.profileHandler.saveProfile(profile)
@@ -359,6 +362,9 @@ class TownyCommand : CommandExecutor {
                         }
                         town.gold += amount
                         profile.gold -= amount
+                        val member = town.getMember(sender.uniqueId)!!
+                        member.goldDeposited += amount
+                        town.saveMember(member)
                         town.sendMessage("&e${sender.name}&a deposited ${ChatColor.of("#ffd417")}${amount}g&a into the town treasury.")
                         Brimstone.instance.townHandler.saveTown(town)
                         Brimstone.instance.profileHandler.saveProfile(profile)
