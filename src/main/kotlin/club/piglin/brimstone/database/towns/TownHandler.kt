@@ -89,6 +89,22 @@ class TownHandler {
         }
     }
 
+    fun checkIfAvailable(name: String) : Promise<Boolean> {
+        return Schedulers.async().supply {
+            try {
+                with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("towns")) {
+                    val filter = Filters.eq("name", name)
+                    val documents = this.find(filter).toList()
+                    return@supply documents.isEmpty()
+                }
+            } catch (e: MongoException) {
+                e.printStackTrace()
+                return@supply true
+            }
+            return@supply true
+        }
+    }
+
     fun lookupTown(uuid: UUID): Promise<Town> {
         val town = getTown(uuid)
         if (town != null) {

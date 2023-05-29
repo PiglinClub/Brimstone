@@ -61,6 +61,10 @@ class TownyCommand : CommandExecutor {
                         Chat.sendMessage(sender, "&cYou don't have enough gold to purchase a town. (Short ${1000.0 - profile.gold}g)")
                         return false
                     }
+                    if (Brimstone.instance.townHandler.checkIfAvailable(name).get() == false) {
+                        Chat.sendMessage(sender, "&cThis name is already taken.")
+                        return false
+                    }
                     profile.gold -= 1000.0
                     val town = Town(
                         UUID.randomUUID(),
@@ -140,6 +144,10 @@ class TownyCommand : CommandExecutor {
                     }
                     if (name.length < 2) {
                         Chat.sendMessage(sender, "&cYour Town's name must be more than 2 characters.")
+                        return false
+                    }
+                    if (Brimstone.instance.townHandler.checkIfAvailable(name).get() == false) {
+                        Chat.sendMessage(sender, "&cThis name is already taken.")
                         return false
                     }
                     town.name = name
