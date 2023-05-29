@@ -1,6 +1,7 @@
 package club.piglin.brimstone
 
 import club.piglin.brimstone.commands.BalanceCommand
+import club.piglin.brimstone.commands.ClaimCommand
 import club.piglin.brimstone.commands.TownyCommand
 import club.piglin.brimstone.database.profiles.ProfileHandler
 import club.piglin.brimstone.database.towns.TownHandler
@@ -43,6 +44,7 @@ class Brimstone : ExtendedJavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(Scoreboard(), this)
 
         this.getCommand("balance")!!.setExecutor(BalanceCommand())
+        this.getCommand("claim")!!.setExecutor(ClaimCommand())
         this.getCommand("towny")!!.setExecutor(TownyCommand())
 
 

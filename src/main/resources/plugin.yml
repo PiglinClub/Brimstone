@@ -16,3 +16,5 @@ commands:
       - bal
       - coins
       - gold
+  claim:
+    description: Command for claiming a chunk in a town.

@@ -41,6 +41,7 @@ class ClaimCommand : CommandExecutor {
             Chat.sendMessage(sender, "&cThis claim is already occupied by another town.")
         } else {
             town.sendMessage("&e${sender.name}&a claimed a chunk at &eX: ${chunk.x}, Z: ${chunk.z}&a.")
+            Brimstone.log.info("Claimed chunk at X: ${chunk.x}, Z: ${chunk.z} for ${town.name} (${town.uniqueId})")
         }
         return true
     }
