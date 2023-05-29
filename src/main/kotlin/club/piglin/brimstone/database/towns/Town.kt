@@ -14,7 +14,9 @@ class Claim(
     val uniqueId: UUID,
     val claimedAt: Long,
     val x: Int,
-    val z: Int
+    val z: Int,
+    val health: Int,
+    val world: String
 )
 
 class Member(
