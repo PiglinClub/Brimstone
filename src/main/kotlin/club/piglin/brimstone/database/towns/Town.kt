@@ -2,13 +2,18 @@ package club.piglin.brimstone.database.towns
 
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.utils.Chat
+import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.FindOneAndReplaceOptions
 import me.lucko.helper.Schedulers
+import me.lucko.helper.promise.Promise
 import org.bson.Document
 import org.bukkit.Bukkit
+import org.bukkit.Chunk
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.random.Random
 
 class Claim(
     val uniqueId: UUID,
@@ -16,7 +21,8 @@ class Claim(
     val x: Int,
     val z: Int,
     val health: Int,
-    val world: String
+    val world: String,
+    val townUniqueId: UUID
 )
 
 class Member(
@@ -104,6 +110,58 @@ class Town(
         sendMessage("&e${player.name}&a joined your town!")
         Brimstone.instance.profileHandler.saveProfile(profile)
         Brimstone.instance.townHandler.saveTown(this)
+    }
+
+    fun getClaims(): Promise<List<Document>> {
+        return Schedulers.async().supply {
+            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                try {
+                    val filter = Filters.eq("townUniqueId", uniqueId)
+                    return@supply find(filter).toList()
+                } catch (e: MongoException) {
+                    return@supply listOf()
+                }
+            }
+        }
+    }
+
+    fun claimChunk(chunk: Chunk): Promise<Claim?> {
+        return Schedulers.async().supply {
+            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                try {
+                    val filter = Filters.and(
+                        Filters.eq("x", chunk.x),
+                        Filters.eq("z", chunk.z)
+                    )
+                    val documents = this.find(filter)
+                    if (documents.toList().isNotEmpty()) {
+                        return@supply null
+                    }
+                    val claim = Claim(
+                        UUID.randomUUID(),
+                        System.currentTimeMillis(),
+                        chunk.x,
+                        chunk.z,
+                        100,
+                        chunk.world.name,
+                        uniqueId
+                    )
+                    val document = Document("uuid", claim.uniqueId)
+                        .append("claimedAt", claim.claimedAt)
+                        .append("x", claim.x)
+                        .append("z", claim.z)
+                        .append("health", claim.health)
+                        .append("world", claim.world)
+                        .append("townUniqueId", claim.townUniqueId)
+                    this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
+                    power += Random.nextInt(200, 450)
+                    Brimstone.instance.townHandler.saveTown(this@Town)
+                    return@supply claim
+                } catch (e: MongoException) {
+                    return@supply null
+                }
+            }
+        }
     }
 
     fun removePlayer(player: OfflinePlayer) {
