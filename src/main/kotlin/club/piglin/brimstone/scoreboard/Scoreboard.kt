@@ -87,7 +87,7 @@ class Scoreboard : Listener {
                         " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
                         "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}/25",
                         "  ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${town.gold}g",
-                        "  ${ChatColor.RESET}Power: ☄ ${ChatColor.of("#ff365e")}${floor(town.power).toInt()}",
+                        "  ${ChatColor.RESET}Power: ${ChatColor.of("#ff365e")}☄ ${floor(town.power).toInt()}",
                         " "
                     )
                 }
