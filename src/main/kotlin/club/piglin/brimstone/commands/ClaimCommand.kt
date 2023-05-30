@@ -30,12 +30,28 @@ class ClaimCommand : CommandExecutor {
             return false
         }
         val claims = town.getClaims()
-        val cost = ((750 * 1.5).pow(claims.get().size))
+        val cost = ((750) * (1.5).pow(claims.get().size))
         if (town.gold < cost) {
             Chat.sendMessage(sender, "&cYou can't afford to purchase this chunk. You are short by ${ChatColor.of("#ffd417")}${cost - town.gold}g&c.")
             return false
         }
         val chunk = sender.location.chunk
+        val north = chunk.world.getChunkAt(chunk.x, chunk.z - 1)
+        val west = chunk.world.getChunkAt(chunk.x - 1, chunk.z)
+        val east = chunk.world.getChunkAt(chunk.x + 1, chunk.z)
+        val south = chunk.world.getChunkAt(chunk.x, chunk.z + 1)
+
+        if (claims.get().isNotEmpty()) {
+            if (
+                town.doWeOwnAdjacentChunk(north.x, north.z).get() == false &&
+                town.doWeOwnAdjacentChunk(west.x, west.z).get() == false &&
+                town.doWeOwnAdjacentChunk(east.x, east.z).get() == false &&
+                town.doWeOwnAdjacentChunk(south.x, south.z).get() == false
+            ) {
+                Chat.sendMessage(sender, "&cYou must own an adjacent chunk to claim this chunk.")
+                return false
+            }
+        }
         val claim = town.claimChunk(chunk)
         if (claim.get() == null) {
             Chat.sendMessage(sender, "&cThis claim is already occupied by another town.")
