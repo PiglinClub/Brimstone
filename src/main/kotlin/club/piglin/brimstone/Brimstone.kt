@@ -4,6 +4,7 @@ import club.piglin.brimstone.commands.BalanceCommand
 import club.piglin.brimstone.commands.ClaimCommand
 import club.piglin.brimstone.commands.TownyCommand
 import club.piglin.brimstone.database.profiles.ProfileHandler
+import club.piglin.brimstone.database.towns.ClaimHandler
 import club.piglin.brimstone.database.towns.TownHandler
 import club.piglin.brimstone.scoreboard.Scoreboard
 import club.piglin.brimstone.utils.Settings
@@ -27,6 +28,7 @@ class Brimstone : ExtendedJavaPlugin() {
     lateinit var dataSource: MongoClient
     lateinit var profileHandler: ProfileHandler
     lateinit var townHandler: TownHandler
+    lateinit var claimHandler: ClaimHandler
 
     override fun load() {
         protocolManager = ProtocolLibrary.getProtocolManager()
@@ -40,6 +42,7 @@ class Brimstone : ExtendedJavaPlugin() {
 
         profileHandler = ProfileHandler()
         townHandler = TownHandler()
+        claimHandler = ClaimHandler()
 
         Bukkit.getServer().pluginManager.registerEvents(Scoreboard(), this)
 

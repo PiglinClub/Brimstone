@@ -125,6 +125,29 @@ class Town(
         }
     }
 
+    fun doWeOwnAdjacentChunk(x: Int, z: Int) : Promise<Boolean> {
+        return Schedulers.async().supply {
+            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                try {
+                    val filter = Filters.and(
+                        Filters.eq("x", x),
+                        Filters.eq("z", z),
+                        Filters.eq("townUniqueId", uniqueId)
+                    )
+                    val documents = this.find(filter).toList()
+                    if (documents.size == 0) {
+                        return@supply false
+                    } else {
+                        return@supply true
+                    }
+                } catch (e: MongoException) {
+                    e.printStackTrace()
+                    return@supply false
+                }
+            }
+        }
+    }
+
     fun claimChunk(chunk: Chunk): Promise<Claim?> {
         return Schedulers.async().supply {
             with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
@@ -137,6 +160,7 @@ class Town(
                     if (documents.toList().isNotEmpty()) {
                         return@supply null
                     }
+
                     val claim = Claim(
                         UUID.randomUUID(),
                         System.currentTimeMillis(),

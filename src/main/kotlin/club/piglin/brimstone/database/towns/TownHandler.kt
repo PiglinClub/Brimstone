@@ -15,6 +15,80 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerLoginEvent
 import java.util.*
 
+class ClaimHandler {
+    val claimsMap: Cache<UUID, Claim> = Caffeine.newBuilder()
+        .build()
+
+    fun preload(amount: Int = 10000) {
+        Schedulers.async().run {
+            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                val claims = this.find().limit(amount)
+                for (claim in claims) {
+                    val t = lookupClaim(claim["uuid"] as UUID)
+                    t.get()?.let { saveClaim(it) }
+                    Brimstone.log.info("[Towns] Successfully preloaded X: ${t.get()!!.x}, Z: ${t.get()!!.z} (${t.get()!!.uniqueId})")
+                }
+            }
+        }
+    }
+
+    init {
+        preload()
+    }
+
+    fun updateCache(claim: Claim) {
+        val existing: Claim? = this.claimsMap.getIfPresent(claim.uniqueId)
+        if (existing == null) {
+            this.claimsMap.put(claim.uniqueId, claim)
+        }
+    }
+
+    fun getClaim(uuid: UUID): Claim? {
+        return this.claimsMap.getIfPresent(uuid)
+    }
+
+    fun saveClaim(claim: Claim) {
+        with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+            val filter = Filters.eq("uuid", claim.uniqueId)
+            val document = Document("uuid", claim.uniqueId)
+                .append("claimedAt", claim.claimedAt)
+                .append("x", claim.x)
+                .append("z", claim.z)
+                .append("health", claim.health)
+                .append("world", claim.world)
+                .append("townUniqueId", claim.townUniqueId)
+            this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
+        }
+    }
+
+    fun lookupClaim(uuid: UUID): Promise<Claim?> {
+        val cachedClaim = getClaim(uuid)
+        if (cachedClaim != null) {
+            return Promise.completed(cachedClaim)
+        }
+        return Schedulers.async().supply {
+            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                val filter = Filters.eq("uuid", uuid)
+                val document = this.find(filter).first()
+                if (document != null) {
+                    val claim = Claim(
+                        document["uuid"] as UUID,
+                        document["claimedAt"] as Long,
+                        document["x"] as Int,
+                        document["z"] as Int,
+                        document["health"] as Int,
+                        document["world"] as String,
+                        document["townUniqueId"] as UUID
+                    )
+                    updateCache(claim)
+                    return@supply claim
+                }
+                return@supply null
+            }
+        }
+    }
+}
+
 class TownHandler {
     val townsMap: Cache<UUID, Town> = Caffeine.newBuilder()
         .build()
