@@ -80,14 +80,14 @@ class Scoreboard : Listener {
                     board.updateLines(
                         " ",
                         "${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
-                        "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${profile.gold}g",
+                        "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${floor(profile.gold)}g",
                         "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
                         " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
                         "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}/25",
                         "  ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.getClaims().get().size}",
-                        "  ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${town.gold}g",
+                        "  ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${floor(town.gold)}g",
                         "  ${ChatColor.RESET}Power: ${ChatColor.of("#ff365e")}☄ ${floor(town.power).toInt()}",
                         " "
                     )
