@@ -25,6 +25,20 @@ class ClaimHandler {
                 val claims = this.find().limit(amount)
                 for (claim in claims) {
                     val t = lookupClaim(claim["uuid"] as UUID)
+                    val ownerTown = Brimstone.instance.townHandler.lookupTown(claim["townUniqueId"] as UUID)
+                    if (ownerTown == null) {
+                        Schedulers.async().run {
+                            with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                                val filter = Filters.eq("uuid", claim["uuid"] as UUID)
+                                val document = this.find(filter).first()
+                                if (document != null) {
+                                    this.findOneAndDelete(filter)
+                                    Brimstone.instance.claimHandler.claimsMap.invalidate(claim["uuid"] as UUID)
+                                    Brimstone.log.info("[Claims] Deleted X: ${claim["x"] as Int}, Z: ${claim["z"] as Int} due to owner town not existing.")
+                                }
+                            }
+                        }
+                    }
                     t.get()?.let { saveClaim(it) }
                     Brimstone.log.info("[Claims] Successfully preloaded X: ${t.get()!!.x}, Z: ${t.get()!!.z} (${t.get()!!.uniqueId})")
                 }
