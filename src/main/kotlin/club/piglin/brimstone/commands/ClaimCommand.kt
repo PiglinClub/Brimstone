@@ -54,6 +54,10 @@ class ClaimCommand : CommandExecutor {
         }
         val claim = town.claimChunk(chunk)
         if (claim.get() == null) {
+            if (town.doWeOwnAdjacentChunk(chunk.x, chunk.z).get() == true) {
+                Chat.sendMessage(sender, "&cWe already own this claim.")
+                return true
+            }
             Chat.sendMessage(sender, "&cThis claim is already occupied by another town.")
         } else {
             town.sendMessage("&e${sender.name}&a claimed a chunk at &eX: ${chunk.x}, Z: ${chunk.z}&a.")
