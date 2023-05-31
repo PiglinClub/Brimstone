@@ -26,7 +26,7 @@ class ClaimHandler {
                 for (claim in claims) {
                     val t = lookupClaim(claim["uuid"] as UUID)
                     t.get()?.let { saveClaim(it) }
-                    Brimstone.log.info("[Towns] Successfully preloaded X: ${t.get()!!.x}, Z: ${t.get()!!.z} (${t.get()!!.uniqueId})")
+                    Brimstone.log.info("[Claims] Successfully preloaded X: ${t.get()!!.x}, Z: ${t.get()!!.z} (${t.get()!!.uniqueId})")
                 }
             }
         }
@@ -40,6 +40,43 @@ class ClaimHandler {
         val existing: Claim? = this.claimsMap.getIfPresent(claim.uniqueId)
         if (existing == null) {
             this.claimsMap.put(claim.uniqueId, claim)
+        }
+    }
+
+    fun getClaimAt(x: Int, z: Int): Promise<Claim?> {
+        for (claim in this.claimsMap.asMap().values) {
+            if (claim.x == x && claim.z == z) {
+                return Promise.completed(claim)
+            }
+        }
+        return Schedulers.async().supply {
+            try {
+                with (Brimstone.instance.dataSource.getDatabase("piglin").getCollection("claims")) {
+                    val filter = Filters.and(
+                        Filters.eq("x", x),
+                        Filters.eq("z", z)
+                    )
+                    val document = this.find(filter).first()
+                    if (document != null) {
+                        val claim = Claim(
+                            document["uuid"] as UUID,
+                            document["claimedAt"] as Long,
+                            document["x"] as Int,
+                            document["z"] as Int,
+                            document["health"] as Int,
+                            document["world"] as String,
+                            document["townUniqueId"] as UUID
+                        )
+                        updateCache(claim)
+                        return@supply claim
+                    } else {
+                        return@supply null
+                    }
+                }
+            } catch (e: MongoException) {
+                e.printStackTrace()
+                return@supply null
+            }
         }
     }
 
