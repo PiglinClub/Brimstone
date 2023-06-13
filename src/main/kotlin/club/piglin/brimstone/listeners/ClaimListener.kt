@@ -6,10 +6,10 @@ import club.piglin.brimstone.utils.Chat
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.block.*
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import java.util.*
@@ -63,7 +63,7 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onBlockBreak(e: BlockBreakEvent) {
-        val claim = Brimstone.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z)
+        val claim = Brimstone.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
         val town = Brimstone.instance.townHandler.getPlayerTown(e.player)
         if (claim.get() != null) {
             val claimTown = Brimstone.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
@@ -80,8 +80,53 @@ class ClaimListener : Listener {
     }
 
     @EventHandler
+    fun onPistonRetract(e: BlockPistonRetractEvent) {
+
+    }
+
+    @EventHandler
+    fun onBlockForm(e: EntityBlockFormEvent) {
+        val claim = Brimstone.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
+        if (e.entity is Player) {
+            val town = Brimstone.instance.townHandler.getPlayerTown(e.entity as Player)
+            if (claim.get() != null) {
+                val claimTown = Brimstone.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
+                if (town != null) {
+                    if (claim.get()!!.townUniqueId != town.uniqueId) {
+                        e.isCancelled = true
+                        Chat.sendComponent(e.entity, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+                    }
+                } else {
+                    e.isCancelled = true
+                    Chat.sendComponent(e.entity, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    fun onBlockIgnite(e: BlockIgniteEvent) {
+        val claim = Brimstone.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
+        if (e.player != null) {
+            val town = Brimstone.instance.townHandler.getPlayerTown(e.player!!)
+            if (claim.get() != null) {
+                val claimTown = Brimstone.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
+                if (town != null) {
+                    if (claim.get()!!.townUniqueId != town.uniqueId) {
+                        e.isCancelled = true
+                        Chat.sendComponent(e.player!!, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+                    }
+                } else {
+                    e.isCancelled = true
+                    Chat.sendComponent(e.player!!, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+                }
+            }
+        }
+    }
+
+    @EventHandler
     fun onBlockPlace(e: BlockPlaceEvent) {
-        val claim = Brimstone.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z)
+        val claim = Brimstone.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
         val town = Brimstone.instance.townHandler.getPlayerTown(e.player)
         if (claim.get() != null) {
             val claimTown = Brimstone.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
