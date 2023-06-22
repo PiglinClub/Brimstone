@@ -44,25 +44,25 @@ class Scoreboard : Listener {
                 val progressBar = if (percentage >= 95) {
                     "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}██████████"
                 } else if (percentage >= 90) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉▉▉▉▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■■■■■${ChatColor.RESET}${ChatColor.BOLD}■"
                 } else if (percentage >= 80) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉▉▉▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■■■■${ChatColor.RESET}${ChatColor.BOLD}■■"
                 } else if (percentage >= 70) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉▉▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■■■${ChatColor.RESET}${ChatColor.BOLD}■■■"
                 } else if (percentage >= 60) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■■${ChatColor.RESET}${ChatColor.BOLD}■■■■"
                 } else if (percentage >= 50) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■${ChatColor.RESET}${ChatColor.BOLD}■■■■■"
                 } else if (percentage >= 40) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■${ChatColor.RESET}${ChatColor.BOLD}■■■■■■"
                 } else if (percentage >= 30) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■${ChatColor.RESET}${ChatColor.BOLD}■■■■■■■"
                 } else if (percentage >= 20) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉▉▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■${ChatColor.RESET}${ChatColor.BOLD}■■■■■■■■"
                 } else if (percentage >= 10) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}▉${ChatColor.RESET}${ChatColor.BOLD}▉▉▉▉▉▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■${ChatColor.RESET}${ChatColor.BOLD}■■■■■■■■■"
                 } else {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.RESET}▉▉▉▉▉▉▉▉▉▉"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.RESET}■■■■■■■■■■"
                 }
 
                 if (profile.town == null) {
