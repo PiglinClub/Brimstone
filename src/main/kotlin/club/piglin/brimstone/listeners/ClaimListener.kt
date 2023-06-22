@@ -17,13 +17,14 @@ import org.bukkit.event.player.PlayerMoveEvent
 import java.util.*
 
 class ClaimListener : Listener {
-    val claimMap = hashMapOf<UUID, Claim?>()
+    companion object {
+        val claimMap = hashMapOf<UUID, Claim?>()
+    }
 
     @EventHandler
     fun onPlayerMove(e: PlayerMoveEvent) {
         if (e.from.chunk != e.to.chunk) {
             val claim = Brimstone.instance.claimHandler.getClaimAt(e.to.chunk.x, e.to.chunk.z).get()
-            print(claimMap[e.player.uniqueId])
             if (claimMap[e.player.uniqueId] == null) {
                 if (claim != null) {
                     val town = Brimstone.instance.townHandler.getTown(claim.townUniqueId)
