@@ -74,7 +74,7 @@ class Scoreboard : Listener {
                         "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
-                        "${ChatColor.RESET} Currently in: ${if (ClaimListener.claimMap[uuid] == null) "${ChatColor.DARK_GREEN}Wilderness" else "${ChatColor.YELLOW}${Brimstone.instance.townHandler.getTown(ClaimListener.claimMap[uuid]!!.townUniqueId)!!.name}"}",
+                        "${ChatColor.RESET} Currently in: ${if (ClaimListener.claimMap[uuid] == null) "${ChatColor.DARK_GREEN}Wilderness" else "${ChatColor.YELLOW}${Brimstone.instance.townHandler.getTown(ClaimListener.claimMap[uuid]!!.townUniqueId)!!.name}"} ",
                         " "
                     )
                 } else {
@@ -87,7 +87,7 @@ class Scoreboard : Listener {
                         "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
-                        "${ChatColor.RESET} Currently in: ${if (ClaimListener.claimMap[uuid] == null) "${ChatColor.DARK_GREEN}Wilderness" else "${ChatColor.YELLOW}${Brimstone.instance.townHandler.getTown(ClaimListener.claimMap[uuid]!!.townUniqueId)!!.name}"}",
+                        "${ChatColor.RESET} Currently in: ${if (ClaimListener.claimMap[uuid] == null) "${ChatColor.DARK_GREEN}Wilderness" else "${ChatColor.YELLOW}${Brimstone.instance.townHandler.getTown(ClaimListener.claimMap[uuid]!!.townUniqueId)!!.name}"} ",
                         " ",
                         " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
                         "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}/25",
