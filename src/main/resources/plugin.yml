@@ -18,3 +18,8 @@ commands:
       - gold
   claim:
     description: Command for claiming a chunk in a town.
+  wilderness:
+    description: Teleport to a random part of the world.
+    aliases:
+      - wild
+      - wi
