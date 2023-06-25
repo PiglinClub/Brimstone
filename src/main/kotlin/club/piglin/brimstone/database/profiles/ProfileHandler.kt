@@ -79,6 +79,8 @@ class ProfileHandler {
                 .append("level", profile.level)
                 .append("gold", profile.gold)
                 .append("town", profile.town)
+                .append("miningSkillExp", profile.miningSkillExp)
+                .append("miningSkillLevel", profile.miningSkillLevel)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -113,7 +115,9 @@ class ProfileHandler {
                             (document["gold"] as Double?) ?: 0.0,
                             (document["xp"] as Double?) ?: 0.0,
                             (document["level"] as Int?) ?: 0,
-                            (document["town"] as UUID?)
+                            (document["town"] as UUID?),
+                            (document["miningSkillExp"] as Double?) ?: 0.0,
+                            (document["miningSkillLevel"] as Int?) ?: 1
                         )
                     } else {
                         p = Profile(

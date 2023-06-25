@@ -7,6 +7,14 @@ import org.bukkit.Location
 import java.util.*
 import kotlin.random.Random
 
+enum class Skill {
+    MINING,
+    FISHING,
+    LOGGING,
+    COMBAT,
+    FARMING
+}
+
 class Profile(
     @JvmField val uniqueId: UUID,
     var name: String? = null,
@@ -19,10 +27,16 @@ class Profile(
     var gold: Double = 0.0,
     var xp: Double = 0.0,
     var level: Int = 0,
-    var town: UUID? = null
+    var town: UUID? = null,
+    var miningSkillExp: Double = 0.0,
+    var miningSkillLevel: Int = 1
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
+    }
+
+    fun addSkillExp(skill: Skill, amount: Double) {
+
     }
 
     fun addExp(amount: Double) {
