@@ -2,9 +2,15 @@ package club.piglin.brimstone.database.profiles
 
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.utils.Chat
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Sound
+import org.bukkit.entity.Player
 import java.util.*
+import kotlin.math.floor
+import kotlin.math.pow
 import kotlin.random.Random
 
 enum class Skill {
@@ -36,7 +42,30 @@ class Profile(
     }
 
     fun addSkillExp(skill: Skill, amount: Double) {
-
+        if (skill == Skill.MINING) {
+            val levelUpExp = floor(250 * (3.5).pow(miningSkillLevel - 1))
+            miningSkillExp += amount
+            if (amount > 0.0) {
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    val percentage = floor((miningSkillExp / levelUpExp) * 100.0) / 100.0
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>⛏ Mining $miningSkillLevel (${percentage * 100}%)</aqua>"))
+                }
+            }
+            if (miningSkillExp >= levelUpExp) {
+                miningSkillExp -= levelUpExp
+                miningSkillLevel += 1
+                addExp(Random.nextDouble(10.0, 50.0))
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                    player.showTitle(Title.title(
+                        MiniMessage.miniMessage().deserialize("<gold><bold>⛏ MINING LEVEL UP! ⛏<bold/></gold>"),
+                        MiniMessage.miniMessage().deserialize("<reset>Level <aqua>${miningSkillLevel - 1} → ${miningSkillLevel}</aqua>")
+                    ))
+                }
+            }
+        }
     }
 
     fun addExp(amount: Double) {
@@ -44,8 +73,16 @@ class Profile(
         if (xp >= 1000.0) {
             xp -= 1000.0
             level += 1
+            if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+            }
             if (level % 5 == 0) {
                 Chat.broadcast("&a${name} has leveled up to &eLevel ${level}&a!")
+            } else {
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    Chat.sendComponent(Bukkit.getOfflinePlayer(uniqueId) as Player, "<green>Congratulations, you have leveled up to <yellow>Level ${level}</yellow>!</green>!")
+                }
             }
             if (town != null) {
                 val t = Brimstone.instance.townHandler.getTown(town!!)

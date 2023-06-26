@@ -5,6 +5,7 @@ import club.piglin.brimstone.database.profiles.ProfileHandler
 import club.piglin.brimstone.database.towns.ClaimHandler
 import club.piglin.brimstone.database.towns.TownHandler
 import club.piglin.brimstone.listeners.ClaimListener
+import club.piglin.brimstone.listeners.SkillListener
 import club.piglin.brimstone.scoreboard.Scoreboard
 import club.piglin.brimstone.utils.Settings
 import com.comphenix.protocol.ProtocolLibrary
@@ -45,6 +46,7 @@ class Brimstone : ExtendedJavaPlugin() {
 
         Bukkit.getServer().pluginManager.registerEvents(Scoreboard(), this)
         Bukkit.getServer().pluginManager.registerEvents(ClaimListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(SkillListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(WildernessMovementCheck(), this)
 
         this.getCommand("balance")!!.setExecutor(BalanceCommand())
