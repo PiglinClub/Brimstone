@@ -35,7 +35,11 @@ class Profile(
     var level: Int = 0,
     var town: UUID? = null,
     var miningSkillExp: Double = 0.0,
-    var miningSkillLevel: Int = 1
+    var miningSkillLevel: Int = 1,
+    var farmingSkillExp: Double = 0.0,
+    var farmingSkillLevel: Int = 1,
+    var combatSkillExp: Double = 0.0,
+    var combatSkillLevel: Int = 1,
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
@@ -62,6 +66,29 @@ class Profile(
                     player.showTitle(Title.title(
                         MiniMessage.miniMessage().deserialize("<gold><bold>⛏ MINING LEVEL UP! ⛏<bold/></gold>"),
                         MiniMessage.miniMessage().deserialize("<reset>Level <aqua>${miningSkillLevel - 1} → ${miningSkillLevel}</aqua>")
+                    ))
+                }
+            }
+        } else if (skill == Skill.FARMING) {
+            val levelUpExp = floor(250 * (3.5).pow(farmingSkillLevel - 1))
+            farmingSkillExp += amount
+            if (amount > 0.0) {
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    val percentage = floor((farmingSkillExp / levelUpExp) * 100.0) / 100.0
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83C\uDF3A Farming $farmingSkillLevel (${percentage * 100}%)</aqua>"))
+                }
+            }
+            if (farmingSkillExp >= levelUpExp) {
+                farmingSkillExp -= levelUpExp
+                farmingSkillLevel += 1
+                addExp(Random.nextDouble(10.0, 50.0))
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                    player.showTitle(Title.title(
+                        MiniMessage.miniMessage().deserialize("<gold><bold>\uD83C\uDF3A FARMING LEVEL UP! \uD83C\uDF3A<bold/></gold>"),
+                        MiniMessage.miniMessage().deserialize("<reset>Level <aqua>${farmingSkillLevel - 1} → ${farmingSkillLevel}</aqua>")
                     ))
                 }
             }
