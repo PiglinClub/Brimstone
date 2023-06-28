@@ -81,6 +81,14 @@ class ProfileHandler {
                 .append("town", profile.town)
                 .append("miningSkillExp", profile.miningSkillExp)
                 .append("miningSkillLevel", profile.miningSkillLevel)
+                .append("farmingSkillExp", profile.farmingSkillExp)
+                .append("farmingSkillLevel", profile.farmingSkillLevel)
+                .append("combatSkillExp", profile.combatSkillExp)
+                .append("combatSkillLevel", profile.combatSkillLevel)
+                .append("fishingSkillExp", profile.fishingSkillExp)
+                .append("fishingSkillLevel", profile.fishingSkillLevel)
+                .append("loggingSkillExp", profile.loggingSkillExp)
+                .append("loggingSkillLevel", profile.loggingSkillLevel)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -117,7 +125,15 @@ class ProfileHandler {
                             (document["level"] as Int?) ?: 0,
                             (document["town"] as UUID?),
                             (document["miningSkillExp"] as Double?) ?: 0.0,
-                            (document["miningSkillLevel"] as Int?) ?: 1
+                            (document["miningSkillLevel"] as Int?) ?: 1,
+                            (document["farmingSkillExp"] as Double?) ?: 0.0,
+                            (document["farmingSkillLevel"] as Int?) ?: 1,
+                            (document["combatSkillExp"] as Double?) ?: 0.0,
+                            (document["combatSkillLevel"] as Int?) ?: 1,
+                            (document["fishingSkillExp"] as Double?) ?: 0.0,
+                            (document["fishingSkillLevel"] as Int?) ?: 1,
+                            (document["loggingSkillExp"] as Double?) ?: 0.0,
+                            (document["loggingSkillLevel"] as Int?) ?: 1
                         )
                     } else {
                         p = Profile(

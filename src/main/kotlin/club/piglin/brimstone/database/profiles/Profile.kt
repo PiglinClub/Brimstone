@@ -40,6 +40,10 @@ class Profile(
     var farmingSkillLevel: Int = 1,
     var combatSkillExp: Double = 0.0,
     var combatSkillLevel: Int = 1,
+    var fishingSkillExp: Double = 0.0,
+    var fishingSkillLevel: Int = 1,
+    var loggingSkillExp: Double = 0.0,
+    var loggingSkillLevel: Int = 1
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
