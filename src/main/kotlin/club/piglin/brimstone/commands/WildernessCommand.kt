@@ -44,9 +44,9 @@ class WildernessTask(val player: Player) : BukkitRunnable(), Listener {
             while (finalLocation == null) {
                 val location = Location(
                     player.world,
-                    Random.nextDouble(player.location.x - 1000, player.location.x + 1000),
+                    Random.nextDouble(player.location.x - 5000, player.location.x + 5000),
                     256.0,
-                    Random.nextDouble(player.location.z - 1000, player.location.z + 1000)
+                    Random.nextDouble(player.location.z - 5000, player.location.z + 5000)
                 )
                 if (world.getHighestBlockAt(location).type != Material.CACTUS &&
                     world.getHighestBlockAt(location).type != Material.LAVA &&
