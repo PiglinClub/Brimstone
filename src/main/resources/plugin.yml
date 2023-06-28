@@ -23,3 +23,5 @@ commands:
     aliases:
       - wild
       - wi
+      - rtp
+      - randomtp
