@@ -43,12 +43,32 @@ class SkillListener : Listener {
                     Material.PUMPKIN -> {
                         exp = 7.5
                     }
+                    Material.BAMBOO -> {
+                        exp = 0.2
+                    }
+                    Material.SUGAR_CANE -> {
+                        exp = 0.45
+                    }
+                    Material.PITCHER_CROP -> {
+                        exp = 5.5
+                    }
+                    Material.PITCHER_PLANT -> {
+                        exp = 5.5
+                    }
+                    Material.TORCHFLOWER_CROP -> {
+                        exp = 5.5
+                    }
+                    Material.TORCHFLOWER -> {
+                        exp = 5.5
+                    }
+
                     else -> {}
                 }
             }
             Brimstone.instance.profileHandler.getProfile(e.player.uniqueId)!!.addSkillExp(Skill.FARMING, exp)
         }
     }
+
 
     @EventHandler
     fun onOreMine(e: BlockBreakEvent) {
