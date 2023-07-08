@@ -89,6 +89,14 @@ class ProfileHandler {
                 .append("fishingSkillLevel", profile.fishingSkillLevel)
                 .append("loggingSkillExp", profile.loggingSkillExp)
                 .append("loggingSkillLevel", profile.loggingSkillLevel)
+                .append("spelunker", profile.spelunker)
+                .append("jackhammering", profile.jackhammering)
+                .append("harvesting", profile.harvesting)
+                .append("slaughtering", profile.slaughtering)
+                .append("venomous", profile.venomous)
+                .append("scavenging", profile.scavenging)
+                .append("sweep", profile.sweep)
+                .append("angler", profile.angler)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
         Brimstone.log.info("[Profiles] ${profile.name}'s profile was just saved.")
@@ -134,8 +142,17 @@ class ProfileHandler {
                             (document["fishingSkillExp"] as Double?) ?: 0.0,
                             (document["fishingSkillLevel"] as Int?) ?: 1,
                             (document["loggingSkillExp"] as Double?) ?: 0.0,
-                            (document["loggingSkillLevel"] as Int?) ?: 1
-                        )
+                            (document["loggingSkillLevel"] as Int?) ?: 1,
+                            (document["spelunker"] as Double?) ?: 0.0,
+                            (document["jackhammering"] as Double?) ?: 0.0,
+                            (document["harvesting"] as Double?) ?: 0.0,
+                            (document["slaughtering"] as Double?) ?: 0.0,
+                            (document["venomous"] as Double?) ?: 0.0,
+                            (document["scavenging"] as Double?) ?: 0.0,
+                            (document["sweep"] as Double?) ?: 0.0,
+                            (document["angler"] as Double?) ?: 0.0,
+
+                            )
                     } else {
                         p = Profile(
                             uniqueId
