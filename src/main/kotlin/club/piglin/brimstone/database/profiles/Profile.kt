@@ -96,13 +96,14 @@ class Profile(
             if (farmingSkillExp >= levelUpExp) {
                 farmingSkillExp -= levelUpExp
                 farmingSkillLevel += 1
+                harvesting += 1
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                     Chat.sendComponent(player, "<gold><bold>\uD83C\uDF3A FARMING LEVEL UP! \uD83C\uDF3A</bold></gold>")
                     Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${farmingSkillLevel - 1} → ${farmingSkillLevel}</aqua><gray>)</gray>")
-                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2 <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from farming.'>Harvest</hover></green>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2 <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from farming.'>Harvesting</hover></green>")
                 }
             }
         }
@@ -119,6 +120,8 @@ class Profile(
             if (combatSkillExp >= levelUpExp) {
                 combatSkillExp -= levelUpExp
                 combatSkillLevel += 1
+                venomous += 1.5
+                slaughtering += 2
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
@@ -127,6 +130,32 @@ class Profile(
                     Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${combatSkillLevel - 1} → ${combatSkillLevel}</aqua><gray>)</gray>")
                     Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2% <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from slaughtering.'>Slaughtering</hover></green>")
                     Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+1.5 <hover:show_text:'<reset>Gain more venom time when hitting mobs.'>Venom Power</hover></green>")
+                }
+            }
+        }
+        if (skill == Skill.LOGGING) {
+            val levelUpExp = floor(250 * (3.5).pow(loggingSkillLevel - 1))
+            loggingSkillExp += amount
+            if (amount > 0.0) {
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    val percentage = floor((loggingSkillExp / levelUpExp) * 100.0) / 100.0
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83E\uDE93 Logging $loggingSkillLevel (${percentage * 100}%)</aqua>"))
+                }
+            }
+            if (loggingSkillExp >= levelUpExp) {
+                loggingSkillExp -= levelUpExp
+                loggingSkillLevel += 1
+                sweep += 1
+                scavenging += 2
+                addExp(Random.nextDouble(10.0, 50.0))
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                    Chat.sendComponent(player, "<gold><bold>\uD83E\uDE93 LOGGING LEVEL UP! \uD83E\uDE93</bold></gold>")
+                    Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${loggingSkillLevel - 1} → ${loggingSkillLevel}</aqua><gray>)</gray>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2% <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from logging.'>Scavenging</hover></green>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+1 <hover:show_text:'<reset>Allows you to have a chance to mine multiple trees at once.'>Sweep</hover></green>")
                 }
             }
         }

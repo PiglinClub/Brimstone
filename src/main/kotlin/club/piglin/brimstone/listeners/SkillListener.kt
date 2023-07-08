@@ -13,6 +13,31 @@ import org.bukkit.event.entity.EntityDeathEvent
 
 class SkillListener : Listener {
     @EventHandler
+    fun onLogMine(e: BlockBreakEvent) {
+        if (!e.isCancelled) {
+            var exp = 0.0
+            when (e.block.type) {
+                Material.OAK_LOG, Material.OAK_WOOD,
+                Material.SPRUCE_LOG, Material.SPRUCE_WOOD,
+                Material.BIRCH_LOG, Material.BIRCH_WOOD,
+                Material.JUNGLE_LOG, Material.JUNGLE_WOOD,
+                Material.ACACIA_LOG, Material.ACACIA_WOOD,
+                Material.DARK_OAK_LOG, Material.DARK_OAK_WOOD,
+                Material.CHERRY_LOG, Material.CHERRY_WOOD,
+                Material.MANGROVE_LOG, Material.MANGROVE_WOOD -> {
+                    exp = 10.0
+                }
+                Material.CRIMSON_STEM, Material.CRIMSON_HYPHAE,
+                Material.WARPED_STEM, Material.WARPED_HYPHAE -> {
+                    exp = 20.0
+                }
+                else -> {}
+            }
+            Brimstone.instance.profileHandler.getProfile(e.player.uniqueId)!!.addSkillExp(Skill.LOGGING, exp)
+        }
+    }
+
+    @EventHandler
     fun onMobDeath(e: EntityDeathEvent) {
         if (!e.isCancelled) {
             if (e.entity.killer != null && e.entity.killer is Player) {
