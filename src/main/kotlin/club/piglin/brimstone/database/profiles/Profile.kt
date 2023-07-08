@@ -3,7 +3,6 @@ package club.piglin.brimstone.database.profiles
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Sound
@@ -43,7 +42,14 @@ class Profile(
     var fishingSkillExp: Double = 0.0,
     var fishingSkillLevel: Int = 1,
     var loggingSkillExp: Double = 0.0,
-    var loggingSkillLevel: Int = 1
+    var loggingSkillLevel: Int = 1,
+    var spelunker: Double = 0.0,
+    var jackhammering: Double = 0.0,
+    var harvesting: Double = 0.0,
+    var slaughtering: Double = 0.0,
+    var scavenging: Double = 0.0,
+    var sweep: Double = 0.0,
+    var angler: Double = 0.0
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
@@ -57,23 +63,26 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     val percentage = floor((miningSkillExp / levelUpExp) * 100.0) / 100.0
-                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>⛏ Mining $miningSkillLevel (${percentage * 100}%)</aqua>"))
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>⛏ Mining $miningSkillLevel (${floor(percentage * 100)}%)</aqua>"))
                 }
             }
             if (miningSkillExp >= levelUpExp) {
                 miningSkillExp -= levelUpExp
                 miningSkillLevel += 1
+                jackhammering += 0.5
+                spelunker += 2
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-                    player.showTitle(Title.title(
-                        MiniMessage.miniMessage().deserialize("<gold><bold>⛏ MINING LEVEL UP! ⛏<bold/></gold>"),
-                        MiniMessage.miniMessage().deserialize("<reset>Level <aqua>${miningSkillLevel - 1} → ${miningSkillLevel}</aqua>")
-                    ))
+                    Chat.sendComponent(player, "<gold><bold>⛏ MINING LEVEL UP! ⛏</bold></gold>")
+                    Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${miningSkillLevel - 1} → ${miningSkillLevel}</aqua><gray>)</gray>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+0.5% <hover:show_text:'<reset>Allows you to get have a chance to mine a vein.'>Jackhammer</hover></green>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2 <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from ores.'>Spelunker</hover></green>")
                 }
             }
-        } else if (skill == Skill.FARMING) {
+        }
+        if (skill == Skill.FARMING) {
             val levelUpExp = floor(250 * (3.5).pow(farmingSkillLevel - 1))
             farmingSkillExp += amount
             if (amount > 0.0) {
@@ -90,10 +99,9 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-                    player.showTitle(Title.title(
-                        MiniMessage.miniMessage().deserialize("<gold><bold>\uD83C\uDF3A FARMING LEVEL UP! \uD83C\uDF3A<bold/></gold>"),
-                        MiniMessage.miniMessage().deserialize("<reset>Level <aqua>${farmingSkillLevel - 1} → ${farmingSkillLevel}</aqua>")
-                    ))
+                    Chat.sendComponent(player, "<gold><bold>\uD83C\uDF3A FARMING LEVEL UP! \uD83C\uDF3A</bold></gold>")
+                    Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${farmingSkillLevel - 1} → ${farmingSkillLevel}</aqua><gray>)</gray>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2 <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from farming.'>Harvest</hover></green>")
                 }
             }
         }
