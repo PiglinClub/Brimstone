@@ -4,6 +4,7 @@ import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.database.profiles.Skill
 import org.bukkit.Material
 import org.bukkit.block.data.Ageable
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,8 +14,66 @@ import org.bukkit.event.entity.EntityDeathEvent
 class SkillListener : Listener {
     @EventHandler
     fun onMobDeath(e: EntityDeathEvent) {
-        if (e.entity.killer is Player) {
-
+        if (!e.isCancelled) {
+            if (e.entity.killer != null && e.entity.killer is Player) {
+                var exp = 0.0
+                when (e.entityType) {
+                    EntityType.ENDER_DRAGON -> {
+                        exp = 1500.0
+                    }
+                    EntityType.WITHER -> {
+                        exp = 2500.0
+                    }
+                    EntityType.BLAZE -> {
+                        exp = 100.0
+                    }
+                    EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER -> {
+                        exp = 25.0
+                    }
+                    EntityType.ELDER_GUARDIAN -> {
+                        exp = 500.0
+                    }
+                    EntityType.ENDERMITE, EntityType.SILVERFISH -> {
+                        exp = 15.0
+                    }
+                    EntityType.GUARDIAN -> {
+                        exp = 75.0
+                    }
+                    EntityType.WARDEN -> {
+                        exp = 5000.0
+                    }
+                    EntityType.HOGLIN, EntityType.ZOGLIN -> {
+                        exp = 55.0
+                    }
+                    EntityType.RAVAGER -> {
+                        exp = 125.0
+                    }
+                    EntityType.WITHER_SKELETON -> {
+                        exp = 65.0
+                    }
+                    EntityType.PILLAGER, EntityType.WITCH, EntityType.VINDICATOR, EntityType.EVOKER -> {
+                        exp = 85.0
+                    }
+                    EntityType.SHULKER -> {
+                        exp = 60.0
+                    }
+                    EntityType.PHANTOM, EntityType.GHAST -> {
+                        exp = 50.5
+                    }
+                    EntityType.SKELETON, EntityType.STRAY -> {
+                        exp = 35.0
+                    }
+                    EntityType.CREEPER -> {
+                        exp = 30.0
+                    }
+                    EntityType.MAGMA_CUBE, EntityType.SLIME -> {
+                        exp = 100.0
+                        // I really respect anyone that tries to grind magma cubes, they are the absolute bane of my existence.
+                    }
+                    else -> {}
+                }
+                Brimstone.instance.profileHandler.getProfile(e.entity.killer!!.uniqueId)!!.addSkillExp(Skill.COMBAT, exp)
+            }
         }
     }
 
@@ -104,6 +163,9 @@ class SkillListener : Listener {
                 }
                 Material.STONE, Material.ANDESITE, Material.GRANITE, Material.DIORITE, Material.DEEPSLATE -> {
                     exp = 1.5
+                }
+                Material.NETHERRACK -> {
+                    exp = 0.5
                 }
                 else -> {}
             }

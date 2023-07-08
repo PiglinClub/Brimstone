@@ -47,6 +47,7 @@ class Profile(
     var jackhammering: Double = 0.0,
     var harvesting: Double = 0.0,
     var slaughtering: Double = 0.0,
+    var venomous: Double = 0.0,
     var scavenging: Double = 0.0,
     var sweep: Double = 0.0,
     var angler: Double = 0.0
@@ -102,6 +103,30 @@ class Profile(
                     Chat.sendComponent(player, "<gold><bold>\uD83C\uDF3A FARMING LEVEL UP! \uD83C\uDF3A</bold></gold>")
                     Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${farmingSkillLevel - 1} → ${farmingSkillLevel}</aqua><gray>)</gray>")
                     Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2 <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from farming.'>Harvest</hover></green>")
+                }
+            }
+        }
+        if (skill == Skill.COMBAT) {
+            val levelUpExp = floor(250 * (3.5).pow(combatSkillLevel - 1))
+            combatSkillExp += amount
+            if (amount > 0.0) {
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    val percentage = floor((combatSkillExp / levelUpExp) * 100.0) / 100.0
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83D\uDDE1 Combat $combatSkillLevel (${percentage * 100}%)</aqua>"))
+                }
+            }
+            if (combatSkillExp >= levelUpExp) {
+                combatSkillExp -= levelUpExp
+                combatSkillLevel += 1
+                addExp(Random.nextDouble(10.0, 50.0))
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                    Chat.sendComponent(player, "<gold><bold>\uD83D\uDDE1 COMBAT LEVEL UP! \uD83D\uDDE1</bold></gold>")
+                    Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${combatSkillLevel - 1} → ${combatSkillLevel}</aqua><gray>)</gray>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2% <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from slaughtering.'>Slaughtering</hover></green>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+1.5 <hover:show_text:'<reset>Gain more venom time when hitting mobs.'>Venom Power</hover></green>")
                 }
             }
         }
