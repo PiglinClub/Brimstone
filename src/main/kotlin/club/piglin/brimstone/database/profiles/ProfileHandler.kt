@@ -91,6 +91,7 @@ class ProfileHandler {
                 .append("loggingSkillLevel", profile.loggingSkillLevel)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
+        Brimstone.log.info("[Profiles] ${profile.name}'s profile was just saved.")
     }
 
     fun getProfile(uniqueId: UUID): Profile? {
@@ -141,6 +142,7 @@ class ProfileHandler {
                         )
                     }
                     updateCache(p)
+                    Brimstone.log.info("[Profiles] ${p.name}'s profile was just loaded.")
                     return@supply p
                 }
             } catch (e: MongoException) {

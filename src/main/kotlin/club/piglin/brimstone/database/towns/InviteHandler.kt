@@ -27,10 +27,12 @@ class InviteTask(
         if (status == InviteStatus.ACCEPTED || status == InviteStatus.DENIED) {
             InviteHandler.removeInvite(this)
             cancel()
+            Brimstone.log.info("[Invites] Invite removed because accepted/denied for ${invitee.name} to ${from.name} (${from.uniqueId}).")
         }
         if (timer == 0) {
             InviteHandler.removeInvite(this)
             cancel()
+            Brimstone.log.info("[Invites] Invite timed out for ${invitee.name} to ${from.name} (${from.uniqueId}).")
         }
     }
 

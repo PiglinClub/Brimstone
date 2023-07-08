@@ -76,6 +76,9 @@ class Brimstone : ExtendedJavaPlugin() {
     }
 
     override fun disable() {
+        for (player in Bukkit.getOnlinePlayers()) {
+            Brimstone.instance.profileHandler.saveProfile(Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!)
+        }
         log.info("The plugin has successfully unloaded.")
     }
 }
