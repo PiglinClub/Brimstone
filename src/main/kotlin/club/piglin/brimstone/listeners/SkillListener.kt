@@ -73,7 +73,7 @@ class SkillListener : Listener {
                     EntityType.RAVAGER -> {
                         exp = 125.0
                     }
-                    EntityType.WITHER_SKELETON -> {
+                    EntityType.WITHER_SKELETON, EntityType.ENDERMAN -> {
                         exp = 65.0
                     }
                     EntityType.PILLAGER, EntityType.WITCH, EntityType.VINDICATOR, EntityType.EVOKER -> {
