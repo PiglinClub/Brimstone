@@ -67,7 +67,6 @@ class Profile(
             if (miningSkillExp >= levelUpExp) {
                 miningSkillExp -= levelUpExp
                 miningSkillLevel += 1
-                jackhammering += 0.5
                 spelunker += 2
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -75,7 +74,6 @@ class Profile(
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                     Chat.sendComponent(player, "<gold><bold>⛏ MINING LEVEL UP! ⛏</bold></gold>")
                     Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${miningSkillLevel - 1} → ${miningSkillLevel}</aqua><gray>)</gray>")
-                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+0.5% <hover:show_text:'<reset>Allows you to get have a chance to mine a vein.'>Jackhammer</hover></green>")
                     Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2 <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from ores.'>Spelunker</hover></green>")
                 }
             }
@@ -93,7 +91,7 @@ class Profile(
             if (farmingSkillExp >= levelUpExp) {
                 farmingSkillExp -= levelUpExp
                 farmingSkillLevel += 1
-                harvesting += 1
+                harvesting += 2
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
@@ -117,7 +115,6 @@ class Profile(
             if (combatSkillExp >= levelUpExp) {
                 combatSkillExp -= levelUpExp
                 combatSkillLevel += 1
-                venomous += 1.5
                 slaughtering += 2
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -126,7 +123,6 @@ class Profile(
                     Chat.sendComponent(player, "<gold><bold>\uD83D\uDDE1 COMBAT LEVEL UP! \uD83D\uDDE1</bold></gold>")
                     Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${combatSkillLevel - 1} → ${combatSkillLevel}</aqua><gray>)</gray>")
                     Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2% <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from slaughtering.'>Slaughtering</hover></green>")
-                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+1.5 <hover:show_text:'<reset>Gain more venom time when hitting mobs.'>Venom Power</hover></green>")
                 }
             }
         }
@@ -143,7 +139,6 @@ class Profile(
             if (loggingSkillExp >= levelUpExp) {
                 loggingSkillExp -= levelUpExp
                 loggingSkillLevel += 1
-                sweep += 1
                 scavenging += 2
                 addExp(Random.nextDouble(10.0, 50.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -152,10 +147,35 @@ class Profile(
                     Chat.sendComponent(player, "<gold><bold>\uD83E\uDE93 LOGGING LEVEL UP! \uD83E\uDE93</bold></gold>")
                     Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${loggingSkillLevel - 1} → ${loggingSkillLevel}</aqua><gray>)</gray>")
                     Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2% <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from logging.'>Scavenging</hover></green>")
-                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+1 <hover:show_text:'<reset>Allows you to have a chance to mine multiple trees at once.'>Sweep</hover></green>")
                 }
             }
         }
+        if (skill == Skill.FISHING) {
+            val levelUpExp = floor(250 * (3.5).pow(fishingSkillLevel - 1))
+            fishingSkillExp += amount
+            if (amount > 0.0) {
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    val percentage = floor((fishingSkillExp / levelUpExp) * 100.0) / 100.0
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83C\uDFA3 Fishing $fishingSkillLevel (${percentage * 100}%)</aqua>"))
+                }
+            }
+            if (fishingSkillExp >= levelUpExp) {
+                fishingSkillExp -= levelUpExp
+                fishingSkillLevel += 1
+                angler += 2
+                addExp(Random.nextDouble(10.0, 50.0))
+                if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
+                    val player = Bukkit.getOfflinePlayer(uniqueId) as Player
+                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                    Chat.sendComponent(player, "<gold><bold>\uD83C\uDFA3 FISHING LEVEL UP! \uD83C\uDFA3</bold></gold>")
+                    Chat.sendComponent(player, "<gray>(Level</gray> <aqua>${fishingSkillLevel - 1} → ${fishingSkillLevel}</aqua><gray>)</gray>")
+                    Chat.sendComponent(player, " <dark_gray>■</dark_gray> <green>+2% <hover:show_text:'<reset>Allows you to get have a chance to gain more drops from fishing.'>Angler</hover></green>")
+                }
+            }
+        }
+        Brimstone.log.info("[Profiles] Added $amount XP to ${skill.toString().uppercase()} for $uniqueId")
+        Brimstone.instance.profileHandler.saveProfile(this)
     }
 
     fun addExp(amount: Double) {
