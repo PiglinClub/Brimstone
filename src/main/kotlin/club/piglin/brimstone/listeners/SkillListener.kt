@@ -3,6 +3,7 @@ package club.piglin.brimstone.listeners
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.database.profiles.Skill
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.block.data.Ageable
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.player.PlayerFishEvent
 
 class SkillListener : Listener {
     @EventHandler
@@ -34,6 +36,16 @@ class SkillListener : Listener {
                 else -> {}
             }
             Brimstone.instance.profileHandler.getProfile(e.player.uniqueId)!!.addSkillExp(Skill.LOGGING, exp)
+        }
+    }
+
+    @EventHandler
+    fun onPlayerFish(e: PlayerFishEvent) {
+        if (e.state == PlayerFishEvent.State.CAUGHT_FISH) {
+            Brimstone.instance.profileHandler.getProfile(e.player.uniqueId)!!.addSkillExp(Skill.FISHING, 500.0)
+        }
+        if (e.state == PlayerFishEvent.State.BITE) {
+            e.player.playSound(e.player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
         }
     }
 
