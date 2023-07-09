@@ -44,12 +44,9 @@ class Profile(
     var loggingSkillExp: Double = 0.0,
     var loggingSkillLevel: Int = 1,
     var spelunker: Double = 0.0,
-    var jackhammering: Double = 0.0,
     var harvesting: Double = 0.0,
     var slaughtering: Double = 0.0,
-    var venomous: Double = 0.0,
     var scavenging: Double = 0.0,
-    var sweep: Double = 0.0,
     var angler: Double = 0.0
 ) {
     fun getUniqueId(): UUID {
