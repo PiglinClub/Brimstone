@@ -53,6 +53,7 @@ class Brimstone : ExtendedJavaPlugin() {
         this.getCommand("claim")!!.setExecutor(ClaimCommand())
         this.getCommand("towny")!!.setExecutor(TownyCommand())
         this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
+        this.getCommand("skills")!!.setExecutor(SkillsCommand())
 
 
         log.info("The plugin has successfully loaded.")

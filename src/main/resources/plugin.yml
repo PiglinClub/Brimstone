@@ -25,3 +25,8 @@ commands:
       - wi
       - rtp
       - randomtp
+  skills:
+    description: View a menu for your skills.
+    aliases:
+      - ski
+      - skill
