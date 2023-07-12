@@ -1,4 +1,4 @@
-package club.piglin.brimstone.scoreboard
+package club.piglin.brimstone.features
 
 import club.piglin.brimstone.Brimstone
 import fr.mrmicky.fastboard.FastBoard

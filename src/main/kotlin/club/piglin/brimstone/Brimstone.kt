@@ -4,9 +4,9 @@ import club.piglin.brimstone.commands.*
 import club.piglin.brimstone.database.profiles.ProfileHandler
 import club.piglin.brimstone.database.towns.ClaimHandler
 import club.piglin.brimstone.database.towns.TownHandler
+import club.piglin.brimstone.features.Scoreboard
 import club.piglin.brimstone.listeners.ClaimListener
 import club.piglin.brimstone.listeners.SkillListener
-import club.piglin.brimstone.scoreboard.Scoreboard
 import club.piglin.brimstone.utils.Settings
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
@@ -54,6 +54,7 @@ class Brimstone : ExtendedJavaPlugin() {
         this.getCommand("towny")!!.setExecutor(TownyCommand())
         this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
+        this.getCommand("shop")!!.setExecutor(ShopCommand())
 
 
         log.info("The plugin has successfully loaded.")

@@ -30,3 +30,9 @@ commands:
     aliases:
       - ski
       - skill
+  shop:
+    description: Access a shop to buy/sell blocks/items.
+    aliases:
+      - buy
+      - sell
+      - s
