@@ -1,6 +1,7 @@
 package club.piglin.brimstone.menus.buttons
 
 import club.piglin.brimstone.menus.Button
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -32,7 +33,7 @@ class BooleanButton @ConstructorProperties(value = ["confirm", "callback"]) cons
         return if (confirm) "\u00a7aConfirm" else "\u00a7cCancel"
     }
 
-    override fun getDescription(player: Player?): List<String> {
+    override fun getDescription(player: Player?): List<Component> {
         return ArrayList()
     }
 

@@ -3,6 +3,9 @@ package club.piglin.brimstone.commands.menus
 import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.menus.Button
 import club.piglin.brimstone.menus.Menu
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -16,220 +19,220 @@ class SkillsGUI : Menu() {
         val profile = Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!
         buttons[2] = object : Button() {
             override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}${ChatColor.BOLD}Combat ${profile.combatSkillLevel}"
+                return "${ChatColor.AQUA}<bold>Combat ${profile.combatSkillLevel}"
             }
 
             override fun getMaterial(var1: Player?): Material {
                 return Material.IRON_SWORD
             }
 
-            override fun getDescription(var1: Player?): List<String> {
+            override fun getDescription(var1: Player?): List<Component> {
                 val levelUpExp = floor(250 * (3.5).pow(profile.combatSkillLevel - 1))
                 val percentage = round(((profile.combatSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}██████████"
+                    "<aqua><bold>██████████"
                 } else if (percentage >= 90) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■"
+                    "<aqua><bold>■■■■■■■■■<white><bold>■"
                 } else if (percentage >= 80) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■"
+                    "<aqua><bold>■■■■■■■■<white><bold>■■"
                 } else if (percentage >= 70) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■"
+                    "<aqua><bold>■■■■■■■<white><bold>■■■"
                 } else if (percentage >= 60) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■"
+                    "<aqua><bold>■■■■■■<white><bold>■■■■"
                 } else if (percentage >= 50) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■"
+                    "<aqua><bold>■■■■■<white><bold>■■■■■"
                 } else if (percentage >= 40) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■"
+                    "<aqua><bold>■■■■<white><bold>■■■■■■"
                 } else if (percentage >= 30) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■"
+                    "<aqua><bold>■■■<white><bold>■■■■■■■"
                 } else if (percentage >= 20) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■"
+                    "<aqua><bold>■■<white><bold>■■■■■■■■"
                 } else if (percentage >= 10) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■■"
+                    "<aqua><bold>■<white><bold>■■■■■■■■■"
                 } else {
-                    "${ChatColor.AQUA}${ChatColor.WHITE}■■■■■■■■■■"
+                    "<aqua><white>■■■■■■■■■■"
                 }
                 return listOf(
-                    "${ChatColor.WHITE}Progress toward ${ChatColor.AQUA}Lvl ${profile.combatSkillLevel + 1}",
-                    "$progressBar",
-                    " ",
-                    "${ChatColor.DARK_GRAY}\uD83D\uDDE1 \uD83D\uDDE1 \uD83D\uDDE1 \uD83D\uDDE1 \uD83D\uDDE1"
+                    MiniMessage.miniMessage().deserialize("<white>Progress toward <aqua>Lvl ${profile.combatSkillLevel + 1}").decoration(TextDecoration.ITALIC, false),
+                        MiniMessage.miniMessage().deserialize("$progressBar").decoration(TextDecoration.ITALIC, false),
+                            MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                                MiniMessage.miniMessage().deserialize("<dark_gray>\uD83D\uDDE1 \uD83D\uDDE1 \uD83D\uDDE1 \uD83D\uDDE1 \uD83D\uDDE1").decoration(TextDecoration.ITALIC, false)
                 )
             }
         }
 
         buttons[3] = object : Button() {
             override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}${ChatColor.BOLD}Mining ${profile.miningSkillLevel}"
+                return "${ChatColor.AQUA}<bold>Mining ${profile.miningSkillLevel}"
             }
 
             override fun getMaterial(var1: Player?): Material {
                 return Material.IRON_PICKAXE
             }
 
-            override fun getDescription(var1: Player?): List<String> {
+            override fun getDescription(var1: Player?): List<Component> {
                 val levelUpExp = floor(250 * (3.5).pow(profile.miningSkillLevel - 1))
                 val percentage = round(((profile.miningSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}██████████"
+                    "<aqua><bold>██████████"
                 } else if (percentage >= 90) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■"
+                    "<aqua><bold>■■■■■■■■■<white><bold>■"
                 } else if (percentage >= 80) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■"
+                    "<aqua><bold>■■■■■■■■<white><bold>■■"
                 } else if (percentage >= 70) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■"
+                    "<aqua><bold>■■■■■■■<white><bold>■■■"
                 } else if (percentage >= 60) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■"
+                    "<aqua><bold>■■■■■■<white><bold>■■■■"
                 } else if (percentage >= 50) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■"
+                    "<aqua><bold>■■■■■<white><bold>■■■■■"
                 } else if (percentage >= 40) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■"
+                    "<aqua><bold>■■■■<white><bold>■■■■■■"
                 } else if (percentage >= 30) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■"
+                    "<aqua><bold>■■■<white><bold>■■■■■■■"
                 } else if (percentage >= 20) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■"
+                    "<aqua><bold>■■<white><bold>■■■■■■■■"
                 } else if (percentage >= 10) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■■"
+                    "<aqua><bold>■<white><bold>■■■■■■■■■"
                 } else {
-                    "${ChatColor.AQUA}${ChatColor.WHITE}■■■■■■■■■■"
+                    "<aqua><white>■■■■■■■■■■"
                 }
                 return listOf(
-                    "${ChatColor.WHITE}Progress toward ${ChatColor.AQUA}Lvl ${profile.miningSkillLevel + 1}",
-                    "$progressBar",
-                    " ",
-                    "${ChatColor.DARK_GRAY}⛏ ⛏ ⛏ ⛏ ⛏"
+                    MiniMessage.miniMessage().deserialize("<white>Progress toward <aqua>Lvl ${profile.miningSkillLevel + 1}").decoration(TextDecoration.ITALIC, false),
+                        MiniMessage.miniMessage().deserialize("$progressBar").decoration(TextDecoration.ITALIC, false),
+                            MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                                MiniMessage.miniMessage().deserialize("<dark_gray>⛏ ⛏ ⛏ ⛏ ⛏").decoration(TextDecoration.ITALIC, false)
                 )
             }
         }
 
         buttons[4] = object : Button() {
             override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}${ChatColor.BOLD}Farming ${profile.farmingSkillLevel}"
+                return "${ChatColor.AQUA}<bold>Farming ${profile.farmingSkillLevel}"
             }
 
             override fun getMaterial(var1: Player?): Material {
                 return Material.IRON_HOE
             }
 
-            override fun getDescription(var1: Player?): List<String> {
+            override fun getDescription(var1: Player?): List<Component> {
                 val levelUpExp = floor(250 * (3.5).pow(profile.farmingSkillLevel - 1))
                 val percentage = round(((profile.farmingSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}██████████"
+                    "<aqua><bold>██████████"
                 } else if (percentage >= 90) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■"
+                    "<aqua><bold>■■■■■■■■■<white><bold>■"
                 } else if (percentage >= 80) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■"
+                    "<aqua><bold>■■■■■■■■<white><bold>■■"
                 } else if (percentage >= 70) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■"
+                    "<aqua><bold>■■■■■■■<white><bold>■■■"
                 } else if (percentage >= 60) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■"
+                    "<aqua><bold>■■■■■■<white><bold>■■■■"
                 } else if (percentage >= 50) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■"
+                    "<aqua><bold>■■■■■<white><bold>■■■■■"
                 } else if (percentage >= 40) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■"
+                    "<aqua><bold>■■■■<white><bold>■■■■■■"
                 } else if (percentage >= 30) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■"
+                    "<aqua><bold>■■■<white><bold>■■■■■■■"
                 } else if (percentage >= 20) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■"
+                    "<aqua><bold>■■<white><bold>■■■■■■■■"
                 } else if (percentage >= 10) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■■"
+                    "<aqua><bold>■<white><bold>■■■■■■■■■"
                 } else {
-                    "${ChatColor.AQUA}${ChatColor.WHITE}■■■■■■■■■■"
+                    "<aqua><white>■■■■■■■■■■"
                 }
                 return listOf(
-                    "${ChatColor.WHITE}Progress toward ${ChatColor.AQUA}Lvl ${profile.farmingSkillLevel + 1}",
-                    "$progressBar",
-                    " ",
-                    "${ChatColor.DARK_GRAY}\uD83C\uDF3A \uD83C\uDF3A \uD83C\uDF3A \uD83C\uDF3A \uD83C\uDF3A"
+                    MiniMessage.miniMessage().deserialize("<white>Progress toward <aqua>Lvl ${profile.farmingSkillLevel + 1}").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize("$progressBar").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize("<dark_gray>\uD83C\uDF3A \uD83C\uDF3A \uD83C\uDF3A \uD83C\uDF3A \uD83C\uDF3A").decoration(TextDecoration.ITALIC, false)
                 )
             }
         }
 
         buttons[5] = object : Button() {
             override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}${ChatColor.BOLD}Fishing ${profile.fishingSkillLevel}"
+                return "${ChatColor.AQUA}<bold>Fishing ${profile.fishingSkillLevel}"
             }
 
             override fun getMaterial(var1: Player?): Material {
                 return Material.FISHING_ROD
             }
 
-            override fun getDescription(var1: Player?): List<String> {
+            override fun getDescription(var1: Player?): List<Component> {
                 val levelUpExp = floor(250 * (3.5).pow(profile.fishingSkillLevel - 1))
                 val percentage = round(((profile.fishingSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}██████████"
+                    "<aqua><bold>██████████"
                 } else if (percentage >= 90) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■"
+                    "<aqua><bold>■■■■■■■■■<white><bold>■"
                 } else if (percentage >= 80) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■"
+                    "<aqua><bold>■■■■■■■■<white><bold>■■"
                 } else if (percentage >= 70) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■"
+                    "<aqua><bold>■■■■■■■<white><bold>■■■"
                 } else if (percentage >= 60) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■"
+                    "<aqua><bold>■■■■■■<white><bold>■■■■"
                 } else if (percentage >= 50) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■"
+                    "<aqua><bold>■■■■■<white><bold>■■■■■"
                 } else if (percentage >= 40) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■"
+                    "<aqua><bold>■■■■<white><bold>■■■■■■"
                 } else if (percentage >= 30) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■"
+                    "<aqua><bold>■■■<white><bold>■■■■■■■"
                 } else if (percentage >= 20) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■"
+                    "<aqua><bold>■■<white><bold>■■■■■■■■"
                 } else if (percentage >= 10) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■■"
+                    "<aqua><bold>■<white><bold>■■■■■■■■■"
                 } else {
-                    "${ChatColor.AQUA}${ChatColor.WHITE}■■■■■■■■■■"
+                    "<aqua><white>■■■■■■■■■■"
                 }
                 return listOf(
-                    "${ChatColor.WHITE}Progress toward ${ChatColor.AQUA}Lvl ${profile.fishingSkillLevel + 1}",
-                    "$progressBar",
-                    " ",
-                    "${ChatColor.DARK_GRAY}\uD83C\uDFA3 \uD83C\uDFA3 \uD83C\uDFA3 \uD83C\uDFA3 \uD83C\uDFA3"
+                    MiniMessage.miniMessage().deserialize("<white>Progress toward <aqua>Lvl ${profile.fishingSkillLevel + 1}").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize("$progressBar").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize("<dark_gray>\uD83C\uDFA3 \uD83C\uDFA3 \uD83C\uDFA3 \uD83C\uDFA3 \uD83C\uDFA3").decoration(TextDecoration.ITALIC, false)
                 )
             }
         }
 
         buttons[6] = object : Button() {
             override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}${ChatColor.BOLD}Logging ${profile.loggingSkillLevel}"
+                return "${ChatColor.AQUA}<bold>Logging ${profile.loggingSkillLevel}"
             }
 
             override fun getMaterial(var1: Player?): Material {
                 return Material.IRON_AXE
             }
 
-            override fun getDescription(var1: Player?): List<String> {
+            override fun getDescription(var1: Player?): List<Component> {
                 val levelUpExp = floor(250 * (3.5).pow(profile.loggingSkillLevel - 1))
                 val percentage = round(((profile.loggingSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}██████████"
+                    "<aqua><bold>██████████"
                 } else if (percentage >= 90) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■"
+                    "<aqua><bold>■■■■■■■■■<white><bold>■"
                 } else if (percentage >= 80) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■"
+                    "<aqua><bold>■■■■■■■■<white><bold>■■"
                 } else if (percentage >= 70) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■"
+                    "<aqua><bold>■■■■■■■<white><bold>■■■"
                 } else if (percentage >= 60) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■"
+                    "<aqua><bold>■■■■■■<white><bold>■■■■"
                 } else if (percentage >= 50) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■"
+                    "<aqua><bold>■■■■■<white><bold>■■■■■"
                 } else if (percentage >= 40) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■"
+                    "<aqua><bold>■■■■<white><bold>■■■■■■"
                 } else if (percentage >= 30) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■"
+                    "<aqua><bold>■■■<white><bold>■■■■■■■"
                 } else if (percentage >= 20) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■"
+                    "<aqua><bold>■■<white><bold>■■■■■■■■"
                 } else if (percentage >= 10) {
-                    "${ChatColor.AQUA}${ChatColor.BOLD}■${ChatColor.WHITE}${ChatColor.BOLD}■■■■■■■■■"
+                    "<aqua><bold>■<white><bold>■■■■■■■■■"
                 } else {
-                    "${ChatColor.AQUA}${ChatColor.WHITE}■■■■■■■■■■"
+                    "<aqua><white>■■■■■■■■■■"
                 }
                 return listOf(
-                    "${ChatColor.WHITE}Progress toward ${ChatColor.AQUA}Lvl ${profile.loggingSkillLevel + 1}",
-                    "$progressBar",
-                    " ",
-                    "${ChatColor.DARK_GRAY}\uD83E\uDE93 \uD83E\uDE93 \uD83E\uDE93 \uD83E\uDE93 \uD83E\uDE93"
+                    MiniMessage.miniMessage().deserialize("<white>Progress toward <aqua>Lvl ${profile.loggingSkillLevel + 1}").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize("$progressBar").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                    MiniMessage.miniMessage().deserialize("<dark_gray>\uD83E\uDE93 \uD83E\uDE93 \uD83E\uDE93 \uD83E\uDE93 \uD83E\uDE93").decoration(TextDecoration.ITALIC, false)
                 )
             }
         }

@@ -4,6 +4,8 @@ import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.database.towns.Member
 import club.piglin.brimstone.menus.Button
 import club.piglin.brimstone.menus.pagination.PaginatedMenu
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -38,16 +40,16 @@ class TownyMembersGUI : PaginatedMenu() {
                         meta.displayName(MiniMessage.miniMessage().deserialize("<reset><green>${m.name}"))
                         meta.lore(
                             mutableListOf(
-                                MiniMessage.miniMessage().deserialize("<reset><gray>Joined at: <aqua>${SimpleDateFormat("MM/dd/yyyy 'at' h:mm a").format(Date(it.joinedAt))}"),
-                                MiniMessage.miniMessage().deserialize("<reset><gray>Role: <aqua>${it.role.uppercase()}"),
-                                MiniMessage.miniMessage().deserialize("<reset><gray>Gold deposited: <color:#ffd417>${it.goldDeposited}g")
+                                MiniMessage.miniMessage().deserialize("<reset><gray>Joined at: <aqua>${SimpleDateFormat("MM/dd/yyyy 'at' h:mm a").format(Date(it.joinedAt))}").decoration(TextDecoration.ITALIC, false),
+                                MiniMessage.miniMessage().deserialize("<reset><gray>Role: <aqua>${it.role.uppercase()}").decoration(TextDecoration.ITALIC, false),
+                                MiniMessage.miniMessage().deserialize("<reset><gray>Gold deposited: <color:#ffd417>${it.goldDeposited}g").decoration(TextDecoration.ITALIC, false)
                             )
                         )
                         item.itemMeta = meta
                         return item
                     }
 
-                    override fun getDescription(var1: Player?): List<String>? {
+                    override fun getDescription(var1: Player?): List<Component>? {
                         return null
                     }
 

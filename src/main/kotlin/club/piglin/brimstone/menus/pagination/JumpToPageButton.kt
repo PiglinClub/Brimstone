@@ -1,6 +1,7 @@
 package club.piglin.brimstone.menus.pagination
 
 import club.piglin.brimstone.menus.Button
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -17,7 +18,7 @@ class JumpToPageButton @ConstructorProperties(value = ["page", "menu"]) construc
         return "\u00a7ePage " + page
     }
 
-    override fun getDescription(player: Player?): List<String>? {
+    override fun getDescription(player: Player?): List<Component>? {
         return null
     }
 

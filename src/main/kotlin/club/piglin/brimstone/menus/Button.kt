@@ -2,6 +2,7 @@ package club.piglin.brimstone.menus
 
 import com.google.common.base.Joiner
 import com.google.common.collect.ImmutableList
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -11,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 
 abstract class Button {
     abstract fun getName(var1: Player?): String?
-    abstract fun getDescription(var1: Player?): List<String>?
+    abstract fun getDescription(var1: Player?): List<Component>?
     open fun getMaterial(var1: Player?): Material? {
         return Material.DIRT
     }
@@ -34,12 +35,14 @@ abstract class Button {
     }
 
     open fun getButtonItem(player: Player?): ItemStack {
-        val buttonItem = ItemStack(getMaterial(player)!!, getAmount(player), getDamageValue(player).toShort())
+        val buttonItem = ItemStack(getMaterial(player)!!, getAmount(player))
         val meta = buttonItem.itemMeta
         meta.setDisplayName(getName(player))
         val description = getDescription(player)
         if (description != null) {
-            meta.lore = description
+            meta.lore(
+                description
+            )
         }
         buttonItem.setItemMeta(meta)
         return buttonItem
@@ -72,7 +75,7 @@ abstract class Button {
                     return title
                 }
 
-                override fun getDescription(player: Player?): List<String> {
+                override fun getDescription(player: Player?): List<Component> {
                     return ImmutableList.of()
                 }
 
@@ -99,7 +102,7 @@ abstract class Button {
                     return null
                 }
 
-                override fun getDescription(player: Player?): List<String>? {
+                override fun getDescription(player: Player?): List<Component>? {
                     return null
                 }
 

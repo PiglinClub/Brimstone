@@ -4,6 +4,9 @@ import club.piglin.brimstone.Brimstone
 import club.piglin.brimstone.menus.Button
 import club.piglin.brimstone.menus.Menu
 import club.piglin.brimstone.utils.Chat
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -22,9 +25,9 @@ class LeaveTownyGUI : Menu() {
                 return "${ChatColor.GREEN}Confirm"
             }
 
-            override fun getDescription(var1: Player?): List<String>? {
+            override fun getDescription(var1: Player?): List<Component> {
                 return listOf(
-                    "${ChatColor.GRAY}Confirm leaving your town."
+                    MiniMessage.miniMessage().deserialize("<gray>Confirm leaving your town.</gray>").decoration(TextDecoration.ITALIC, false)
                 )
             }
 
@@ -45,9 +48,9 @@ class LeaveTownyGUI : Menu() {
                 return "${ChatColor.RED}Decline"
             }
 
-            override fun getDescription(var1: Player?): List<String>? {
+            override fun getDescription(var1: Player?): List<Component>? {
                 return listOf(
-                    "${ChatColor.GRAY}Decline leaving your town."
+                    MiniMessage.miniMessage().deserialize("<gray>Decline leaving your town.</gray>").decoration(TextDecoration.ITALIC, false)
                 )
             }
 

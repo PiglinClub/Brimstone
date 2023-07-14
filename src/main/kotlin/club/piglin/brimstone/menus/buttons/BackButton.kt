@@ -2,6 +2,9 @@ package club.piglin.brimstone.menus.buttons
 
 import club.piglin.brimstone.menus.Button
 import club.piglin.brimstone.menus.Menu
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -22,14 +25,14 @@ class BackButton @ConstructorProperties(value = ["back"]) constructor(back: Menu
         return "\u00a7c\u00a7l" + if (back == null) "Close" else "Back"
     }
 
-    override fun getDescription(player: Player?): List<String> {
-        val lines: MutableList<String> = ArrayList()
+    override fun getDescription(player: Player?): List<Component> {
+        val lines: MutableList<Component> = ArrayList()
         if (back != null) {
-            lines.add("\u00a7c" + "Click here to return to")
-            lines.add("\u00a7c" + "the previous menu.")
+            lines.add(MiniMessage.miniMessage().deserialize("Click here to return to").decoration(TextDecoration.ITALIC, false))
+            lines.add(MiniMessage.miniMessage().deserialize("the previous menu.").decoration(TextDecoration.ITALIC, false))
         } else {
-            lines.add("\u00a7c" + "Click here to")
-            lines.add("\u00a7c" + "close this menu.")
+            lines.add(MiniMessage.miniMessage().deserialize("Click here to").decoration(TextDecoration.ITALIC, false))
+            lines.add(MiniMessage.miniMessage().deserialize("close this menu.").decoration(TextDecoration.ITALIC, false))
         }
         return lines
     }

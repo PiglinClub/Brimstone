@@ -1,6 +1,7 @@
 package club.piglin.brimstone.menus.pagination
 
 import club.piglin.brimstone.menus.Button
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -37,7 +38,7 @@ class PageButton @ConstructorProperties(value = ["mod", "menu"]) constructor(
         return if (mod > 0) "\u00a7a\u27f6" else "\u00a7c\u27f5"
     }
 
-    override fun getDescription(player: Player?): List<String> {
+    override fun getDescription(player: Player?): List<Component> {
         return ArrayList()
     }
 
