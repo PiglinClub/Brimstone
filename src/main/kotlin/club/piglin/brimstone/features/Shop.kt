@@ -2,17 +2,17 @@ package club.piglin.brimstone.features
 
 import org.bukkit.Material
 
-enum class ShopCategory {
-    BUILDING_BLOCKS,
-    COLOR_BLOCKS,
-    MINERALS,
-    FOOD,
-    FARMING,
-    MOB_DROPS,
-    WEAPONS_AND_TOOLS,
-    REDSTONE,
-    DECORATION,
-    DYES
+enum class ShopCategory(val material: Material, val displayName: String) {
+    BUILDING_BLOCKS(Material.BRICKS, "Building Blocks"),
+    COLOR_BLOCKS(Material.LIME_WOOL, "Color Blocks"),
+    MINERALS(Material.DIAMOND_ORE, "Minerals"),
+    FOOD(Material.COOKED_BEEF, "Food"),
+    FARMING(Material.WHEAT_SEEDS, "Farming"),
+    MOB_DROPS(Material.ROTTEN_FLESH, "Mob Drops"),
+    WEAPONS_AND_TOOLS(Material.DIAMOND_PICKAXE, "Weapons & Tools"),
+    REDSTONE(Material.REDSTONE, "Redstone"),
+    DECORATION(Material.BLUE_BANNER, "Decoration"),
+    DYES(Material.ORANGE_DYE, "Dyes")
 }
 
 class ShopEntry(

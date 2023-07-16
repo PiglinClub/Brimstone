@@ -11,11 +11,37 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.ClickType
 import java.util.concurrent.atomic.AtomicInteger
 
 class ShopGUI : Menu() {
     override fun getButtons(player: Player): Map<Int, Button?> {
         val buttons = HashMap<Int, Button>()
+        for ((index, category) in ShopCategory.values().withIndex()) {
+            buttons[index] = object : Button() {
+                override fun getMaterial(var1: Player?): Material? {
+                    return category.material
+                }
+
+                override fun getName(var1: Player?): String? {
+                    return "${ChatColor.RED}${category.displayName}"
+                }
+
+                override fun getDescription(var1: Player?): List<Component>? {
+                    return listOf(
+                        MiniMessage.miniMessage().deserialize("<st><dark_gray>                                  </dark_gray></st>").decoration(TextDecoration.ITALIC, false),
+                        MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                        MiniMessage.miniMessage().deserialize("<yellow>Click to see ${category.displayName} items").decoration(TextDecoration.ITALIC, false),
+                        MiniMessage.miniMessage().deserialize(" ").decoration(TextDecoration.ITALIC, false),
+                        MiniMessage.miniMessage().deserialize("<st><dark_gray>                                  </dark_gray></st>").decoration(TextDecoration.ITALIC, false)
+                    )
+                }
+
+                override fun clicked(player: Player, slot: Int, clickType: ClickType?) {
+                    ShopPage(category).openMenu(player)
+                }
+            }
+        }
         return buttons
     }
 }
