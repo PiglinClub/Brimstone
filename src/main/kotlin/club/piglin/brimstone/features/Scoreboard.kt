@@ -68,9 +68,9 @@ class Scoreboard : Listener {
                 if (profile.town == null) {
                     board.updateLines(
                         " ",
-                        "${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
-                        "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${profile.gold}g",
-                        "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
+                        " ${ChatColor.of("#ff5100")}\uD83D\uDC14${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
+                        " ${ChatColor.of("#ffd417")}\uD83D\uDC8E${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${floor(profile.gold)}g",
+                        " ${ChatColor.of("#32b3c9")}✴${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
                         " ${ChatColor.GRAY}You are not in a town!",
@@ -81,16 +81,16 @@ class Scoreboard : Listener {
                     val town = Brimstone.instance.townHandler.getTown(profile.town!!)!!
                     board.updateLines(
                         " ",
-                        "${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
-                        "${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${floor(profile.gold)}g",
-                        "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
+                        " ${ChatColor.of("#ff5100")}\uD83D\uDC14${ChatColor.RESET} Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
+                        " ${ChatColor.of("#ffd417")}\uD83D\uDC8E${ChatColor.RESET} Balance: ${ChatColor.of("#ffd417")}${floor(profile.gold)}g",
+                        " ${ChatColor.of("#32b3c9")}✴${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
                         " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
-                        "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}",
-                        "  ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.getClaims().get().size}",
-                        "  ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${floor(town.gold)}g",
-                        "  ${ChatColor.RESET}Power: ${ChatColor.of("#ff365e")}☄ ${floor(town.power).toInt()}",
+                        "  ${ChatColor.of("#ff5100")}\uD83D\uDC14 ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size}",
+                        "  ${ChatColor.of("#ff5100")}\uD83C\uDF33 ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.getClaims().get().size}",
+                        "  ${ChatColor.of("#ffd417")}\uD83D\uDC8E ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${floor(town.gold)}g",
+                        "  ${ChatColor.of("#ff365e")}☄ ${ChatColor.RESET}Power: ${ChatColor.of("#ff365e")}${floor(town.power).toInt()}",
                         " "
                     )
                 }
