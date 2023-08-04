@@ -29,7 +29,7 @@ class Profile(
     var lastLoginLocationY: Double = 34.5,
     var lastLoginLocationZ: Double = -87.5,
     var lastLoginWorld: String = "world",
-    var gold: Double = 0.0,
+    var gold: Double = 1000.0,
     var xp: Double = 0.0,
     var level: Int = 0,
     var town: UUID? = null,

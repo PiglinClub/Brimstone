@@ -73,6 +73,8 @@ class Scoreboard : Listener {
                         "${ChatColor.RESET} Level: ${ChatColor.of("#32b3c9")}${profile.level}",
                         " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
+                        " ${ChatColor.GRAY}You are not in a town!",
+                        " ${ChatColor.GRAY}Create a town using ${ChatColor.RESET}/towny create"
                     )
                 } else {
 
