@@ -84,6 +84,7 @@ class ShopHandler {
             addEntry(Material.BRICKS, ShopCategory.BUILDING_BLOCKS, 20.0, 8.0)
             addEntry(Material.DEEPSLATE, ShopCategory.BUILDING_BLOCKS, 0.5, 0.1)
             addEntry(Material.BLACKSTONE, ShopCategory.BUILDING_BLOCKS, 0.5, 0.1)
+            addEntry(Material.BASALT, ShopCategory.BUILDING_BLOCKS, 3.5, 0.5)
             addEntry(Material.NETHER_BRICKS, ShopCategory.BUILDING_BLOCKS, 2.5, 1.5)
             addEntry(Material.END_STONE, ShopCategory.BUILDING_BLOCKS, 1.5, 0.5)
             addEntry(Material.PURPUR_BLOCK, ShopCategory.BUILDING_BLOCKS, 8.5, 4.5)
@@ -96,6 +97,15 @@ class ShopHandler {
             addEntry(Material.GLOWSTONE, ShopCategory.BUILDING_BLOCKS, 25.0, 15.0)
             addEntry(Material.OBSIDIAN, ShopCategory.BUILDING_BLOCKS, 45.0, 15.0)
             addEntry(Material.CRYING_OBSIDIAN, ShopCategory.BUILDING_BLOCKS, 55.0, 25.5)
+            addEntry(Material.PRISMARINE_BRICKS, ShopCategory.BUILDING_BLOCKS, 20.0, 10.5)
+            addEntry(Material.DARK_PRISMARINE, ShopCategory.BUILDING_BLOCKS, 15.0, 5.5)
+            addEntry(Material.PRISMARINE, ShopCategory.BUILDING_BLOCKS, 10.0, 5.5)
+            addEntry(Material.PACKED_MUD, ShopCategory.BUILDING_BLOCKS, 2.5, 1.0)
+            addEntry(Material.MUD_BRICKS, ShopCategory.BUILDING_BLOCKS, 7.5, 2.5)
+            addEntry(Material.BAMBOO_BLOCK, ShopCategory.BUILDING_BLOCKS, 15.5, 7.5)
+            addEntry(Material.ICE, ShopCategory.BUILDING_BLOCKS, 7.5, 2.5)
+            addEntry(Material.PACKED_ICE, ShopCategory.BUILDING_BLOCKS, 15.5, 7.5)
+
         }
     }
 }
