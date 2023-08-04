@@ -2,6 +2,7 @@ package club.piglin.brimstone.menus.pagination
 
 import club.piglin.brimstone.menus.Button
 import club.piglin.brimstone.menus.Menu
+import club.piglin.brimstone.menus.buttons.BackButton
 import org.bukkit.entity.Player
 
 
@@ -30,7 +31,11 @@ abstract class PaginatedMenu : Menu() {
         val minIndex = ((page - 1).toDouble() * getMaxItemsPerPage(player).toDouble()).toInt()
         val maxIndex = (page.toDouble() * getMaxItemsPerPage(player).toDouble()).toInt()
         val buttons = HashMap<Int, Button>()
-        buttons[0] = PageButton(-1, this)
+        if (page == 1) {
+            buttons[0] = BackButton(getPreviousMenu(player))
+        } else {
+            buttons[0] = PageButton(-1, this)
+        }
         buttons[8] = PageButton(1, this)
         for ((ind, value) in getAllPagesButtons(player)) {
             if (ind < minIndex || ind >= maxIndex) continue
@@ -46,7 +51,11 @@ abstract class PaginatedMenu : Menu() {
         return buttons
     }
 
-    fun getMaxItemsPerPage(player: Player?): Int {
+    open fun getPreviousMenu(player: Player?): Menu? {
+        return null
+    }
+
+    open fun getMaxItemsPerPage(player: Player?): Int {
         return 18
     }
 
