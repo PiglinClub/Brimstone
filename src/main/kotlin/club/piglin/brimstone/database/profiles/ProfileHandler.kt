@@ -126,7 +126,7 @@ class ProfileHandler {
                             (document["lastLoginLocationY"] as Double?) ?: 100.0,
                             (document["lastLoginLocationZ"] as Double?) ?: 0.0,
                             (document["lastLoginWorld"] as String?) ?: "world",
-                            (document["gold"] as Double?) ?: 0.0,
+                            (document["gold"] as Double?) ?: 1000.0,
                             (document["xp"] as Double?) ?: 0.0,
                             (document["level"] as Int?) ?: 0,
                             (document["town"] as UUID?),
