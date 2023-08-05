@@ -168,7 +168,17 @@ class ShopPage(val category: ShopCategory) : PaginatedMenu() {
 
                     override fun clicked(player: Player, slot: Int, clickType: ClickType?) {
                         if (clickType == ClickType.MIDDLE) {
-
+                            if (InventoryUtils.amount(ItemStack(entry.material), player.inventory) <= 0) {
+                                Chat.sendComponent(player, "<red>You do not have the required items.</red>")
+                                player.playSound(player.location, Sound.ENTITY_WARDEN_TENDRIL_CLICKS, 1f, 1f)
+                                return
+                            }
+                            val amount = InventoryUtils.amount(ItemStack(entry.material), player.inventory)
+                            InventoryUtils.removeManually(ItemStack(entry.material, amount), player.inventory)
+                            Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!.gold += entry.sellPricePerOne * amount
+                            Brimstone.instance.profileHandler.saveProfile(Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!)
+                            player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                            Chat.sendComponent(player, "<green>Successfully sold <aqua>${amount}x ${WordUtils.capitalize(entry.material.name.lowercase().replace("_", " "))}</aqua><green> for <color:#ffd417>${entry.sellPricePerOne * amount}g</color><green>.")
                         } else if (clickType == ClickType.RIGHT) {
                             ShopConfirm(entry, ShopConfirmType.SELL).openMenu(player)
                         } else if (clickType == ClickType.LEFT) {
