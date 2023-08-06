@@ -52,6 +52,10 @@ class ShopGUI : Menu() {
         }
         return buttons
     }
+
+    override fun getTitle(player: Player): String {
+        return "Shop"
+    }
 }
 
 enum class ShopConfirmType {
@@ -168,21 +172,36 @@ class ShopPage(val category: ShopCategory) : PaginatedMenu() {
 
                     override fun clicked(player: Player, slot: Int, clickType: ClickType?) {
                         if (clickType == ClickType.MIDDLE) {
-                            if (InventoryUtils.amount(ItemStack(entry.material), player.inventory) <= 0) {
-                                Chat.sendComponent(player, "<red>You do not have the required items.</red>")
+                            if (entry.sellable) {
+                                if (InventoryUtils.amount(ItemStack(entry.material), player.inventory) <= 0) {
+                                    Chat.sendComponent(player, "<red>You do not have the required items.</red>")
+                                    player.playSound(player.location, Sound.ENTITY_WARDEN_TENDRIL_CLICKS, 1f, 1f)
+                                    return
+                                }
+                                val amount = InventoryUtils.amount(ItemStack(entry.material), player.inventory)
+                                InventoryUtils.removeManually(ItemStack(entry.material, amount), player.inventory)
+                                Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!.gold += entry.sellPricePerOne * amount
+                                Brimstone.instance.profileHandler.saveProfile(Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!)
+                                player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
+                                Chat.sendComponent(player, "<green>Successfully sold <aqua>${amount}x ${WordUtils.capitalize(entry.material.name.lowercase().replace("_", " "))}</aqua><green> for <color:#ffd417>${entry.sellPricePerOne * amount}g</color><green>.")
+                            } else {
                                 player.playSound(player.location, Sound.ENTITY_WARDEN_TENDRIL_CLICKS, 1f, 1f)
-                                return
+                                Chat.sendComponent(player, "<red>This item is not sellable.</red>")
                             }
-                            val amount = InventoryUtils.amount(ItemStack(entry.material), player.inventory)
-                            InventoryUtils.removeManually(ItemStack(entry.material, amount), player.inventory)
-                            Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!.gold += entry.sellPricePerOne * amount
-                            Brimstone.instance.profileHandler.saveProfile(Brimstone.instance.profileHandler.getProfile(player.uniqueId)!!)
-                            player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
-                            Chat.sendComponent(player, "<green>Successfully sold <aqua>${amount}x ${WordUtils.capitalize(entry.material.name.lowercase().replace("_", " "))}</aqua><green> for <color:#ffd417>${entry.sellPricePerOne * amount}g</color><green>.")
                         } else if (clickType == ClickType.RIGHT) {
-                            ShopConfirm(entry, ShopConfirmType.SELL).openMenu(player)
+                            if (entry.sellable) {
+                                ShopConfirm(entry, ShopConfirmType.SELL).openMenu(player)
+                            } else {
+                                player.playSound(player.location, Sound.ENTITY_WARDEN_TENDRIL_CLICKS, 1f, 1f)
+                                Chat.sendComponent(player, "<red>This item is not sellable.</red>")
+                            }
                         } else if (clickType == ClickType.LEFT) {
-                            ShopConfirm(entry, ShopConfirmType.BUY).openMenu(player)
+                            if (entry.buyable) {
+                                ShopConfirm(entry, ShopConfirmType.BUY).openMenu(player)
+                            } else {
+                                player.playSound(player.location, Sound.ENTITY_WARDEN_TENDRIL_CLICKS, 1f, 1f)
+                                Chat.sendComponent(player, "<red>This item is not purchasable.</red>")
+                            }
                         }
                     }
 
@@ -191,25 +210,38 @@ class ShopPage(val category: ShopCategory) : PaginatedMenu() {
                     }
 
                     override fun getDescription(var1: Player?): List<Component> {
-                        return listOf(
+                        val list = arrayListOf(
                             MiniMessage.miniMessage().deserialize("<st><dark_gray>                              </dark_gray></st>").decoration(
                                 TextDecoration.ITALIC, false),
-                            MiniMessage.miniMessage().deserialize(" "),
-                            MiniMessage.miniMessage().deserialize("<white>▐</white> <color:#33ff05>PURCHASE PRICE:</color> <color:#ffd417>${entry.pricePerOne}g</color><white></white>").decoration(
-                                TextDecoration.ITALIC, false),
-                            MiniMessage.miniMessage().deserialize("<white>▐</white> <color:#33ff05>SELLING PRICE:</color> <color:#ffd417>${entry.sellPricePerOne}g</color><white></white>").decoration(
-                                TextDecoration.ITALIC, false),
-                            MiniMessage.miniMessage().deserialize(" "),
-                            MiniMessage.miniMessage().deserialize(" <color:#33ff05>*</color> <color:#26ff00>Left click to <color:#159c00>buy</color>!</color>").decoration(
-                                TextDecoration.ITALIC, false),
-                            MiniMessage.miniMessage().deserialize(" <color:#33ff05>*</color> <color:#fbff29>Right click to <color:#d6d923>sell</color>!</color>").decoration(
-                                TextDecoration.ITALIC, false),
-                            MiniMessage.miniMessage().deserialize(" <color:#33ff05>*</color> <color:#d6241e>Middle click to <color:#911914>sell all</color>!</color>").decoration(
-                                TextDecoration.ITALIC, false),
-                            MiniMessage.miniMessage().deserialize("  "),
-                            MiniMessage.miniMessage().deserialize("<st><dark_gray>                              </dark_gray></st>").decoration(
-                                TextDecoration.ITALIC, false),
+                            MiniMessage.miniMessage().deserialize(" ")
                         )
+                        if (entry.buyable) {
+                            list.add(MiniMessage.miniMessage().deserialize("<white>▐</white> <color:#33ff05>PURCHASE PRICE:</color> <color:#ffd417>${entry.pricePerOne}g</color><white></white>").decoration(
+                                TextDecoration.ITALIC, false))
+                        }
+                        if (entry.sellable) {
+                            list.add(MiniMessage.miniMessage().deserialize("<white>▐</white> <color:#33ff05>SELLING PRICE:</color> <color:#ffd417>${entry.sellPricePerOne}g</color><white></white>").decoration(
+                                TextDecoration.ITALIC, false))
+                        }
+                        list.add(MiniMessage.miniMessage().deserialize(" "),)
+                        if (entry.buyable) {
+                            list.add(MiniMessage.miniMessage().deserialize(" <color:#33ff05>*</color> <color:#26ff00>Left click to <color:#159c00>buy</color>!</color>").decoration(
+                                TextDecoration.ITALIC, false))
+                        }
+                        if (entry.sellable) {
+                            list.add(MiniMessage.miniMessage().deserialize(" <color:#33ff05>*</color> <color:#fbff29>Right click to <color:#d6d923>sell</color>!</color>").decoration(
+                                TextDecoration.ITALIC, false))
+                            list.add(MiniMessage.miniMessage().deserialize(" <color:#33ff05>*</color> <color:#d6241e>Middle click to <color:#911914>sell all</color>!</color>").decoration(
+                                TextDecoration.ITALIC, false))
+                        }
+                        list.add(
+                            MiniMessage.miniMessage().deserialize("  ")
+                        )
+                        list.add(
+                            MiniMessage.miniMessage().deserialize("<st><dark_gray>                              </dark_gray></st>").decoration(
+                                TextDecoration.ITALIC, false)
+                        )
+                        return list
                     }
                 }
                 count.getAndIncrement()
