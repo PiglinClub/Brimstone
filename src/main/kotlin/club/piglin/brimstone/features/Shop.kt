@@ -20,8 +20,8 @@ class ShopEntry(
     val category: ShopCategory,
     val pricePerOne: Double,
     val sellPricePerOne: Double,
-    val sellable: Boolean = true,
-    val buyable: Boolean = true
+    val sellable: Boolean,
+    val buyable: Boolean
 ) {
     fun getBulkBuyPrice(amount: Int) : Double {
         return pricePerOne * amount
@@ -36,9 +36,9 @@ class ShopHandler {
     companion object {
         val entries = ArrayList<ShopEntry>()
 
-        fun addEntry(material: Material, category: ShopCategory, pricePerOne: Double, sellPricePerOne: Double) {
+        fun addEntry(material: Material, category: ShopCategory, pricePerOne: Double, sellPricePerOne: Double, sellable: Boolean = true, buyable: Boolean = true) {
             entries.add(ShopEntry(
-                material, category, pricePerOne, sellPricePerOne
+                material, category, pricePerOne, sellPricePerOne, sellable, buyable
             ))
         }
 
@@ -290,6 +290,87 @@ class ShopHandler {
             addEntry(Material.COPPER_INGOT, ShopCategory.MINERALS, 25.0, 10.0)
             addEntry(Material.FLINT, ShopCategory.MINERALS, 5.0, 2.5)
 
+            addEntry(Material.APPLE, ShopCategory.FOOD, 20.0, 10.0)
+            addEntry(Material.GOLDEN_APPLE, ShopCategory.FOOD, 150.0, 75.0)
+            addEntry(Material.ENCHANTED_GOLDEN_APPLE, ShopCategory.FOOD, 50000.0, 25000.0)
+            addEntry(Material.SWEET_BERRIES, ShopCategory.FOOD, 10.0, 4.5)
+            addEntry(Material.GLOW_BERRIES, ShopCategory.FOOD, 15.0, 5.5)
+            addEntry(Material.GOLDEN_CARROT, ShopCategory.FOOD, 50.0, 25.5)
+            addEntry(Material.BAKED_POTATO, ShopCategory.FOOD, 15.0, 5.5)
+            addEntry(Material.POISONOUS_POTATO, ShopCategory.FOOD, 25.5, 7.5)
+            addEntry(Material.DRIED_KELP, ShopCategory.FOOD, 10.0, 5.5)
+            addEntry(Material.BEEF, ShopCategory.FOOD, 25.0, 15.0)
+            addEntry(Material.COOKED_BEEF, ShopCategory.FOOD, 35.5, 20.0)
+            addEntry(Material.PORKCHOP, ShopCategory.FOOD, 15.0, 7.5)
+            addEntry(Material.COOKED_PORKCHOP, ShopCategory.FOOD, 25.0, 10.5)
+            addEntry(Material.MUTTON, ShopCategory.FOOD, 12.5, 8.5)
+            addEntry(Material.COOKED_MUTTON, ShopCategory.FOOD, 18.5, 10.5)
+            addEntry(Material.CHICKEN, ShopCategory.FOOD, 12.5, 7.5)
+            addEntry(Material.COOKED_CHICKEN, ShopCategory.FOOD, 17.5, 9.5)
+            addEntry(Material.RABBIT, ShopCategory.FOOD, 18.5, 10.5)
+            addEntry(Material.COOKED_RABBIT, ShopCategory.FOOD, 25.5, 15.5)
+            addEntry(Material.COD, ShopCategory.FOOD, 18.5, 10.5)
+            addEntry(Material.COOKED_COD, ShopCategory.FOOD, 25.5, 15.5)
+            addEntry(Material.BREAD, ShopCategory.FOOD, 20.0, 10.0)
+            addEntry(Material.COOKIE, ShopCategory.FOOD, 15.0, 7.5)
+            addEntry(Material.CAKE, ShopCategory.FOOD, 85.0, 25.0)
+            addEntry(Material.HONEY_BOTTLE, ShopCategory.FOOD, 150.0, 75.5)
+            addEntry(Material.PUMPKIN_PIE, ShopCategory.FOOD, 75.5, 50.0)
+            addEntry(Material.MUSHROOM_STEW, ShopCategory.FOOD, 75.0, 25.0)
+            addEntry(Material.RABBIT_STEW, ShopCategory.FOOD, 125.0, 75.0)
+            addEntry(Material.BEETROOT_SOUP, ShopCategory.FOOD, 125.0, 50.0)
+
+            //netherwart, carrots, wheat, potato, melon, pumpkin, sugarcane, honeycomb, beetroot, cocoa, bamboo
+            addEntry(Material.NETHER_WART, ShopCategory.FARMING, 8.0, 4.0)
+            addEntry(Material.CARROT, ShopCategory.FARMING, 6.5, 3.5)
+            addEntry(Material.WHEAT, ShopCategory.FARMING, 12.5, 6.5)
+            addEntry(Material.WHEAT_SEEDS, ShopCategory.FARMING, 6.5, 2.5)
+            addEntry(Material.POTATO, ShopCategory.FARMING, 6.5, 3.5)
+            addEntry(Material.MELON_SLICE, ShopCategory.FARMING, 6.5, 2.5)
+            addEntry(Material.MELON_SEEDS, ShopCategory.FARMING, 1.5, 0.5)
+            addEntry(Material.PUMPKIN, ShopCategory.FARMING, 20.5, 8.5)
+            addEntry(Material.PUMPKIN_SEEDS, ShopCategory.FARMING, 1.5, 0.5)
+            addEntry(Material.SUGAR_CANE, ShopCategory.FARMING, 8.5, 4.5)
+            addEntry(Material.HONEYCOMB, ShopCategory.FARMING, 30.5, 20.5)
+            addEntry(Material.BEETROOT, ShopCategory.FARMING, 10.0, 5.0)
+            addEntry(Material.BEETROOT_SEEDS, ShopCategory.FARMING, 1.5, 0.5)
+            addEntry(Material.COCOA_BEANS, ShopCategory.FARMING, 12.5, 5.5)
+            addEntry(Material.BAMBOO, ShopCategory.FARMING, 3.5, 0.25)
+
+            addEntry(Material.WHITE_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.LIGHT_GRAY_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.GRAY_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.BLACK_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.BROWN_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.RED_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.ORANGE_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.YELLOW_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.LIME_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.GREEN_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.CYAN_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.LIGHT_BLUE_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.BLUE_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.PURPLE_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.MAGENTA_DYE, ShopCategory.DYES, 45.0, 25.5)
+            addEntry(Material.PINK_DYE, ShopCategory.DYES, 45.0, 25.5)
+
+            addEntry(Material.SHULKER_SHELL, ShopCategory.MOB_DROPS, 1.0, 750.0, true, false)
+            addEntry(Material.SLIME_BALL, ShopCategory.MOB_DROPS, 10.0, 5.0)
+            addEntry(Material.PRISMARINE_SHARD, ShopCategory.MOB_DROPS, 10.0, 5.0)
+            addEntry(Material.PRISMARINE_CRYSTALS, ShopCategory.MOB_DROPS, 10.0, 5.0)
+            addEntry(Material.INK_SAC, ShopCategory.MOB_DROPS, 10.0, 5.0)
+            addEntry(Material.GLOW_INK_SAC, ShopCategory.MOB_DROPS, 20.0, 10.0)
+            addEntry(Material.LEATHER, ShopCategory.MOB_DROPS, 35.0, 15.0)
+            addEntry(Material.ENDER_PEARL, ShopCategory.MOB_DROPS, 1.0, 250.0, true, false)
+            addEntry(Material.GUNPOWDER, ShopCategory.MOB_DROPS, 50.0, 10.0)
+            addEntry(Material.PHANTOM_MEMBRANE, ShopCategory.MOB_DROPS, 125.0, 75.0)
+            addEntry(Material.MAGMA_CREAM, ShopCategory.MOB_DROPS, 150.0, 100.0)
+            addEntry(Material.SPIDER_EYE, ShopCategory.MOB_DROPS, 25.0, 10.0)
+            addEntry(Material.RABBIT_FOOT, ShopCategory.MOB_DROPS, 125.0, 75.0)
+            addEntry(Material.ROTTEN_FLESH, ShopCategory.MOB_DROPS, 20.0, 10.0)
+            addEntry(Material.STRING, ShopCategory.MOB_DROPS, 20.0, 10.0)
+            addEntry(Material.BONE, ShopCategory.MOB_DROPS, 20.0, 10.0)
+            addEntry(Material.GHAST_TEAR, ShopCategory.MOB_DROPS, 200.0, 100.0)
 
         }
     }
