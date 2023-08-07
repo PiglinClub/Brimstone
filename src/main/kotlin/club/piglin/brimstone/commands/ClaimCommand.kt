@@ -7,7 +7,6 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import kotlin.math.pow
 
 class ClaimCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -30,7 +29,7 @@ class ClaimCommand : CommandExecutor {
             return false
         }
         val claims = town.getClaims()
-        val cost = ((750) * (1.5).pow(claims.get().size))
+        val cost = ((750) + (claims.get().size * 250))
         if (town.gold < cost) {
             Chat.sendMessage(sender, "&cYou can't afford to purchase this chunk. You are short by ${ChatColor.of("#ffd417")}${Math.ceil(cost - town.gold)}g&c.")
             return false
