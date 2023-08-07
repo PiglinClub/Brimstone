@@ -371,6 +371,7 @@ class ShopHandler {
             addEntry(Material.STRING, ShopCategory.MOB_DROPS, 20.0, 10.0)
             addEntry(Material.BONE, ShopCategory.MOB_DROPS, 20.0, 10.0)
             addEntry(Material.GHAST_TEAR, ShopCategory.MOB_DROPS, 200.0, 100.0)
+            addEntry(Material.BLAZE_ROD, ShopCategory.MOB_DROPS, 500.0, 175.0)
 
         }
     }
