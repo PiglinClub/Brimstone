@@ -1,7 +1,7 @@
-name: Brimstone
-description: Nether-styled SMP plugin
+name: Malloy
+description: SMP plugin
 api-version: 1.13
-main: club.piglin.brimstone.Brimstone
+main: club.malvaceae.malloy.Malloy
 version: 1.0-SNAPSHOT
 depend: [ProtocolLib]
 commands:
