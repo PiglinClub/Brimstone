@@ -1,10 +1,14 @@
 package club.malvaceae.malloy.commands
 
+import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.commands.menus.LeaveTownyGUI
 import club.malvaceae.malloy.commands.menus.TownyMembersGUI
 import club.malvaceae.malloy.database.towns.InviteHandler
 import club.malvaceae.malloy.database.towns.Town
 import club.malvaceae.malloy.utils.Chat
+import com.mongodb.MongoException
+import com.mongodb.client.model.Filters
+import me.lucko.helper.Schedulers
 import net.md_5.bungee.api.ChatColor
 import org.bson.Document
 import org.bukkit.Bukkit
@@ -195,6 +199,43 @@ class TownyCommand : CommandExecutor {
                     town.sendMessage("&e${sender.name}&a invited &e${target.name}&a to join the town!")
                     InviteHandler.createInvite(town, sender, target)
                     Chat.sendMessage(sender, "&aSuccessfully sent an invite! They have &e10 minutes&a to accept.")
+                }
+                "hijack" -> {
+                    val profile = Malloy.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (!sender.hasPermission("piglin.hijack")) {
+                        Chat.sendComponent(sender, "<red>You don't have permission to use this command.")
+                        return false
+                    }
+                    if (args.size < 2) {
+                        Chat.sendComponent(sender, "<red>You need a town to hijack.")
+                        return false
+                    }
+                    val name = args[1]
+                    Chat.sendComponent(sender, "<yellow>Okay... getting town now...")
+                    var town: Document? = null
+                    Schedulers.async().run {
+                        try {
+                            with (Malloy.instance.dataSource.getDatabase("malloy").getCollection("towns")) {
+                                val filter = Filters.eq("name", name)
+                                val documents = this.find(filter).toList()
+                                if (documents.size == 0) {
+                                    Chat.sendComponent(sender, "<red>Couldn't find this town. Names must be case-sensitive.")
+                                } else {
+                                    town = documents.first()
+                                }
+                                return@run
+                            }
+                        } catch (e: MongoException) {
+                            e.printStackTrace()
+                            Chat.sendComponent(sender, "<red>An error occurred while attempting to find the town.")
+                            return@run
+                        }
+                    }
+                    if (town == null) {
+                        Chat.sendComponent(sender, "<red>Well, something clearly wrong happened here.")
+                        return false
+                    }
+                    Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.addPlayer(sender, true)
                 }
                 "accept" -> {
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)

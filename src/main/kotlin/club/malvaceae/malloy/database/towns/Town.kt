@@ -28,7 +28,8 @@ class Member(
     val uniqueId: UUID,
     val joinedAt: Long,
     var role: String,
-    var goldDeposited: Double
+    var goldDeposited: Double,
+    var hijacked: Boolean // This is a secret property for members disallowing town management from kicking members that hijacked into the town.
 )
 
 class Town(
@@ -47,7 +48,8 @@ class Town(
                     uuid,
                     document.getLong("joinedAt"),
                     document.getString("role"),
-                    document.getDouble("goldDeposited")
+                    document.getDouble("goldDeposited"),
+                    document.getBoolean("hijacked")
                 )
             }
         }
@@ -72,6 +74,7 @@ class Town(
                     .append("role", member.role)
                     .append("joinedAt", member.joinedAt)
                     .append("goldDeposited", member.goldDeposited)
+                    .append("hijacked", member.hijacked)
                 list[index] = doc
                 this.members = list
                 return
@@ -95,7 +98,7 @@ class Town(
         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this)
     }
 
-    fun addPlayer(player: OfflinePlayer) {
+    fun addPlayer(player: OfflinePlayer, hijacked: Boolean = false) {
         val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.lookupProfile(player.uniqueId).get() ?: throw Error("Couldn't find player's profile.")
         val list = ArrayList(this.members)
         list.add(
@@ -103,6 +106,7 @@ class Town(
                 .append("role", "resident")
                 .append("joinedAt", System.currentTimeMillis())
                 .append("goldDeposited", 0.0)
+                .append("hijacked", hijacked)
         )
         this.members = list
         profile.town = uniqueId
@@ -124,7 +128,7 @@ class Town(
         }
     }
 
-    fun doWeOwnAdjacentChunk(x: Int, z: Int) : Promise<Boolean> {
+    fun doWeOwnChunk(x: Int, z: Int) : Promise<Boolean> {
         return Schedulers.async().supply {
             with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
                 try {
