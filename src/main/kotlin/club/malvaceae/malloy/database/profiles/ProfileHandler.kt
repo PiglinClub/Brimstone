@@ -78,6 +78,7 @@ class ProfileHandler {
                 .append("level", profile.level)
                 .append("gold", profile.gold)
                 .append("town", profile.town)
+                .append("chatMode", profile.chatMode)
                 .append("miningSkillExp", profile.miningSkillExp)
                 .append("miningSkillLevel", profile.miningSkillLevel)
                 .append("farmingSkillExp", profile.farmingSkillExp)
@@ -129,6 +130,7 @@ class ProfileHandler {
                             (document["xp"] as Double?) ?: 0.0,
                             (document["level"] as Int?) ?: 0,
                             (document["town"] as UUID?),
+                            (document["chatMode"] as String?) ?: "PUBLIC",
                             (document["miningSkillExp"] as Double?) ?: 0.0,
                             (document["miningSkillLevel"] as Int?) ?: 1,
                             (document["farmingSkillExp"] as Double?) ?: 0.0,

@@ -32,6 +32,7 @@ class Profile(
     var xp: Double = 0.0,
     var level: Int = 0,
     var town: UUID? = null,
+    var chatMode: String = "PUBLIC",
     var miningSkillExp: Double = 0.0,
     var miningSkillLevel: Int = 1,
     var farmingSkillExp: Double = 0.0,
