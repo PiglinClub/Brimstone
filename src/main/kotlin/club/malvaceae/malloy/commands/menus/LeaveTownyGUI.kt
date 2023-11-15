@@ -6,7 +6,6 @@ import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -20,8 +19,8 @@ class LeaveTownyGUI : Menu() {
         val buttons = HashMap<Int, Button>()
         val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(player.uniqueId)
         buttons[3] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.GREEN}Confirm"
+            override fun getName(var1: Player?): Component {
+                return MiniMessage.miniMessage().deserialize("<green>Confirm")
             }
 
             override fun getDescription(var1: Player?): List<Component> {
@@ -43,8 +42,8 @@ class LeaveTownyGUI : Menu() {
             }
         }
         buttons[5] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.RED}Decline"
+            override fun getName(var1: Player?): Component {
+                return MiniMessage.miniMessage().deserialize("<red>Decline")
             }
 
             override fun getDescription(var1: Player?): List<Component>? {

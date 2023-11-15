@@ -41,10 +41,10 @@ class ClaimCommand : CommandExecutor {
 
         if (claims.get().isNotEmpty()) {
             if (
-                town.doWeOwnAdjacentChunk(north.x, north.z).get() == false &&
-                town.doWeOwnAdjacentChunk(west.x, west.z).get() == false &&
-                town.doWeOwnAdjacentChunk(east.x, east.z).get() == false &&
-                town.doWeOwnAdjacentChunk(south.x, south.z).get() == false
+                town.doWeOwnChunk(north.x, north.z).get() == false &&
+                town.doWeOwnChunk(west.x, west.z).get() == false &&
+                town.doWeOwnChunk(east.x, east.z).get() == false &&
+                town.doWeOwnChunk(south.x, south.z).get() == false
             ) {
                 Chat.sendMessage(sender, "&cYou must own an adjacent chunk to claim this chunk.")
                 return false
@@ -52,7 +52,7 @@ class ClaimCommand : CommandExecutor {
         }
         val claim = town.claimChunk(chunk)
         if (claim.get() == null) {
-            if (town.doWeOwnAdjacentChunk(chunk.x, chunk.z).get() == true) {
+            if (town.doWeOwnChunk(chunk.x, chunk.z).get() == true) {
                 Chat.sendMessage(sender, "&cWe already own this claim.")
                 return true
             }
