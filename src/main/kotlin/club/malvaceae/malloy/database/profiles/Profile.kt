@@ -54,7 +54,7 @@ class Profile(
 
     fun addSkillExp(skill: Skill, amount: Double) {
         if (skill == Skill.MINING) {
-            val levelUpExp = floor(250 * (3.5).pow(miningSkillLevel - 1))
+            val levelUpExp = floor(250 * (1.15).pow(miningSkillLevel - 1))
             miningSkillExp += amount
             if (amount > 0.0) {
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -78,7 +78,7 @@ class Profile(
             }
         }
         if (skill == Skill.FARMING) {
-            val levelUpExp = floor(250 * (3.5).pow(farmingSkillLevel - 1))
+            val levelUpExp = floor(250 * (1.15).pow(farmingSkillLevel - 1))
             farmingSkillExp += amount
             if (amount > 0.0) {
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -102,7 +102,7 @@ class Profile(
             }
         }
         if (skill == Skill.COMBAT) {
-            val levelUpExp = floor(250 * (3.5).pow(combatSkillLevel - 1))
+            val levelUpExp = floor(250 * (1.15).pow(combatSkillLevel - 1))
             combatSkillExp += amount
             if (amount > 0.0) {
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -126,7 +126,7 @@ class Profile(
             }
         }
         if (skill == Skill.LOGGING) {
-            val levelUpExp = floor(250 * (3.5).pow(loggingSkillLevel - 1))
+            val levelUpExp = floor(250 * (1.15).pow(loggingSkillLevel - 1))
             loggingSkillExp += amount
             if (amount > 0.0) {
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
@@ -150,7 +150,7 @@ class Profile(
             }
         }
         if (skill == Skill.FISHING) {
-            val levelUpExp = floor(250 * (3.5).pow(fishingSkillLevel - 1))
+            val levelUpExp = floor(250 * (1.15).pow(fishingSkillLevel - 1))
             fishingSkillExp += amount
             if (amount > 0.0) {
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {

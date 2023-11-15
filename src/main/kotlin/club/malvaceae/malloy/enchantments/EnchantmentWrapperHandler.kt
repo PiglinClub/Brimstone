@@ -1,9 +1,11 @@
 package club.malvaceae.malloy.enchantments
 
 import club.malvaceae.malloy.Malloy
+import club.malvaceae.malloy.enchantments.list.ExtractionEnchantment
+import club.malvaceae.malloy.enchantments.list.MoltenEnchantment
 import org.bukkit.Bukkit
-import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import java.lang.reflect.Field
@@ -12,13 +14,53 @@ import java.lang.reflect.Field
 class EnchantmentWrapperHandler {
     companion object {
         val instance = EnchantmentWrapperHandler()
-    }
 
-    val MOLTEN = EnchantmentWrapper(NamespacedKey.minecraft("molten"), "Molten", 1)
+        fun getRomanNumeral(number: Int): String {
+            when (number) {
+                1 -> {
+                    return "I"
+                }
+                2 -> {
+                    return "II"
+                }
+                3 -> {
+                    return "III"
+                }
+                4 -> {
+                    return "IV"
+                }
+                5 -> {
+                    return "V"
+                }
+                6 -> {
+                    return "VI"
+                }
+                7 -> {
+                    return "VII"
+                }
+                8 -> {
+                    return "VIII"
+                }
+                9 -> {
+                    return "IX"
+                }
+                10 -> {
+                    return "X"
+                }
+                else -> {
+                    return "???"
+                }
+            }
+        }
+    }
 
     fun getEnchants(): List<Enchantment> {
-        return listOf(MOLTEN)
+        return listOf(
+            MoltenEnchantment(),
+            ExtractionEnchantment()
+        )
     }
+
 
     fun checkStoredCustomEnchants(item: ItemStack): HashMap<Enchantment, Int> {
         if (!item.hasItemMeta()) return hashMapOf()
@@ -51,6 +93,9 @@ class EnchantmentWrapperHandler {
             Bukkit.getServer().pluginManager.registerEvents(EnchantmentListener(), Malloy.instance)
             for (ench in list) {
                 registerEnchantment(ench)
+                if (ench is Listener) {
+                    Bukkit.getServer().pluginManager.registerEvents(ench, Malloy.instance)
+                }
             }
         }
     }

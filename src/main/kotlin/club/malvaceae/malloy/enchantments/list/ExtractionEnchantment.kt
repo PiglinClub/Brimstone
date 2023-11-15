@@ -1,21 +1,82 @@
-package club.malvaceae.malloy.enchantments
+package club.malvaceae.malloy.enchantments.list
 
+import club.malvaceae.malloy.Malloy
+import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
 import io.papermc.paper.enchantments.EnchantmentRarity
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.EnchantmentTarget
 import org.bukkit.entity.EntityCategory
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitRunnable
+import java.net.http.WebSocket.Listener
 
-class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enchantment(k) {
+class ExtractionEnchantment : Enchantment(NamespacedKey.minecraft("extraction")), Listener {
     /**
      * Gets the translation key.
      *
      * @return the translation key
      * @since 4.8.0
      */
+    @EventHandler
+    fun onBlockBreak(e: BlockBreakEvent) {
+        if (e.player.inventory.itemInMainHand == null) return
+        if (!e.player.equipment.itemInMainHand.hasItemMeta()) return
+        if (!e.player.equipment.itemInMainHand.containsEnchantment(ExtractionEnchantment())) return
+        if (!e.player.isSneaking) return
+        val blocks = listOf(
+            Material.ANCIENT_DEBRIS,
+            Material.DIAMOND_ORE,
+            Material.DEEPSLATE_DIAMOND_ORE,
+            Material.EMERALD_ORE,
+            Material.DEEPSLATE_EMERALD_ORE,
+            Material.LAPIS_ORE,
+            Material.DEEPSLATE_LAPIS_ORE,
+            Material.GOLD_ORE,
+            Material.NETHER_GOLD_ORE,
+            Material.NETHER_QUARTZ_ORE,
+            Material.DEEPSLATE_GOLD_ORE,
+            Material.IRON_ORE,
+            Material.DEEPSLATE_IRON_ORE,
+            Material.DEEPSLATE_COPPER_ORE,
+            Material.COPPER_ORE,
+            Material.COAL_ORE,
+            Material.DEEPSLATE_COAL_ORE,
+            Material.DEEPSLATE_REDSTONE_ORE,
+            Material.REDSTONE_ORE
+        )
+        if (blocks.contains(e.block.type)) {
+            veinMine(e.block.location, e.block.type, e.player)
+        }
+    }
+
+    private fun veinMine(loc: Location, material: Material, player: Player) {
+        object : BukkitRunnable() {
+            override fun run() {
+                for (x in loc.blockX - 1..loc.blockX + 1) {
+                    for (y in loc.blockY - 1..loc.blockY + 1) {
+                        for (z in loc.blockZ - 1..loc.blockZ + 1) {
+                            val block = loc.world.getBlockAt(x, y, z)
+                            if (block.type == material) {
+                                veinMine(block.location, material, player)
+                                player.breakBlock(block)
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskLater(Malloy.instance, 2)
+    }
+
     override fun translationKey(): String {
         return translationKey()
     }
@@ -26,7 +87,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return Unique name
      */
     override fun getName(): String {
-        return n
+        return "Extraction"
     }
 
     /**
@@ -35,7 +96,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return Maximum level of the Enchantment
      */
     override fun getMaxLevel(): Int {
-        return ml
+        return 5
     }
 
     /**
@@ -44,7 +105,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return Starting level of the Enchantment
      */
     override fun getStartLevel(): Int {
-        return startLevel
+        return 1
     }
 
     /**
@@ -53,7 +114,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return Target type of the Enchantment
      */
     override fun getItemTarget(): EnchantmentTarget {
-        return itemTarget
+        return EnchantmentTarget.TOOL
     }
 
     /**
@@ -65,7 +126,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return true if the enchantment is a treasure enchantment
      */
     override fun isTreasure(): Boolean {
-        return isTreasure
+        return true
     }
 
     /**
@@ -76,7 +137,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return true if the enchantment is cursed
      */
     override fun isCursed(): Boolean {
-        return isCursed
+        return false
     }
 
     /**
@@ -86,7 +147,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return True if there is a conflict.
      */
     override fun conflictsWith(other: Enchantment): Boolean {
-        return conflictsWith(other)
+        return (other == Enchantment.LOOT_BONUS_BLOCKS || other == MoltenEnchantment())
     }
 
     /**
@@ -100,7 +161,14 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return True if the enchantment may be applied, otherwise False
      */
     override fun canEnchantItem(item: ItemStack): Boolean {
-        return canEnchantItem(item)
+        return (
+                item.type == Material.NETHERITE_PICKAXE ||
+                        item.type == Material.DIAMOND_PICKAXE ||
+                        item.type == Material.GOLDEN_PICKAXE ||
+                        item.type == Material.IRON_PICKAXE ||
+                        item.type == Material.STONE_PICKAXE ||
+                        item.type == Material.WOODEN_PICKAXE
+                )
     }
 
     /**
@@ -115,7 +183,8 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return the name of the enchantment with `level` applied
      */
     override fun displayName(level: Int): Component {
-        return displayName(level)
+        return MiniMessage.miniMessage().deserialize("<gray>Extraction ${EnchantmentWrapperHandler.getRomanNumeral(level)}</gray>").decoration(
+            TextDecoration.ITALIC, false)
     }
 
     /**
@@ -124,7 +193,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return true if the enchantment can be found in trades
      */
     override fun isTradeable(): Boolean {
-        return isTradeable
+        return true
     }
 
     /**
@@ -134,7 +203,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return true if the enchantment can be found in a table or by loot tables
      */
     override fun isDiscoverable(): Boolean {
-        return isDiscoverable
+        return true
     }
 
     /**
@@ -149,7 +218,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return The modified cost of this enchantment
      */
     override fun getMinModifiedCost(level: Int): Int {
-        return getMinModifiedCost(level)
+        return 45
     }
 
     /**
@@ -164,7 +233,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return The modified cost of this enchantment
      */
     override fun getMaxModifiedCost(level: Int): Int {
-        return getMaxModifiedCost(level)
+        return 65
     }
 
     /**
@@ -173,7 +242,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return the rarity
      */
     override fun getRarity(): EnchantmentRarity {
-        return rarity
+        return EnchantmentRarity.VERY_RARE
     }
 
     /**
@@ -184,7 +253,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return the damage increase
      */
     override fun getDamageIncrease(level: Int, entityCategory: EntityCategory): Float {
-        return getDamageIncrease(level, entityCategory)
+        return 0f
     }
 
     /**
@@ -193,6 +262,7 @@ class EnchantmentWrapper(val k: NamespacedKey, val n: String, val ml: Int) : Enc
      * @return the equipment slots
      */
     override fun getActiveSlots(): MutableSet<EquipmentSlot> {
-        return activeSlots
+        return mutableSetOf(EquipmentSlot.HAND)
     }
+
 }
