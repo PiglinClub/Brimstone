@@ -32,8 +32,8 @@ class ShopGUI : Menu() {
                     return category.material
                 }
 
-                override fun getName(var1: Player?): String? {
-                    return "${net.md_5.bungee.api.ChatColor.of("#ed982f")}${category.displayName}"
+                override fun getName(var1: Player?): Component? {
+                    return MiniMessage.miniMessage().deserialize("<color:#ed982f>${category.displayName}")
                 }
 
                 override fun getDescription(var1: Player?): List<Component>? {
@@ -97,8 +97,8 @@ class ShopConfirmButton(val item: ShopEntry, val type: ShopConfirmType, val amou
         return amount
     }
 
-    override fun getName(var1: Player?): String {
-        return "${ChatColor.AQUA}${WordUtils.capitalize(item.material.name.lowercase().replace("_", " "))}"
+    override fun getName(var1: Player?): Component {
+        return MiniMessage.miniMessage().deserialize("<aqua>${WordUtils.capitalize(item.material.name.lowercase().replace("_", " "))}")
     }
 
     override fun clicked(player: Player, slot: Int, clickType: ClickType?) {
@@ -204,8 +204,8 @@ class ShopPage(val category: ShopCategory) : PaginatedMenu() {
                         }
                     }
 
-                    override fun getName(var1: Player?): String {
-                        return "${ChatColor.AQUA}${WordUtils.capitalize(entry.material.name.lowercase().replace("_", " "))}"
+                    override fun getName(var1: Player?): Component {
+                        return MiniMessage.miniMessage().deserialize("<aqua>${WordUtils.capitalize(entry.material.name.lowercase().replace("_", " "))}")
                     }
 
                     override fun getDescription(var1: Player?): List<Component> {

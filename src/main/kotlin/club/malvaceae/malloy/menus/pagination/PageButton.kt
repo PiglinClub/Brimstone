@@ -2,6 +2,7 @@ package club.malvaceae.malloy.menus.pagination
 
 import club.malvaceae.malloy.menus.Button
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -30,12 +31,12 @@ class PageButton @ConstructorProperties(value = ["mod", "menu"]) constructor(
         return pg > 0 && menu.getPages(player) >= pg
     }
 
-    override fun getName(player: Player?): String {
+    override fun getName(player: Player?): Component {
         if (!hasNext(player!!)) {
-            return if (mod > 0) "\u00a77Last page" else "\u00a77First page"
+            return MiniMessage.miniMessage().deserialize(if (mod > 0) "\u00a77Last page" else "\u00a77First page")
         }
         val str = "(\u00a7e" + (menu.page + mod) + "/\u00a7e" + menu.getPages(player) + "\u00a7a)"
-        return if (mod > 0) "\u00a7a\u27f6" else "\u00a7c\u27f5"
+        return MiniMessage.miniMessage().deserialize(if (mod > 0) "\u00a7a\u27f6" else "\u00a7c\u27f5")
     }
 
     override fun getDescription(player: Player?): List<Component> {

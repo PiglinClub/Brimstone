@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 
 
 abstract class Button {
-    abstract fun getName(var1: Player?): String?
+    abstract fun getName(var1: Player?): Component?
     abstract fun getDescription(var1: Player?): List<Component>?
     open fun getMaterial(var1: Player?): Material? {
         return Material.DIRT
@@ -37,7 +37,7 @@ abstract class Button {
     open fun getButtonItem(player: Player?): ItemStack {
         val buttonItem = ItemStack(getMaterial(player)!!, getAmount(player))
         val meta = buttonItem.itemMeta
-        meta.setDisplayName(getName(player))
+        meta.displayName(getName(player))
         val description = getDescription(player)
         if (description != null) {
             meta.lore(
@@ -69,9 +69,9 @@ abstract class Button {
             return placeholder(material, 0.toByte(), title)
         }
 
-        fun placeholder(material: Material?, data: Byte, title: String?): Button {
+        fun placeholder(material: Material?, data: Byte, title: Component?): Button {
             return object : Button() {
-                override fun getName(player: Player?): String? {
+                override fun getName(player: Player?): Component? {
                     return title
                 }
 
@@ -98,7 +98,7 @@ abstract class Button {
                     return item
                 }
 
-                override fun getName(player: Player?): String? {
+                override fun getName(player: Player?): Component? {
                     return null
                 }
 

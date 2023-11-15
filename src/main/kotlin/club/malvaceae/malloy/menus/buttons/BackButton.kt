@@ -21,8 +21,8 @@ class BackButton @ConstructorProperties(value = ["back"]) constructor(back: Menu
         return 0
     }
 
-    override fun getName(player: Player?): String {
-        return "\u00a7c\u00a7l" + if (back == null) "Close" else "Back"
+    override fun getName(player: Player?): Component {
+        return MiniMessage.miniMessage().deserialize("\u00a7c\u00a7l" + if (back == null) "Close" else "Back")
     }
 
     override fun getDescription(player: Player?): List<Component> {

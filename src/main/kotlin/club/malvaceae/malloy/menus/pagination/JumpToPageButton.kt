@@ -2,6 +2,7 @@ package club.malvaceae.malloy.menus.pagination
 
 import club.malvaceae.malloy.menus.Button
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -14,8 +15,8 @@ class JumpToPageButton @ConstructorProperties(value = ["page", "menu"]) construc
 ) :
     Button() {
     private val menu: PaginatedMenu
-    override fun getName(player: Player?): String {
-        return "\u00a7ePage " + page
+    override fun getName(player: Player?): Component {
+        return MiniMessage.miniMessage().deserialize("\u00a7ePage " + page)
     }
 
     override fun getDescription(player: Player?): List<Component>? {

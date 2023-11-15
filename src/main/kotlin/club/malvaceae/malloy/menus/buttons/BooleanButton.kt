@@ -2,6 +2,7 @@ package club.malvaceae.malloy.menus.buttons
 
 import club.malvaceae.malloy.menus.Button
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -29,8 +30,8 @@ class BooleanButton @ConstructorProperties(value = ["confirm", "callback"]) cons
         callback.callback(confirm)
     }
 
-    override fun getName(player: Player?): String {
-        return if (confirm) "\u00a7aConfirm" else "\u00a7cCancel"
+    override fun getName(player: Player?): Component? {
+        return MiniMessage.miniMessage().deserialize(if (confirm) "\u00a7aConfirm" else "\u00a7cCancel")
     }
 
     override fun getDescription(player: Player?): List<Component> {

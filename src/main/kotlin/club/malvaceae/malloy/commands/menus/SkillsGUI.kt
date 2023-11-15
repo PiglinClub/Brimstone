@@ -17,8 +17,8 @@ class SkillsGUI : Menu() {
         val buttons = HashMap<Int, Button>()
         val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(player.uniqueId)!!
         buttons[2] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}<bold>Combat ${profile.combatSkillLevel}"
+            override fun getName(var1: Player?): Component? {
+                return MiniMessage.miniMessage().deserialize("${ChatColor.AQUA}<bold>Combat ${profile.combatSkillLevel}")
             }
 
             override fun getMaterial(var1: Player?): Material {
@@ -61,8 +61,8 @@ class SkillsGUI : Menu() {
         }
 
         buttons[3] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}<bold>Mining ${profile.miningSkillLevel}"
+            override fun getName(var1: Player?): Component {
+                return MiniMessage.miniMessage().deserialize("<aqua><bold>Mining ${profile.miningSkillLevel}")
             }
 
             override fun getMaterial(var1: Player?): Material {
@@ -105,8 +105,8 @@ class SkillsGUI : Menu() {
         }
 
         buttons[4] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}<bold>Farming ${profile.farmingSkillLevel}"
+            override fun getName(var1: Player?): Component {
+                return MiniMessage.miniMessage().deserialize("<aqua><bold>Farming ${profile.farmingSkillLevel}")
             }
 
             override fun getMaterial(var1: Player?): Material {
@@ -149,8 +149,8 @@ class SkillsGUI : Menu() {
         }
 
         buttons[5] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}<bold>Fishing ${profile.fishingSkillLevel}"
+            override fun getName(var1: Player?): Component {
+                return MiniMessage.miniMessage().deserialize("<aqua><bold>Fishing ${profile.fishingSkillLevel}")
             }
 
             override fun getMaterial(var1: Player?): Material {
@@ -193,8 +193,8 @@ class SkillsGUI : Menu() {
         }
 
         buttons[6] = object : Button() {
-            override fun getName(var1: Player?): String {
-                return "${ChatColor.AQUA}<bold>Logging ${profile.loggingSkillLevel}"
+            override fun getName(var1: Player?): Component {
+                return MiniMessage.miniMessage().deserialize("<aqua><bold>Logging ${profile.loggingSkillLevel}")
             }
 
             override fun getMaterial(var1: Player?): Material {

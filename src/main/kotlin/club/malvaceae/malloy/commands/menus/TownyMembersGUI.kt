@@ -36,7 +36,7 @@ class TownyMembersGUI : PaginatedMenu() {
                         val item = ItemStack(Material.PLAYER_HEAD)
                         val meta = item.itemMeta as SkullMeta
                         meta.owningPlayer = m
-                        meta.displayName(MiniMessage.miniMessage().deserialize("<reset><green>${m.name}"))
+                        meta.displayName(MiniMessage.miniMessage().deserialize("<reset><green>${m.name}").decoration(TextDecoration.ITALIC, false))
                         meta.lore(
                             mutableListOf(
                                 MiniMessage.miniMessage().deserialize("<reset><gray>Joined at: <aqua>${SimpleDateFormat("MM/dd/yyyy 'at' h:mm a").format(Date(it.joinedAt))}").decoration(TextDecoration.ITALIC, false),
@@ -52,7 +52,7 @@ class TownyMembersGUI : PaginatedMenu() {
                         return null
                     }
 
-                    override fun getName(var1: Player?): String? {
+                    override fun getName(var1: Player?): Component? {
                         return null
                     }
                 }
