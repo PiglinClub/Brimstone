@@ -33,6 +33,7 @@ class ExtractionEnchantment : Enchantment(NamespacedKey.minecraft("extraction"))
         if (!e.player.equipment.itemInMainHand.hasItemMeta()) return
         if (!e.player.equipment.itemInMainHand.containsEnchantment(ExtractionEnchantment())) return
         if (!e.player.isSneaking) return
+        val level = e.player.equipment.itemInMainHand.getEnchantmentLevel(ExtractionEnchantment())
         val blocks = listOf(
             Material.ANCIENT_DEBRIS,
             Material.DIAMOND_ORE,
@@ -55,19 +56,19 @@ class ExtractionEnchantment : Enchantment(NamespacedKey.minecraft("extraction"))
             Material.REDSTONE_ORE
         )
         if (blocks.contains(e.block.type)) {
-            veinMine(e.block.location, e.block.type, e.player)
+            veinMine(e.block.location, e.block.type, e.player, level)
         }
     }
 
-    private fun veinMine(loc: Location, material: Material, player: Player) {
+    private fun veinMine(loc: Location, material: Material, player: Player, level: Int) {
         object : BukkitRunnable() {
             override fun run() {
-                for (x in loc.blockX - 1..loc.blockX + 1) {
-                    for (y in loc.blockY - 1..loc.blockY + 1) {
-                        for (z in loc.blockZ - 1..loc.blockZ + 1) {
+                for (x in (1 - level) - loc.blockX - (1 - level)..loc.blockX + (1 + level)) {
+                    for (y in (1 - level) - loc.blockY - (1 - level)..loc.blockY + (1 + level)) {
+                        for (z in (1 - level) - loc.blockZ - (1 - level)..loc.blockZ + (1 + level)) {
                             val block = loc.world.getBlockAt(x, y, z)
                             if (block.type == material) {
-                                veinMine(block.location, material, player)
+                                veinMine(block.location, material, player, level)
                                 player.breakBlock(block)
                             }
                         }
