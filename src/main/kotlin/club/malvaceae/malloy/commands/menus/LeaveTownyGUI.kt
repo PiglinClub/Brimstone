@@ -36,6 +36,7 @@ class LeaveTownyGUI : Menu() {
             override fun clicked(player: Player, slot: Int, clickType: ClickType?) {
                 playSuccess(player)
                 val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(player) ?: return
+                town.sendMessage("<red><yellow>${player.name}</yellow> left your town.</red>")
                 town.removePlayer(player)
                 Chat.sendMessage(player, "&aSuccessfully left your town.")
                 player.closeInventory()

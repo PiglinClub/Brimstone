@@ -22,17 +22,17 @@ class BackButton @ConstructorProperties(value = ["back"]) constructor(back: Menu
     }
 
     override fun getName(player: Player?): Component {
-        return MiniMessage.miniMessage().deserialize("\u00a7c\u00a7l" + if (back == null) "Close" else "Back")
+        return MiniMessage.miniMessage().deserialize("<red>" + if (back == null) "Close" else "Back")
     }
 
     override fun getDescription(player: Player?): List<Component> {
         val lines: MutableList<Component> = ArrayList()
         if (back != null) {
-            lines.add(MiniMessage.miniMessage().deserialize("Click here to return to").decoration(TextDecoration.ITALIC, false))
-            lines.add(MiniMessage.miniMessage().deserialize("the previous menu.").decoration(TextDecoration.ITALIC, false))
+            lines.add(MiniMessage.miniMessage().deserialize("<gray>Click here to return to").decoration(TextDecoration.ITALIC, false))
+            lines.add(MiniMessage.miniMessage().deserialize("<gray>the previous menu.").decoration(TextDecoration.ITALIC, false))
         } else {
-            lines.add(MiniMessage.miniMessage().deserialize("Click here to").decoration(TextDecoration.ITALIC, false))
-            lines.add(MiniMessage.miniMessage().deserialize("close this menu.").decoration(TextDecoration.ITALIC, false))
+            lines.add(MiniMessage.miniMessage().deserialize("<gray>Click here to").decoration(TextDecoration.ITALIC, false))
+            lines.add(MiniMessage.miniMessage().deserialize("<gray>close this menu.").decoration(TextDecoration.ITALIC, false))
         }
         return lines
     }

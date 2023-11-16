@@ -1,5 +1,6 @@
 package club.malvaceae.malloy.database.towns
 
+import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.utils.Chat
 import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
@@ -39,7 +40,8 @@ class Town(
     var members: List<Document> = listOf(),
     var gold: Double = 0.0,
     var tax: Double = 0.0,
-    var power: Double
+    var power: Double,
+    var createdAt: Long
 ) {
     fun getMember(uuid: UUID): Member? {
         for (document in this.members) {
@@ -61,7 +63,7 @@ class Town(
         for (document in list) {
             val player = Bukkit.getOfflinePlayer(document["uniqueId"] as UUID)
             if (player.isOnline) {
-                Chat.sendMessage(player as Player, "&9[Town]&r $message")
+                Chat.sendComponent(player as Player, "<blue>[Town]<reset> $message")
             }
         }
     }
@@ -80,6 +82,7 @@ class Town(
                 return
             }
         }
+        Malloy.instance.townHandler.saveTown(this)
     }
 
     fun depositGold(player: Player, gold: Double) {
@@ -110,7 +113,7 @@ class Town(
         )
         this.members = list
         profile.town = uniqueId
-        sendMessage("&e${player.name}&a joined your town!")
+        sendMessage("<green><yellow>${player.name}</yellow> joined your town!")
         club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this)
     }
@@ -151,6 +154,33 @@ class Town(
         }
     }
 
+    fun unclaimChunk(chunk: Chunk): Promise<Boolean?> {
+        return Schedulers.async().supply {
+            with(club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
+                try {
+                    val filter = Filters.and(
+                        Filters.eq("x", chunk.x),
+                        Filters.eq("z", chunk.z)
+                    )
+                    val documents = this.find(filter)
+                    if (documents.toList().isEmpty()) {
+                        return@supply true
+                    }
+                    if (documents.first()!!["townUniqueId"] != uniqueId) {
+                        return@supply false
+                    }
+                    this.findOneAndDelete(filter)
+                    power -= 450
+                    Malloy.instance.townHandler.saveTown(this@Town)
+                    return@supply true
+                } catch (e: MongoException) {
+                    e.printStackTrace()
+                    return@supply false
+                }
+            }
+        }
+    }
+
     fun claimChunk(chunk: Chunk): Promise<Claim?> {
         return Schedulers.async().supply {
             with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
@@ -180,6 +210,7 @@ class Town(
                         .append("health", claim.health)
                         .append("world", claim.world)
                         .append("townUniqueId", claim.townUniqueId)
+
                     this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
                     power += Random.nextInt(200, 450)
                     club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this@Town)

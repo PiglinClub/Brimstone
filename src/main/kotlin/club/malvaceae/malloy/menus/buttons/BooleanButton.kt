@@ -31,7 +31,7 @@ class BooleanButton @ConstructorProperties(value = ["confirm", "callback"]) cons
     }
 
     override fun getName(player: Player?): Component? {
-        return MiniMessage.miniMessage().deserialize(if (confirm) "\u00a7aConfirm" else "\u00a7cCancel")
+        return MiniMessage.miniMessage().deserialize(if (confirm) "<green>Confirm" else "<red>Cancel")
     }
 
     override fun getDescription(player: Player?): List<Component> {

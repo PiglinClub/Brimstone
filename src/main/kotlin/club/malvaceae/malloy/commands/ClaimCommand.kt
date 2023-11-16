@@ -30,7 +30,7 @@ class ClaimCommand : CommandExecutor {
         val claims = town.getClaims()
         val cost = ((750) + (claims.get().size * 250))
         if (town.gold < cost) {
-            Chat.sendMessage(sender, "&cYou can't afford to purchase this chunk. You are short by ${ChatColor.of("#ffd417")}${Math.ceil(cost - town.gold)}g&c.")
+            Chat.sendMessage(sender, "&cYour town can't afford to purchase this chunk. The town is short by ${ChatColor.of("#ffd417")}${Math.ceil(cost - town.gold)}g&c.")
             return false
         }
         val chunk = sender.location.chunk
@@ -58,7 +58,7 @@ class ClaimCommand : CommandExecutor {
             }
             Chat.sendMessage(sender, "&cThis claim is already occupied by another town.")
         } else {
-            town.sendMessage("&e${sender.name}&a claimed a chunk at &eX: ${chunk.x}, Z: ${chunk.z}&a.")
+            town.sendMessage("<green><yellow>${sender.name}</yellow> claimed a chunk at <yellow>X: ${chunk.x}, Z: ${chunk.z}</yellow>.")
             town.gold -= cost
             club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
             club.malvaceae.malloy.Malloy.log.info("Claimed chunk at X: ${chunk.x}, Z: ${chunk.z} for ${town.name} (${town.uniqueId})")

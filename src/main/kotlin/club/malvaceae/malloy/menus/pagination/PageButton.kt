@@ -33,10 +33,10 @@ class PageButton @ConstructorProperties(value = ["mod", "menu"]) constructor(
 
     override fun getName(player: Player?): Component {
         if (!hasNext(player!!)) {
-            return MiniMessage.miniMessage().deserialize(if (mod > 0) "\u00a77Last page" else "\u00a77First page")
+            return MiniMessage.miniMessage().deserialize(if (mod > 0) "<gray>Last page" else "<gray>First page")
         }
-        val str = "(\u00a7e" + (menu.page + mod) + "/\u00a7e" + menu.getPages(player) + "\u00a7a)"
-        return MiniMessage.miniMessage().deserialize(if (mod > 0) "\u00a7a\u27f6" else "\u00a7c\u27f5")
+        val str = "<gray>(<yellow>" + (menu.page + mod) + "<yellow>" + menu.getPages(player) + "<gray>)"
+        return MiniMessage.miniMessage().deserialize(if (mod > 0) "<green>⟶" else "<green>⟵")
     }
 
     override fun getDescription(player: Player?): List<Component> {

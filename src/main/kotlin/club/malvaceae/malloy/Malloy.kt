@@ -58,6 +58,7 @@ class Malloy : ExtendedJavaPlugin() {
 
         this.getCommand("balance")!!.setExecutor(club.malvaceae.malloy.commands.BalanceCommand())
         this.getCommand("claim")!!.setExecutor(club.malvaceae.malloy.commands.ClaimCommand())
+        this.getCommand("unclaim")!!.setExecutor(UnclaimCommand())
         this.getCommand("towny")!!.setExecutor(TownyCommand())
         this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())

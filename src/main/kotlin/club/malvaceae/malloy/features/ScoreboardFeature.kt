@@ -70,7 +70,7 @@ class ScoreboardFeature : Listener {
                         " ${ChatColor.RESET}Players: ${ChatColor.of("#ff5100")}${Bukkit.getOnlinePlayers().size}/${Bukkit.getMaxPlayers()}",
                         " ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${floor(profile.gold)}g",
                         " ${ChatColor.RESET}Level: ${ChatColor.of("#32b3c9")}${profile.level}",
-                        "  $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
+                        " $progressBar ${ChatColor.of("#28cf1f")}${percentage}%",
                         " ",
                         " ${ChatColor.GRAY}You are not in a town!",
                         " ${ChatColor.GRAY}Create a town using",

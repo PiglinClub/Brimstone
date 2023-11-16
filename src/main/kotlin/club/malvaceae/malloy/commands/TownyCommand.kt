@@ -9,7 +9,6 @@ import club.malvaceae.malloy.utils.Chat
 import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
 import me.lucko.helper.Schedulers
-import net.md_5.bungee.api.ChatColor
 import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -78,16 +77,18 @@ class TownyCommand : CommandExecutor {
                                 .append("role", "mayor")
                                 .append("joinedAt", System.currentTimeMillis())
                                 .append("goldDeposited", 0.0)
+                                .append("hijacked", false)
                         ),
                         0.0,
                         0.0,
-                        0.0
+                        0.0,
+                        System.currentTimeMillis()
                     )
                     profile.town = town.uniqueId
                     profile.addExp(100.0)
-                    club.malvaceae.malloy.Malloy.instance.townHandler.updateCache(town)
-                    club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
-                    club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
+                    Malloy.instance.townHandler.updateCache(town)
+                    Malloy.instance.townHandler.saveTown(town)
+                    Malloy.instance.profileHandler.saveProfile(profile)
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
                 }
                 "joinTax" -> {
@@ -114,7 +115,7 @@ class TownyCommand : CommandExecutor {
                         return false
                     }
                     town.tax = args[1].toDouble()
-                    town.sendMessage("&e${sender.name}&a set the join tax to ${ChatColor.of("#ffd417")}${town.tax}g&a.")
+                    town.sendMessage("<green><yellow>${sender.name}</yellow> set the join tax to <color:#ffd417>${town.tax}g</color>.")
                     club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
                 }
                 "rename" -> {
@@ -155,7 +156,7 @@ class TownyCommand : CommandExecutor {
                     }
                     town.name = name
                     club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
-                    town.sendMessage("&e${sender.name}&a renamed the town to &e${town.name}&a!")
+                    town.sendMessage("<green><yellow>${sender.name}</yellow> renamed the town to <yellow>${town.name}</yellow>!")
                 }
                 "invite" -> {
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
@@ -196,7 +197,7 @@ class TownyCommand : CommandExecutor {
                             }
                         }
                     }
-                    town.sendMessage("&e${sender.name}&a invited &e${target.name}&a to join the town!")
+                    town.sendMessage("<green><yellow>${sender.name}</yellow> invited <yellow>${target.name}</yellow> to join the town!")
                     InviteHandler.createInvite(town, sender, target)
                     Chat.sendMessage(sender, "&aSuccessfully sent an invite! They have &e10 minutes&a to accept.")
                 }
@@ -236,6 +237,7 @@ class TownyCommand : CommandExecutor {
                         return false
                     }
                     Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.addPlayer(sender, true)
+                    Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.sendMessage("<green><yellow>${sender.name}</yellow> hijacked into your town!")
                 }
                 "accept" -> {
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
@@ -264,7 +266,7 @@ class TownyCommand : CommandExecutor {
                             }
                             profile.gold -= task.from.tax
                             club.malvaceae.malloy.Malloy.instance.townHandler.getTown(task.from.uniqueId)!!.gold += task.from.tax
-                            club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
+                            Malloy.instance.profileHandler.saveProfile(profile)
                             club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(task.from)
                             club.malvaceae.malloy.Malloy.instance.townHandler.getTown(task.from.uniqueId)!!.addPlayer(sender)
                             InviteHandler.removeInvite(task)
@@ -290,7 +292,7 @@ class TownyCommand : CommandExecutor {
                     for (task in InviteHandler.tasks[sender.uniqueId]!!) {
                         if (task.from.uniqueId == UUID.fromString(args[1])) {
                             InviteHandler.removeInvite(task)
-                            task.from.sendMessage("&e${sender.name}&a has declined your invite.")
+                            task.from.sendMessage("<green><yellow>${sender.name}</yellow> has declined your invite.")
                             Chat.sendMessage(sender, "&aSuccessfully denied &e${task.from.name}&a's invite.")
                             return true
                         }
@@ -345,9 +347,9 @@ class TownyCommand : CommandExecutor {
                         val amount = town.gold
                         town.gold -= amount
                         profile.gold += amount
-                        town.sendMessage("&e${sender.name}&a withdrew ${ChatColor.of("#ffd417")}${amount}g&a from the town treasury.")
+                        town.sendMessage("<green><yellow>${sender.name}</yellow> withdrew <color:#ffd417>${amount}g</color> from the town treasury.")
                         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
-                        club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
+                        Malloy.instance.profileHandler.saveProfile(profile)
                     } else {
                         if (args[1].toDoubleOrNull() == null && args[1].toIntOrNull() == null) {
                             Chat.sendMessage(sender, "&cYou need a valid number to withdraw.")
@@ -360,9 +362,9 @@ class TownyCommand : CommandExecutor {
                         }
                         town.gold -= amount
                         profile.gold += amount
-                        town.sendMessage("&e${sender.name}&a withdrew ${ChatColor.of("#ffd417")}${amount}g&a from the town treasury.")
+                        town.sendMessage("<green><yellow>${sender.name}</yellow> withdrew <color:#ffd417>${amount}g</color> from the town treasury.")
                         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
-                        club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
+                        Malloy.instance.profileHandler.saveProfile(profile)
                     }
                 }
                 "deposit" -> {
@@ -387,9 +389,9 @@ class TownyCommand : CommandExecutor {
                         val member = town.getMember(sender.uniqueId)!!
                         member.goldDeposited += amount
                         town.saveMember(member)
-                        town.sendMessage("&e${sender.name}&a deposited ${ChatColor.of("#ffd417")}${amount}g&a into the town treasury.")
+                        town.sendMessage("<green><yellow>${sender.name}</yellow> deposited <color:#ffd417>${amount}g</color> into the town treasury.")
                         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
-                        club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
+                        Malloy.instance.profileHandler.saveProfile(profile)
                     } else {
                         if (args[1].toDoubleOrNull() == null && args[1].toIntOrNull() == null) {
                             Chat.sendMessage(sender, "&cYou need a valid number to withdraw.")
@@ -405,9 +407,9 @@ class TownyCommand : CommandExecutor {
                         val member = town.getMember(sender.uniqueId)!!
                         member.goldDeposited += amount
                         town.saveMember(member)
-                        town.sendMessage("&e${sender.name}&a deposited ${ChatColor.of("#ffd417")}${amount}g&a into the town treasury.")
+                        town.sendMessage("<green><yellow>${sender.name}</yellow> deposited <color:#ffd417>${amount}g</color> into the town treasury.")
                         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(town)
-                        club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
+                        Malloy.instance.profileHandler.saveProfile(profile)
                     }
                 }
             }

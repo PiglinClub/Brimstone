@@ -16,7 +16,7 @@ class JumpToPageButton @ConstructorProperties(value = ["page", "menu"]) construc
     Button() {
     private val menu: PaginatedMenu
     override fun getName(player: Player?): Component {
-        return MiniMessage.miniMessage().deserialize("\u00a7ePage " + page)
+        return MiniMessage.miniMessage().deserialize("<yellow>Page " + page)
     }
 
     override fun getDescription(player: Player?): List<Component>? {

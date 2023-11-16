@@ -38,9 +38,7 @@ class ShopGUI : Menu() {
 
                 override fun getDescription(var1: Player?): List<Component>? {
                     return listOf(
-                        MiniMessage.miniMessage().deserialize("<st><dark_gray>                              </dark_gray></st>").decoration(TextDecoration.ITALIC, false),
-                        MiniMessage.miniMessage().deserialize("<yellow>Click to see ${category.displayName} items").decoration(TextDecoration.ITALIC, false),
-                        MiniMessage.miniMessage().deserialize("<st><dark_gray>                              </dark_gray></st>").decoration(TextDecoration.ITALIC, false)
+                        MiniMessage.miniMessage().deserialize("<yellow>Click to see ${category.displayName} items").decoration(TextDecoration.ITALIC, false)
                     )
                 }
 

@@ -202,6 +202,7 @@ class TownHandler {
                 .append("gold", town.gold)
                 .append("tax", town.tax)
                 .append("power", town.power)
+                .append("createdAt", town.createdAt)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -248,7 +249,8 @@ class TownHandler {
                             (document["members"] as List<Document>),
                             (document["gold"] as Double),
                             ((document["tax"] as Double?) ?: 0.0),
-                            ((document["power"] as Double?) ?: 0.0)
+                            ((document["power"] as Double?) ?: 0.0),
+                            ((document["createdAt"] as Long?) ?: System.currentTimeMillis())
                         )
                     } else {
                         return@supply null
