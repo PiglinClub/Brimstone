@@ -41,7 +41,8 @@ class Town(
     var gold: Double = 0.0,
     var tax: Double = 0.0,
     var power: Double,
-    var createdAt: Long
+    var createdAt: Long,
+    var adminOnly: Boolean
 ) {
     fun getMember(uuid: UUID): Member? {
         for (document in this.members) {
@@ -237,7 +238,7 @@ class Town(
         club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(profile)
         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this)
         val uuid = this.uniqueId
-        if (this.members.isEmpty()) {
+        if (this.members.isEmpty() && !this.adminOnly) {
             Schedulers.async().run {
                 with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("towns")) {
                     val filter = Filters.eq("uuid", uuid)

@@ -5,7 +5,6 @@ import club.malvaceae.malloy.menus.Menu
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import kotlin.math.floor
@@ -18,7 +17,7 @@ class SkillsGUI : Menu() {
         val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(player.uniqueId)!!
         buttons[2] = object : Button() {
             override fun getName(var1: Player?): Component? {
-                return MiniMessage.miniMessage().deserialize("${ChatColor.AQUA}<bold>Combat ${profile.combatSkillLevel}")
+                return MiniMessage.miniMessage().deserialize("<aqua><bold>Combat ${profile.combatSkillLevel}")
             }
 
             override fun getMaterial(var1: Player?): Material {

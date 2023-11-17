@@ -82,7 +82,8 @@ class TownyCommand : CommandExecutor {
                         0.0,
                         0.0,
                         0.0,
-                        System.currentTimeMillis()
+                        System.currentTimeMillis(),
+                        false
                     )
                     profile.town = town.uniqueId
                     profile.addExp(100.0)
@@ -200,6 +201,27 @@ class TownyCommand : CommandExecutor {
                     town.sendMessage("<green><yellow>${sender.name}</yellow> invited <yellow>${target.name}</yellow> to join the town!")
                     InviteHandler.createInvite(town, sender, target)
                     Chat.sendMessage(sender, "&aSuccessfully sent an invite! They have &e10 minutes&a to accept.")
+                }
+                "adminonly" -> {
+                    val profile = Malloy.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (!sender.hasPermission("piglin.adminonly")) {
+                        Chat.sendComponent(sender, "<red>You don't have permission to use this command.")
+                        return false
+                    }
+                    val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(sender)!!
+                    if (town == null) {
+                        Chat.sendComponent(sender, "<red>You must be in a town to use this command.")
+                        return false
+                    }
+                    if (town.adminOnly) {
+                        town.adminOnly = false
+                        Malloy.instance.townHandler.saveTown(town)
+                        town.sendMessage("<green><yellow>${sender.name}</yellow> has disabled <red>Admin-only</red> for your town.")
+                    } else {
+                        town.adminOnly = true
+                        Malloy.instance.townHandler.saveTown(town)
+                        town.sendMessage("<green><yellow>${sender.name}</yellow> has enabled <red>Admin-only</red> for your town.")
+                    }
                 }
                 "hijack" -> {
                     val profile = Malloy.instance.profileHandler.getProfile(sender.uniqueId)

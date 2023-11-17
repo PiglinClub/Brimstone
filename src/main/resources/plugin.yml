@@ -3,7 +3,8 @@ description: SMP plugin
 api-version: 1.13
 main: club.malvaceae.malloy.Malloy
 version: 1.0-SNAPSHOT
-depend: [ProtocolLib]
+depend: [ProtocolLib, Votifier]
+softdepend: [NuVotifier]
 commands:
   towny:
     description: Main command for Towny-related features

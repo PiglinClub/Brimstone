@@ -23,7 +23,7 @@ import java.util.logging.Logger
 class Malloy : ExtendedJavaPlugin() {
     companion object {
         @JvmStatic
-        lateinit var instance: club.malvaceae.malloy.Malloy
+        lateinit var instance: Malloy
         lateinit var log: Logger
     }
 
@@ -38,8 +38,8 @@ class Malloy : ExtendedJavaPlugin() {
     }
 
     override fun enable() {
-        club.malvaceae.malloy.Malloy.Companion.instance = this
-        club.malvaceae.malloy.Malloy.Companion.log = Bukkit.getLogger()
+        instance = this
+        log = Bukkit.getLogger()
         Settings
         setupDataSource()
 
@@ -60,7 +60,7 @@ class Malloy : ExtendedJavaPlugin() {
         this.getCommand("claim")!!.setExecutor(club.malvaceae.malloy.commands.ClaimCommand())
         this.getCommand("unclaim")!!.setExecutor(UnclaimCommand())
         this.getCommand("towny")!!.setExecutor(TownyCommand())
-        this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
+        //this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
         this.getCommand("shop")!!.setExecutor(ShopCommand())
 

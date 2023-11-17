@@ -62,8 +62,7 @@ class WildernessTask(val player: Player) : BukkitRunnable(), Listener {
                     )
                 }
             }
-            world.loadChunk(finalLocation.chunk)
-            player.teleport(finalLocation)
+            player.teleportAsync(finalLocation)
             Chat.sendComponent(player, "<dark_green>[Wilderness]</dark_green> <reset>Teleported you to <green>X: ${round(finalLocation.x)}, Z: ${round(finalLocation.z)}</green>.")
         }
     }

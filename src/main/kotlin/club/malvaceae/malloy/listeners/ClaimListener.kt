@@ -2,9 +2,6 @@ package club.malvaceae.malloy.listeners
 
 import club.malvaceae.malloy.database.towns.Claim
 import club.malvaceae.malloy.utils.Chat
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.title.Title
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -12,7 +9,6 @@ import org.bukkit.event.block.*
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.bukkit.event.player.PlayerBucketFillEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
 import java.util.*
 
 class ClaimListener : Listener {
@@ -21,66 +17,8 @@ class ClaimListener : Listener {
     }
 
     @EventHandler
-    fun onPlayerMove(e: PlayerMoveEvent) {
-        if (e.from.chunk != e.to.chunk) {
-            val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.to.chunk.x, e.to.chunk.z).get()
-            if (claimMap[e.player.uniqueId] == null) {
-                if (claim != null) {
-                    val town = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.townUniqueId)
-                    if (town != null) {
-                        e.player.showTitle(Title.title(
-                            Component.text(" "),
-                            MiniMessage.miniMessage().deserialize("<reset>Now entering: <yellow>${town.name}</yellow>")
-                        ))
-                    }
-                } else {
-                    return
-                }
-            } else {
-                if (claim != null) {
-                    if (claim.townUniqueId != claimMap[e.player.uniqueId]!!.townUniqueId) {
-                        val town = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.townUniqueId)
-                        if (town != null) {
-                            e.player.showTitle(Title.title(
-                                Component.text(" "),
-                                MiniMessage.miniMessage().deserialize("<reset>Now entering: <yellow>${town.name}</yellow>")
-                            ))
-                        }
-                    }
-                } else {
-                    e.player.showTitle(Title.title(
-                        Component.text(" "),
-                        MiniMessage.miniMessage().deserialize("<reset>Now entering: <dark_green>Wilderness</dark_green>")
-                    ))
-                }
-            }
-            claimMap[e.player.uniqueId] = claim
-        }
-    }
-
-    @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         claimMap[e.player.uniqueId] = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z).get()
-    }
-
-    @EventHandler
-    fun onBlockFromTo(e: BlockFromToEvent) {
-        val fromClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z).get()
-        val toClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.toBlock.chunk.x, e.toBlock.chunk.z).get()
-        if (fromClaim == null && toClaim != null) {
-            e.isCancelled = true
-            return
-        }
-        if (fromClaim != null && toClaim == null) {
-            e.isCancelled = true
-            return
-        }
-        if (fromClaim == null && toClaim == null) {
-            return
-        }
-        if (fromClaim!!.townUniqueId != toClaim!!.townUniqueId) {
-            e.isCancelled = true
-        }
     }
 
     @EventHandler

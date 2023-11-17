@@ -203,6 +203,7 @@ class TownHandler {
                 .append("tax", town.tax)
                 .append("power", town.power)
                 .append("createdAt", town.createdAt)
+                .append("adminOnly", town.adminOnly)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -250,7 +251,8 @@ class TownHandler {
                             (document["gold"] as Double),
                             ((document["tax"] as Double?) ?: 0.0),
                             ((document["power"] as Double?) ?: 0.0),
-                            ((document["createdAt"] as Long?) ?: System.currentTimeMillis())
+                            ((document["createdAt"] as Long?) ?: System.currentTimeMillis()),
+                            ((document["adminOnly"] as Boolean?) ?: false)
                         )
                     } else {
                         return@supply null

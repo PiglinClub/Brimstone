@@ -28,7 +28,7 @@ class ClaimCommand : CommandExecutor {
             return false
         }
         val claims = town.getClaims()
-        val cost = ((750) + (claims.get().size * 250))
+        val cost = if (!town.adminOnly) ((750) + (claims.get().size * 250)) else 0
         if (town.gold < cost) {
             Chat.sendMessage(sender, "&cYour town can't afford to purchase this chunk. The town is short by ${ChatColor.of("#ffd417")}${Math.ceil(cost - town.gold)}g&c.")
             return false
