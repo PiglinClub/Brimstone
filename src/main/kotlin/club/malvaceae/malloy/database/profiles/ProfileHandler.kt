@@ -96,7 +96,6 @@ class ProfileHandler {
                 .append("angler", profile.angler)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
-        club.malvaceae.malloy.Malloy.log.info("[Profiles] ${profile.name}'s profile was just saved.")
     }
 
     fun getProfile(uniqueId: UUID): Profile? {

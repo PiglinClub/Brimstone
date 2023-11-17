@@ -4,15 +4,33 @@ api-version: 1.13
 main: club.malvaceae.malloy.Malloy
 version: 1.0-SNAPSHOT
 depend: [ProtocolLib, Votifier]
-softdepend: [NuVotifier]
 commands:
+  discord:
+    description: Get the URL for the discord server.
+    aliases:
+      - disc
+      - d
+  twitter:
+    description: Get the link for our Twitter profile.
+  message:
+    description: Command to privately message another player.
+    aliases:
+      - m
+      - msg
+      - w
+      - whisper
+      - tell
+  reply:
+    description: Command to privately message the last player you messaged.
+    aliases:
+      - r
   towny:
     description: Main command for Towny-related features
     aliases:
       - town
       - t
   balance:
-    description: View your own balance.
+    description: View you, or other's, own balance.
     aliases:
       - bal
       - coins

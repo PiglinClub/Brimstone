@@ -5,6 +5,7 @@ import club.malvaceae.malloy.database.profiles.ProfileHandler
 import club.malvaceae.malloy.database.towns.ClaimHandler
 import club.malvaceae.malloy.database.towns.TownHandler
 import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
+import club.malvaceae.malloy.features.InfoFeature
 import club.malvaceae.malloy.features.ScoreboardFeature
 import club.malvaceae.malloy.listeners.ClaimListener
 import club.malvaceae.malloy.listeners.PlayerListener
@@ -56,14 +57,19 @@ class Malloy : ExtendedJavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(PlayerListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(ServerListPingListener(), this)
 
+        InfoFeature().runTaskTimer(this, 0L, 20L)
+
         this.getCommand("balance")!!.setExecutor(club.malvaceae.malloy.commands.BalanceCommand())
         this.getCommand("claim")!!.setExecutor(club.malvaceae.malloy.commands.ClaimCommand())
         this.getCommand("unclaim")!!.setExecutor(UnclaimCommand())
         this.getCommand("towny")!!.setExecutor(TownyCommand())
+        this.getCommand("reply")!!.setExecutor(ReplyCommand())
+        this.getCommand("message")!!.setExecutor(MessageCommand())
         //this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
         this.getCommand("shop")!!.setExecutor(ShopCommand())
-
+        this.getCommand("twitter")!!.setExecutor(TwitterCommand())
+        this.getCommand("discord")!!.setExecutor(DiscordCommand())
 
         club.malvaceae.malloy.Malloy.Companion.log.info("The plugin has successfully loaded.")
     }

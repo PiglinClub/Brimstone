@@ -174,7 +174,6 @@ class Profile(
                 }
             }
         }
-        club.malvaceae.malloy.Malloy.log.info("[Profiles] Added $amount XP to ${skill.toString().uppercase()} for $uniqueId")
         club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(this)
     }
 
