@@ -354,7 +354,7 @@ class ClaimListener : Listener {
         val (access, town) = getChunkAccessAndTown(e.player, e.lectern.chunk.x, e.lectern.chunk.z)
         if (!access) {
             e.isCancelled = true
-            Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${town!!.name}</yellow>.</red>")
+            Chat.sendComponent(e.player, "<red>You cannot take this book as you are not in <yellow>${town!!.name}</yellow>.</red>")
         }
     }
 }
