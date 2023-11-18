@@ -7,6 +7,7 @@ import club.malvaceae.malloy.database.towns.TownHandler
 import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
 import club.malvaceae.malloy.features.InfoFeature
 import club.malvaceae.malloy.features.ScoreboardFeature
+import club.malvaceae.malloy.features.TeleportCheck
 import club.malvaceae.malloy.listeners.ClaimListener
 import club.malvaceae.malloy.listeners.PlayerListener
 import club.malvaceae.malloy.listeners.ServerListPingListener
@@ -17,8 +18,16 @@ import com.comphenix.protocol.ProtocolManager
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientException
 import com.mongodb.MongoClientURI
+import com.vexsoftware.votifier.model.Vote
+import com.vexsoftware.votifier.model.VotifierEvent
 import me.lucko.helper.plugin.ExtendedJavaPlugin
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
+import org.bukkit.event.Event
+import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.Listener
+import org.bukkit.plugin.EventExecutor
 import java.util.logging.Logger
 
 class Malloy : ExtendedJavaPlugin() {
@@ -43,6 +52,9 @@ class Malloy : ExtendedJavaPlugin() {
         log = Bukkit.getLogger()
         Settings
         setupDataSource()
+        if (Bukkit.getServer().getPluginManager().getPlugin("Votifier") == null) {
+            log.info("Enable Votifier, please.")
+        }
 
         profileHandler = ProfileHandler()
         townHandler = TownHandler()
@@ -54,6 +66,7 @@ class Malloy : ExtendedJavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(ClaimListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(SkillListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(WildernessMovementCheck(), this)
+        Bukkit.getServer().pluginManager.registerEvents(TeleportCheck(), this)
         Bukkit.getServer().pluginManager.registerEvents(PlayerListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(ServerListPingListener(), this)
 
@@ -65,6 +78,9 @@ class Malloy : ExtendedJavaPlugin() {
         this.getCommand("towny")!!.setExecutor(TownyCommand())
         this.getCommand("reply")!!.setExecutor(ReplyCommand())
         this.getCommand("message")!!.setExecutor(MessageCommand())
+        this.getCommand("vote")!!.setExecutor(VoteCommand())
+        this.getCommand("tpa")!!.setExecutor(TeleportCommand())
+        this.getCommand("pay")!!.setExecutor(PayCommand())
         //this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
         this.getCommand("shop")!!.setExecutor(ShopCommand())

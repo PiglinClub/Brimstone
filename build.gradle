@@ -19,12 +19,12 @@ dependencies {
     compileOnly ("net.kyori:adventure-api:4.13.1")
     compileOnly ("net.kyori:adventure-text-minimessage:4.13.1")
     implementation ("me.lucko:helper:5.6.13")
-    implementation files('libs/nuvotifier.jar')
+    compileOnly files('libs/NuVotifier.jar')
     implementation ("me.lucko:helper-profiles:1.2.0")
-    implementation ("com.github.MilkBowl:VaultAPI:1.7")
-    compileOnly ("org.mongodb:mongodb-driver:3.12.11")
+    compileOnly ("com.github.MilkBowl:VaultAPI:1.7")
+    implementation ("org.mongodb:mongodb-driver:3.12.11")
     implementation ("fr.mrmicky:fastboard:2.0.1")
-    compileOnly ("net.wesjd:anvilgui:1.6.4-SNAPSHOT")
+    implementation ("net.wesjd:anvilgui:1.6.4-SNAPSHOT")
     compileOnly files('libs/craftbukkit-1.20.2-R0.1-SNAPSHOT.jar')
 }
 

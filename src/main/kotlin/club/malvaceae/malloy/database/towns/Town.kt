@@ -42,7 +42,11 @@ class Town(
     var tax: Double = 0.0,
     var power: Double,
     var createdAt: Long,
-    var adminOnly: Boolean
+    var adminOnly: Boolean,
+    var homeX: Double?,
+    var homeY: Double?,
+    var homeZ: Double?,
+    var homeWorld: String?
 ) {
     fun getMember(uuid: UUID): Member? {
         for (document in this.members) {

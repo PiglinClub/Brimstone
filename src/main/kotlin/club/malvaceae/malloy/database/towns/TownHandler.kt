@@ -204,6 +204,11 @@ class TownHandler {
                 .append("power", town.power)
                 .append("createdAt", town.createdAt)
                 .append("adminOnly", town.adminOnly)
+                .append("homeX", town.homeX)
+                .append("homeY", town.homeY)
+                .append("homeZ", town.homeZ)
+                .append("homeWorld", town.homeWorld)
+
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -252,7 +257,11 @@ class TownHandler {
                             ((document["tax"] as Double?) ?: 0.0),
                             ((document["power"] as Double?) ?: 0.0),
                             ((document["createdAt"] as Long?) ?: System.currentTimeMillis()),
-                            ((document["adminOnly"] as Boolean?) ?: false)
+                            ((document["adminOnly"] as Boolean?) ?: false),
+                            (document["homeX"] as Double?),
+                            (document["homeY"] as Double?),
+                            (document["homeZ"] as Double?),
+                            (document["homeWorld"] as String?),
                         )
                     } else {
                         return@supply null

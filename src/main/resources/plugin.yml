@@ -3,7 +3,8 @@ description: SMP plugin
 api-version: 1.13
 main: club.malvaceae.malloy.Malloy
 version: 1.0-SNAPSHOT
-depend: [ProtocolLib, Votifier]
+depend: [ProtocolLib]
+softdepend: [Votifier, NuVotifier]
 commands:
   discord:
     description: Get the URL for the discord server.
@@ -12,6 +13,17 @@ commands:
       - d
   twitter:
     description: Get the link for our Twitter profile.
+  tpa:
+    description: Command to request to teleport to someone.
+    aliases:
+      - tpo
+  pay:
+    description: Command to send money to other players.
+    aliases:
+      - send
+      - sendmoney
+  vote:
+    description: Get our voting links.
   message:
     description: Command to privately message another player.
     aliases:

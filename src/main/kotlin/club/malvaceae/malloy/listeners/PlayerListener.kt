@@ -28,14 +28,14 @@ class PlayerListener : Listener {
         club.malvaceae.malloy.utils.Chat.sendComponent(e.player, "<gray>Warning: This server is in <red>ALPHA</red>, many features may be added/removed later on.")
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    fun onPlayerVote(e: VotifierEvent) {
+    @EventHandler
+    fun onVoteSubmit(e: VotifierEvent) {
         val vote = e.vote as Vote
         val player = Bukkit.getOfflinePlayer(vote.username)
         if (player != null) {
             val profile = Malloy.instance.profileHandler.lookupProfile(player.uniqueId).get()
-            profile.addExp(500.0)
-            profile.gold += 150
+            profile.addExp(25.0)
+            profile.gold += 1500
             Malloy.instance.profileHandler.saveProfile(profile)
             Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green><blue>[Vote]</blue> <yellow>${player.name}</yellow> voted for the server and got <aqua>500 xp</aqua> and <color:#ffd417>150g</color>."))
         }

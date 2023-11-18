@@ -5,17 +5,20 @@ import club.malvaceae.malloy.commands.menus.LeaveTownyGUI
 import club.malvaceae.malloy.commands.menus.TownyMembersGUI
 import club.malvaceae.malloy.database.towns.InviteHandler
 import club.malvaceae.malloy.database.towns.Town
+import club.malvaceae.malloy.features.TeleportFeature
 import club.malvaceae.malloy.utils.Chat
 import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
 import me.lucko.helper.Schedulers
 import org.bson.Document
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.math.floor
 
 class TownyCommand : CommandExecutor {
     override fun onCommand(
@@ -83,7 +86,11 @@ class TownyCommand : CommandExecutor {
                         0.0,
                         0.0,
                         System.currentTimeMillis(),
-                        false
+                        false,
+                        null,
+                        null,
+                        null,
+                        null
                     )
                     profile.town = town.uniqueId
                     profile.addExp(100.0)
@@ -91,6 +98,45 @@ class TownyCommand : CommandExecutor {
                     Malloy.instance.townHandler.saveTown(town)
                     Malloy.instance.profileHandler.saveProfile(profile)
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
+                }
+                "home" -> {
+                    val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(sender)!!
+                    if (town.homeX == null) {
+                        Chat.sendComponent(sender, "<red>Your town currently does not have a home set. Ask your mayor to set one for you.")
+                        return false
+                    }
+                    TeleportFeature.startTeleport(sender, Location(Bukkit.getWorld(town.homeWorld!!), town.homeX!!, town.homeY!!, town.homeZ!!))
+                }
+                "sethome" -> {
+                    val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
+                    if (profile == null) {
+                        Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")
+                        return false
+                    }
+                    if (profile.town == null) {
+                        Chat.sendMessage(sender, "&cYou currently are not in a Town.")
+                        return false
+                    }
+                    val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(sender)!!
+                    if (town.getMember(profile.uniqueId)!!.role != "mayor") {
+                        Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
+                        return false
+                    }
+                    town.homeX = sender.location.x
+                    town.homeY = sender.location.y
+                    town.homeZ = sender.location.z
+                    town.homeWorld = sender.location.world.name
+                    Malloy.instance.townHandler.saveTown(town)
+                    town.sendMessage("<green><yellow>${sender.name}</yellow> set the town location to <yellow>X: ${floor(sender.location.x)}, Y: ${floor(sender.location.y)}, Z: ${floor(sender.location.z)}</yellow>.")
                 }
                 "joinTax" -> {
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
