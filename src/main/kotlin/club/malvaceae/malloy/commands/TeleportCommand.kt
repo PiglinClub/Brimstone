@@ -1,11 +1,9 @@
 package club.malvaceae.malloy.commands
 
 import club.malvaceae.malloy.database.towns.InviteStatus
-import club.malvaceae.malloy.database.towns.Town
 import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
-import org.bukkit.OfflinePlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -61,7 +59,7 @@ class TpaHandler {
                     MiniMessage.miniMessage().deserialize("<green><bold><click:run_command:/tpa accept ${from.name}>ACCEPT</click></bold></green> <red><bold><click:run_command:/tpa deny ${from.name}>DENY</click></bold></red>")
                 )
             }
-            Chat.sendComponent(from, "<blue>[Teleports]</blue> Sent teleportation request to <yellow>${to.name}</yellow>.")
+            Chat.sendComponent(from, "<blue>[Teleport]</blue> Sent teleportation request to <yellow>${to.name}</yellow>.")
             club.malvaceae.malloy.Malloy.log.info("[Teleports] Created invite for ${to.name} to ${from.name}.")
         }
 
@@ -91,9 +89,10 @@ class TeleportCommand : CommandExecutor {
             for (task in TpaHandler.tasks[sender.uniqueId]!!.toList()) {
                 if (task.from.uniqueId == from.uniqueId) {
                     TpaHandler.removeInvite(task)
-                    Chat.sendComponent(sender, "<blue>[Teleports]</blue> Accepted request from <yellow>${from.name}</yellow>, now teleporting them to you now.")
-                    Chat.sendComponent(from, "<blue>[Teleports]</blue> <yellow>${sender.name}</yellow> accepted your request, teleporting to them now.")
+                    Chat.sendComponent(sender, "<blue>[Teleport]</blue> Accepted request from <yellow>${from.name}</yellow>, now teleporting them to you now.")
+                    Chat.sendComponent(from, "<blue>[Teleport]</blue> <yellow>${sender.name}</yellow> accepted your request, teleporting to them now.")
                     from.teleportAsync(sender.location)
+                    return false
                 }
             }
             Chat.sendComponent(sender, "<red>Couldn't find teleportation request, they probably didn't send you one.")
@@ -113,6 +112,7 @@ class TeleportCommand : CommandExecutor {
                     TpaHandler.removeInvite(task)
                     Chat.sendComponent(sender, "<blue>[Teleports]</blue> Denied request from <yellow>${from.name}</yellow>.")
                     Chat.sendComponent(from, "<blue>[Teleports]</blue> <yellow>${sender.name}</yellow> denied your request.")
+                    return false
                 }
             }
             Chat.sendComponent(sender, "<red>This player hasn't sent you a teleportation request.")

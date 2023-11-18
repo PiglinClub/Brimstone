@@ -10,7 +10,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.milkbowl.vault.chat.Chat
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -37,7 +36,7 @@ class PlayerListener : Listener {
             profile.addExp(25.0)
             profile.gold += 1500
             Malloy.instance.profileHandler.saveProfile(profile)
-            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green><blue>[Vote]</blue> <yellow>${player.name}</yellow> voted for the server and got <aqua>500 xp</aqua> and <color:#ffd417>150g</color>."))
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green><blue>[Vote]</blue> <yellow>${player.name}</yellow> voted for the server and got <aqua>25 xp</aqua> and <color:#ffd417>1500g</color>."))
         }
     }
 

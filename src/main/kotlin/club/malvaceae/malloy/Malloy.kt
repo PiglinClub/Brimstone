@@ -18,16 +18,8 @@ import com.comphenix.protocol.ProtocolManager
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientException
 import com.mongodb.MongoClientURI
-import com.vexsoftware.votifier.model.Vote
-import com.vexsoftware.votifier.model.VotifierEvent
 import me.lucko.helper.plugin.ExtendedJavaPlugin
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
-import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
-import org.bukkit.plugin.EventExecutor
 import java.util.logging.Logger
 
 class Malloy : ExtendedJavaPlugin() {
