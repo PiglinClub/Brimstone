@@ -118,7 +118,7 @@ class ProfileHandler {
                     if (document != null) {
                         p = Profile(
                             uniqueId,
-                            (document["name"] as String),
+                            (document["name"] as String?),
                             ((document["lastLogin"] as Date?)?.time) ?: System.currentTimeMillis(),
                             ((document["firstJoin"] as Date?)?.time) ?: System.currentTimeMillis(),
                             (document["lastLoginLocationX"] as Double?) ?: 0.0,
