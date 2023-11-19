@@ -76,6 +76,7 @@ class Malloy : ExtendedJavaPlugin() {
         this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
         this.getCommand("shop")!!.setExecutor(ShopCommand())
+        this.getCommand("baltop")!!.setExecutor(BaltopCommand())
         this.getCommand("twitter")!!.setExecutor(TwitterCommand())
         this.getCommand("discord")!!.setExecutor(DiscordCommand())
 
