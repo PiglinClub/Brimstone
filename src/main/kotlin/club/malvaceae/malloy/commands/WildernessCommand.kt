@@ -32,19 +32,29 @@ class WildernessTask(val player: Player) : BukkitRunnable(), Listener {
     var timer = 5
 
     override fun run() {
-        player.sendActionBar(MiniMessage.miniMessage().deserialize("<dark_green>[Wilderness]</dark_green> Teleporting in <green>${timer}s</green>..."))
+        player.sendActionBar(
+            MiniMessage.miniMessage()
+                .deserialize("<dark_green>[Wilderness]</dark_green> Teleporting in <green>${timer}s</green>...")
+        )
         timer--
         if (timer == 0) {
             cancel()
             WildernessCommand.tasks[player.uniqueId] = null
-            val location = Location(
+            val x = Random.nextDouble(player.location.x - 5000, player.location.x + 5000)
+            val y = Random.nextDouble(player.location.z - 5000, player.location.z + 5000)
+            var location = Location(
                 player.world,
-                Random.nextDouble(player.location.x - 5000, player.location.x + 5000),
-                256.0,
-                Random.nextDouble(player.location.z - 5000, player.location.z + 5000)
+                x,
+                player.world.getHighestBlockYAt(x.toInt(), y.toInt()).toDouble(),
+                y
             )
             player.teleportAsync(location.world.getHighestBlockAt(location).location)
-            Chat.sendComponent(player, "<dark_green>[Wilderness]</dark_green> <reset>Teleported you to <green>X: ${round(location.x)}, Z: ${round(location.z)}</green>.")
+            Chat.sendComponent(
+                player,
+                "<dark_green>[Wilderness]</dark_green> <reset>Teleported you to <green>X: ${round(location.x)}, Z: ${
+                    round(location.z)
+                }</green>."
+            )
         }
     }
 }
