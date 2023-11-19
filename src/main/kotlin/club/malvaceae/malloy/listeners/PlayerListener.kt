@@ -24,7 +24,7 @@ class PlayerListener : Listener {
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val group: String? = vaultChat?.getPrimaryGroup(e.player)
-        val prefix = MiniMessage.miniMessage().deserialize("${vaultChat?.getGroupPrefix(e.player.world, group)}")
+        val prefix = vaultChat?.getGroupPrefix(e.player.world, group)
         e.joinMessage(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><green>+<dark_gray>]</dark_gray> <color:#28cf1f>${prefix}${e.player.name}"))
         club.malvaceae.malloy.utils.Chat.sendComponent(e.player, "<gray>Warning: This server is in <red>ALPHA</red>, many features may be added/removed later on.")
     }
@@ -47,23 +47,23 @@ class PlayerListener : Listener {
         e.isCancelled = true
         val level = Malloy.instance.profileHandler.getProfile(e.player.uniqueId)!!.level
         val group: String? = vaultChat?.getPrimaryGroup(e.player)
-        val prefix = MiniMessage.miniMessage().deserialize("${vaultChat?.getGroupPrefix(e.player.world, group)}")
+        val prefix = vaultChat?.getGroupPrefix(e.player.world, group)
         val town: Town? = Malloy.instance.townHandler.getPlayerTown(e.player)
         if (town == null) {
-            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> ${prefix}<reset>${e.player.name}<dark_gray>:<reset> ${(MiniMessage.miniMessage().stripTags(
-                (e.message() as TextComponent).toString()
-            ))}"))
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> ${prefix}<reset>${e.player.name}<dark_gray>:<reset> ${(
+                (e.message() as TextComponent).content()
+            )}"))
         } else {
-            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> <green>${town.name}</green> $prefix<reset>${e.player.name}<dark_gray>:<reset> ${(MiniMessage.miniMessage().stripTags(
-                (e.message() as TextComponent).toString()
-            ))}"))
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> <green>${town.name}</green> $prefix<reset>${e.player.name}<dark_gray>:<reset> ${
+                (e.message() as TextComponent).content()
+            }"))
         }
     }
 
     @EventHandler
     fun onPlayerQuit(e: PlayerQuitEvent) {
         val group: String? = vaultChat?.getPrimaryGroup(e.player)
-        val prefix = MiniMessage.miniMessage().deserialize("${vaultChat?.getGroupPrefix(e.player.world, group)}")
+        val prefix = vaultChat?.getGroupPrefix(e.player.world, group)
         e.quitMessage(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><red>-<dark_gray>]</dark_gray> <color:#f53527>${prefix}${e.player.name}"))
     }
 
