@@ -23,7 +23,7 @@ class ClaimCommand : CommandExecutor {
             return false
         }
         val town = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(profile.town!!)!!
-        if (town.getMember(sender.uniqueId)!!.role != "mayor") {
+        if (town.getMember(sender.uniqueId)!!.role != "mayor" && town.getMember(sender.uniqueId)!!.role != "officer") {
             Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
             return false
         }

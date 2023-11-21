@@ -361,7 +361,7 @@ class ShopHandler {
             addEntry(Material.INK_SAC, ShopCategory.MOB_DROPS, 10.0, 5.0)
             addEntry(Material.GLOW_INK_SAC, ShopCategory.MOB_DROPS, 100.0, 50.0)
             addEntry(Material.LEATHER, ShopCategory.MOB_DROPS, 35.0, 15.0)
-            addEntry(Material.ENDER_PEARL, ShopCategory.MOB_DROPS, 1.0, 250.0, true, false)
+            addEntry(Material.ENDER_PEARL, ShopCategory.MOB_DROPS, 1.0, 25.0, true, false)
             addEntry(Material.GUNPOWDER, ShopCategory.MOB_DROPS, 50.0, 10.0)
             addEntry(Material.PHANTOM_MEMBRANE, ShopCategory.MOB_DROPS, 125.0, 75.0)
             addEntry(Material.MAGMA_CREAM, ShopCategory.MOB_DROPS, 150.0, 100.0)

@@ -18,16 +18,8 @@ import com.comphenix.protocol.ProtocolManager
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientException
 import com.mongodb.MongoClientURI
-import com.vexsoftware.votifier.model.Vote
-import com.vexsoftware.votifier.model.VotifierEvent
 import me.lucko.helper.plugin.ExtendedJavaPlugin
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
-import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
-import org.bukkit.plugin.EventExecutor
 import java.util.logging.Logger
 
 class Malloy : ExtendedJavaPlugin() {
@@ -81,13 +73,14 @@ class Malloy : ExtendedJavaPlugin() {
         this.getCommand("vote")!!.setExecutor(VoteCommand())
         this.getCommand("tpa")!!.setExecutor(TeleportCommand())
         this.getCommand("pay")!!.setExecutor(PayCommand())
-        //this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
+        this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
         this.getCommand("shop")!!.setExecutor(ShopCommand())
+        this.getCommand("baltop")!!.setExecutor(BaltopCommand())
         this.getCommand("twitter")!!.setExecutor(TwitterCommand())
         this.getCommand("discord")!!.setExecutor(DiscordCommand())
 
-        club.malvaceae.malloy.Malloy.Companion.log.info("The plugin has successfully loaded.")
+        club.malvaceae.malloy.Malloy.Companion.log.info("[Malloy] The plugin has successfully loaded.")
     }
 
     fun setupDataSource() {
@@ -111,6 +104,6 @@ class Malloy : ExtendedJavaPlugin() {
         for (player in Bukkit.getOnlinePlayers()) {
             club.malvaceae.malloy.Malloy.Companion.instance.profileHandler.saveProfile(club.malvaceae.malloy.Malloy.Companion.instance.profileHandler.getProfile(player.uniqueId)!!)
         }
-        club.malvaceae.malloy.Malloy.Companion.log.info("The plugin has successfully unloaded.")
+        club.malvaceae.malloy.Malloy.Companion.log.info("[Malloy] The plugin has successfully unloaded.")
     }
 }

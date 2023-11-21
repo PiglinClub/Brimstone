@@ -17,6 +17,10 @@ commands:
     description: Command to request to teleport to someone.
     aliases:
       - tpo
+  baltop:
+    description: View the top balances on the server.
+    aliases:
+      - bt
   pay:
     description: Command to send money to other players.
     aliases:

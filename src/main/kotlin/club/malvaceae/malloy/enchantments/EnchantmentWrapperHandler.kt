@@ -2,6 +2,7 @@ package club.malvaceae.malloy.enchantments
 
 import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.enchantments.list.ExtractionEnchantment
+import club.malvaceae.malloy.enchantments.list.LumberjackEnchantment
 import club.malvaceae.malloy.enchantments.list.MoltenEnchantment
 import org.bukkit.Bukkit
 import org.bukkit.enchantments.Enchantment
@@ -57,7 +58,8 @@ class EnchantmentWrapperHandler {
     fun getEnchants(): List<Enchantment> {
         return listOf(
             MoltenEnchantment(),
-            ExtractionEnchantment()
+            ExtractionEnchantment(),
+            LumberjackEnchantment()
         )
     }
 

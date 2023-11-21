@@ -1,14 +1,21 @@
 package club.malvaceae.malloy.listeners
 
 import club.malvaceae.malloy.database.towns.Claim
+import club.malvaceae.malloy.database.towns.Town
 import club.malvaceae.malloy.utils.Chat
+import org.bukkit.Material
+import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
+import org.bukkit.event.entity.EntityChangeBlockEvent
+import org.bukkit.event.hanging.HangingBreakByEntityEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.bukkit.event.player.PlayerBucketFillEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerTakeLecternBookEvent
 import java.util.*
 
 class ClaimListener : Listener {
@@ -21,30 +28,44 @@ class ClaimListener : Listener {
         claimMap[e.player.uniqueId] = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z).get()
     }
 
-    @EventHandler
-    fun onBucketEmpty(e: PlayerBucketEmptyEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
-        val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(e.player)
+    /**
+     * This function returns a Pair of
+     * - whether the `player` can modify the chunk at `x`, `z`
+     * - the Town at that chunk, or null if the chunk is not claimed by a town
+     */
+    fun getChunkAccessAndTown(player: Player, x: Int, z: Int): Pair<Boolean, Town?> { // the return type of this should be a sealed class but i don't care enough to make it one meaning you have to throw on a !! when accessing the town
+        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(x, z)
         if (claim.get() != null) {
             val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
-            if (town != null) {
-                if (claim.get()!!.townUniqueId != town.uniqueId) {
-                    e.isCancelled = true
-                    Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+            val playerTown = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(player)
+            if (playerTown != null) {
+                if (claim.get()!!.townUniqueId != playerTown.uniqueId) {
+                    return false to claimTown;
+                } else {
+                    return true to claimTown; // make this explicit so we return the town too idk just in case
                 }
             } else {
-                e.isCancelled = true
-                Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+                return false to claimTown;
             }
+        } else {
+            return true to null;
+        }
+    }
+
+    @EventHandler
+    fun onBucketEmpty(e: PlayerBucketEmptyEvent) {
+        val (access, town) = getChunkAccessAndTown(e.player, e.block.chunk.x, e.block.chunk.z)
+        if (!access) {
+            e.isCancelled = true
+            Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${town!!.name}</yellow>.</red>")
         }
     }
 
     @EventHandler
     fun onCauldronLevelChange(e: CauldronLevelChangeEvent) {
-        if (e.entity !is Player) {
-            return
-        }
+        if (e.entity !is Player) return;
         val player = e.entity as Player
+
         if (e.reason == CauldronLevelChangeEvent.ChangeReason.EXTINGUISH) {
             e.isCancelled = true
             if (player.fireTicks > 0) {
@@ -53,19 +74,11 @@ class ClaimListener : Listener {
             }
             return
         }
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z).get()
-        val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(player)
-        if (claim != null) {
-            val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.townUniqueId)!!
-            if (town != null) {
-                if (claim.townUniqueId != town.uniqueId) {
-                    e.isCancelled = true
-                    Chat.sendComponent(player, "<red>You cannot use this cauldron as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                }
-            } else {
-                e.isCancelled = true
-                Chat.sendComponent(player, "<red>You cannot use this cauldron as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-            }
+
+        val (access, town) = getChunkAccessAndTown(player, e.block.chunk.x, e.block.chunk.z)
+        if (!access) {
+            e.isCancelled = true
+            Chat.sendComponent(player, "<red>You cannot use this cauldron as you are not in <yellow>${town!!.name}</yellow>.</red>")
         }
     }
 
@@ -98,19 +111,10 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onBucketFill(e: PlayerBucketFillEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
-        val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(e.player)
-        if (claim.get() != null) {
-            val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
-            if (town != null) {
-                if (claim.get()!!.townUniqueId != town.uniqueId) {
-                    e.isCancelled = true
-                    Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                }
-            } else {
-                e.isCancelled = true
-                Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-            }
+        val (access, town) = getChunkAccessAndTown(e.player, e.block.chunk.x, e.block.chunk.z)
+        if (!access) {
+            e.isCancelled = true
+            Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${town!!.name}</yellow>.</red>")
         }
     }
 
@@ -149,23 +153,12 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onBlockBreak(e: BlockBreakEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
-        val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(e.player)
-        if (claim.get() != null) {
-            val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
-            if (town != null) {
-                if (claim.get()!!.townUniqueId != town.uniqueId) {
-                    e.isCancelled = true
-                    Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                }
-            } else {
-                e.isCancelled = true
-                Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-            }
+        val (access, town) = getChunkAccessAndTown(e.player, e.block.chunk.x, e.block.chunk.z)
+        if (!access) {
+            e.isCancelled = true
+            Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${town!!.name}</yellow>.</red>")
         }
     }
-
-
 
     @EventHandler
     fun onPistonExtend(e: BlockPistonExtendEvent) {
@@ -261,18 +254,10 @@ class ClaimListener : Listener {
     fun onBlockForm(e: EntityBlockFormEvent) {
         val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
         if (e.entity is Player) {
-            val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(e.entity as Player)
-            if (claim.get() != null) {
-                val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
-                if (town != null) {
-                    if (claim.get()!!.townUniqueId != town.uniqueId) {
-                        e.isCancelled = true
-                        Chat.sendComponent(e.entity, "<red>You cannot frost walk as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                    }
-                } else {
-                    e.isCancelled = true
-                    Chat.sendComponent(e.entity, "<red>You cannot frost walk as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                }
+            val (access, town) = getChunkAccessAndTown(e.entity as Player, e.block.chunk.x, e.block.chunk.z)
+            if (!access) {
+                e.isCancelled = true
+                Chat.sendComponent(e.entity, "<red>You cannot frost walk here as you are not in <yellow>${town!!.name}</yellow>.</red>")
             }
         } else {
             if (claim.get() != null) {
@@ -298,39 +283,78 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onBlockIgnite(e: BlockIgniteEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
         if (e.player != null) {
-            val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(e.player!!)
-            if (claim.get() != null) {
-                val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
-                if (town != null) {
-                    if (claim.get()!!.townUniqueId != town.uniqueId) {
-                        e.isCancelled = true
-                        Chat.sendComponent(e.player!!, "<red>You cannot ignite this block as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                    }
-                } else {
-                    e.isCancelled = true
-                    Chat.sendComponent(e.player!!, "<red>You cannot ignite this block as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                }
+            val (access, town) = getChunkAccessAndTown(e.player!!, e.block.chunk.x, e.block.chunk.z)
+            if (!access) {
+                e.isCancelled = true
+                Chat.sendComponent(e.player!!, "<red>You cannot ignite this block as you are not in <yellow>${town!!.name}</yellow>.</red>")
             }
         }
     }
 
     @EventHandler
     fun onBlockPlace(e: BlockPlaceEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
-        val town = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(e.player)
-        if (claim.get() != null) {
-            val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
-            if (town != null) {
-                if (claim.get()!!.townUniqueId != town.uniqueId) {
-                    e.isCancelled = true
-                    Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
-                }
-            } else {
+        val (access, town) = getChunkAccessAndTown(e.player, e.block.chunk.x, e.block.chunk.z)
+        if (!access) {
+            e.isCancelled = true
+            Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${town!!.name}</yellow>.</red>")
+        }
+    }
+
+    @EventHandler
+    fun onFarmLandDamage(e: EntityChangeBlockEvent) {
+        if (e.entity is Player) {
+            val (access, town) = getChunkAccessAndTown(e.entity as Player, e.entity.location.chunk.x, e.entity.location.chunk.z)
+            if (!access) {
                 e.isCancelled = true
-                Chat.sendComponent(e.player, "<red>You cannot build here as you are not in <yellow>${claimTown.name}</yellow>.</red>")
+                Chat.sendComponent(e.entity, "<red>You cannot trample crops as you are not in <yellow>${town!!.name}</yellow>.</red>")
             }
+        }
+        /*
+            Looking at what Saber Factions does[1], it seems like they just treat all EntityChangeBlockEvents done
+            by players as a trampling of crops. I just followed that behavior here, but is it possible that
+            there could be a different EntityChangeBlockEvent that could be done by a player that we *would*
+            want to be possible on claimed land?
+            I mean, that's pretty unlikely... even if this catches some other thing too, it's probably something
+            that we wouldn't want happening on claimed land by players not in the town anyways.
+
+            [1] https://github.com/SaberLLC/Saber-Factions/blob/1.6.x/src/main/java/com/massivecraft/factions/listeners/FactionsBlockListener.java#L398
+        */
+    }
+
+    @EventHandler
+    fun onItemFrameRemove(e: HangingBreakByEntityEvent) {
+        if (e.remover is Player) {
+            if (e.entity.type.name.contains("ITEM_FRAME")) {
+                val (access, town) = getChunkAccessAndTown(e.remover as Player, e.entity.location.chunk.x, e.entity.location.chunk.z)
+
+                if (!access) {
+                    e.isCancelled = true
+                    Chat.sendComponent(e.entity, "<red>You cannot build here as you are not in <yellow>${town!!.name}</yellow>.</red>")
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    fun onContainerInteract(e: PlayerInteractEvent) {
+        if (e.action == Action.RIGHT_CLICK_BLOCK) {
+            if (e.clickedBlock is Container) {
+                val (access, town) = getChunkAccessAndTown(e.player, e.clickedBlock!!.chunk.x, e.clickedBlock!!.chunk.z)
+                if (!access) {
+                    e.isCancelled = true
+                    Chat.sendComponent(e.player, "<red>You cannot access containers here as you are not in <yellow>${town!!.name}</yellow>.</red>")
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    fun onTakeLecternBook(e: PlayerTakeLecternBookEvent) {
+        val (access, town) = getChunkAccessAndTown(e.player, e.lectern.chunk.x, e.lectern.chunk.z)
+        if (!access) {
+            e.isCancelled = true
+            Chat.sendComponent(e.player, "<red>You cannot take this book as you are not in <yellow>${town!!.name}</yellow>.</red>")
         }
     }
 }

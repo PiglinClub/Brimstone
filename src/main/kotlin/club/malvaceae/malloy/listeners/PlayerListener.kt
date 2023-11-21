@@ -10,7 +10,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.milkbowl.vault.chat.Chat
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -24,7 +23,9 @@ class PlayerListener : Listener {
 
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
-        e.joinMessage(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><green>+<dark_gray>]</dark_gray> <color:#28cf1f>${e.player.name}"))
+        val group: String? = vaultChat?.getPrimaryGroup(e.player)
+        val prefix = vaultChat?.getGroupPrefix(e.player.world, group)
+        e.joinMessage(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><green>+<dark_gray>]</dark_gray> <color:#28cf1f>${prefix}${e.player.name}"))
         club.malvaceae.malloy.utils.Chat.sendComponent(e.player, "<gray>Warning: This server is in <red>ALPHA</red>, many features may be added/removed later on.")
     }
 
@@ -37,7 +38,7 @@ class PlayerListener : Listener {
             profile.addExp(25.0)
             profile.gold += 1500
             Malloy.instance.profileHandler.saveProfile(profile)
-            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green><blue>[Vote]</blue> <yellow>${player.name}</yellow> voted for the server and got <aqua>500 xp</aqua> and <color:#ffd417>150g</color>."))
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green><blue>[Vote]</blue> <yellow>${player.name}</yellow> voted for the server and got <aqua>25 xp</aqua> and <color:#ffd417>1500g</color>."))
         }
     }
 
@@ -45,17 +46,25 @@ class PlayerListener : Listener {
     fun onPlayerChat(e: AsyncChatEvent) {
         e.isCancelled = true
         val level = Malloy.instance.profileHandler.getProfile(e.player.uniqueId)!!.level
+        val group: String? = vaultChat?.getPrimaryGroup(e.player)
+        val prefix = vaultChat?.getGroupPrefix(e.player.world, group)
         val town: Town? = Malloy.instance.townHandler.getPlayerTown(e.player)
         if (town == null) {
-            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> <reset>${e.player.name}<dark_gray>:<reset> ${(e.message() as TextComponent).content()}"))
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> ${prefix}<reset>${e.player.name}<dark_gray>:<reset> ${(
+                (e.message() as TextComponent).content()
+            )}"))
         } else {
-            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> <green>${town.name}</green> <reset>${e.player.name}<dark_gray>:<reset> ${(e.message() as TextComponent).content()}"))
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><aqua>${level}</aqua><dark_gray>]</dark_gray> <green>${town.name}</green> $prefix<reset>${e.player.name}<dark_gray>:<reset> ${
+                (e.message() as TextComponent).content()
+            }"))
         }
     }
 
     @EventHandler
     fun onPlayerQuit(e: PlayerQuitEvent) {
-        e.quitMessage(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><red>-<dark_gray>]</dark_gray> <color:#f53527>${e.player.name}"))
+        val group: String? = vaultChat?.getPrimaryGroup(e.player)
+        val prefix = vaultChat?.getGroupPrefix(e.player.world, group)
+        e.quitMessage(MiniMessage.miniMessage().deserialize("<dark_gray>[</dark_gray><red>-<dark_gray>]</dark_gray> <color:#f53527>${prefix}${e.player.name}"))
     }
 
 

@@ -3,7 +3,6 @@ package club.malvaceae.malloy.commands
 import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -33,37 +32,29 @@ class WildernessTask(val player: Player) : BukkitRunnable(), Listener {
     var timer = 5
 
     override fun run() {
-        player.sendActionBar(MiniMessage.miniMessage().deserialize("<dark_green>[Wilderness]</dark_green> Teleporting in <green>${timer}s</green>..."))
+        player.sendActionBar(
+            MiniMessage.miniMessage()
+                .deserialize("<dark_green>[Wilderness]</dark_green> Teleporting in <green>${timer}s</green>...")
+        )
         timer--
         if (timer == 0) {
             cancel()
             WildernessCommand.tasks[player.uniqueId] = null
-            val world = player.world
-            var finalLocation: Location? = null
-            while (finalLocation == null) {
-                val location = Location(
-                    player.world,
-                    Random.nextDouble(player.location.x - 5000, player.location.x + 5000),
-                    256.0,
-                    Random.nextDouble(player.location.z - 5000, player.location.z + 5000)
-                )
-                if (world.getHighestBlockAt(location).type != Material.CACTUS &&
-                    world.getHighestBlockAt(location).type != Material.LAVA &&
-                    world.getHighestBlockAt(location).type != Material.WATER &&
-                    world.getHighestBlockAt(location).type != Material.LILY_PAD &&
-                    world.getHighestBlockAt(location).type != Material.AIR &&
-                    world.worldBorder.isInside(location)
-                ) {
-                    finalLocation = Location(
-                        world,
-                        location.x,
-                        world.getHighestBlockAt(location).location.y + 3,
-                        location.z
-                    )
-                }
-            }
-            player.teleportAsync(finalLocation)
-            Chat.sendComponent(player, "<dark_green>[Wilderness]</dark_green> <reset>Teleported you to <green>X: ${round(finalLocation.x)}, Z: ${round(finalLocation.z)}</green>.")
+            val x = Random.nextDouble(player.location.x - 5000, player.location.x + 5000)
+            val y = Random.nextDouble(player.location.z - 5000, player.location.z + 5000)
+            var location = Location(
+                player.world,
+                x,
+                player.world.getHighestBlockYAt(x.toInt(), y.toInt()).toDouble(),
+                y
+            )
+            player.teleportAsync(location.world.getHighestBlockAt(location).location)
+            Chat.sendComponent(
+                player,
+                "<dark_green>[Wilderness]</dark_green> <reset>Teleported you to <green>X: ${round(location.x)}, Z: ${
+                    round(location.z)
+                }</green>."
+            )
         }
     }
 }
