@@ -339,7 +339,7 @@ class ClaimListener : Listener {
     @EventHandler
     fun onContainerInteract(e: PlayerInteractEvent) {
         if (e.action == Action.RIGHT_CLICK_BLOCK) {
-            if (e.clickedBlock is Container) {
+            if (e.clickedBlock!!.state is Container) {
                 val (access, town) = getChunkAccessAndTown(e.player, e.clickedBlock!!.chunk.x, e.clickedBlock!!.chunk.z)
                 if (!access) {
                     e.isCancelled = true
