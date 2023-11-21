@@ -5,6 +5,9 @@ import club.malvaceae.malloy.database.profiles.ProfileHandler
 import club.malvaceae.malloy.database.towns.ClaimHandler
 import club.malvaceae.malloy.database.towns.TownHandler
 import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
+import club.malvaceae.malloy.enchantments.list.ExtractionEnchantment
+import club.malvaceae.malloy.enchantments.list.LumberjackEnchantment
+import club.malvaceae.malloy.enchantments.list.MoltenEnchantment
 import club.malvaceae.malloy.features.InfoFeature
 import club.malvaceae.malloy.features.ScoreboardFeature
 import club.malvaceae.malloy.features.TeleportCheck
@@ -19,7 +22,15 @@ import com.mongodb.MongoClient
 import com.mongodb.MongoClientException
 import com.mongodb.MongoClientURI
 import me.lucko.helper.plugin.ExtendedJavaPlugin
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.inventory.meta.ItemMeta
 import java.util.logging.Logger
 
 class Malloy : ExtendedJavaPlugin() {
@@ -39,6 +50,50 @@ class Malloy : ExtendedJavaPlugin() {
         protocolManager = ProtocolLibrary.getProtocolManager()
     }
 
+    fun registerRecipes() {
+        var key = NamespacedKey(this, "molten_book")
+        var i = ItemStack(Material.ENCHANTED_BOOK)
+        var im: ItemMeta = (i.itemMeta)
+        (im as EnchantmentStorageMeta).addStoredEnchant(MoltenEnchantment(), 1, true)
+        im.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Molten I</gray>").decoration(TextDecoration.ITALIC, false)))
+        i.itemMeta = im
+
+        Bukkit.getServer().addRecipe(
+            ShapedRecipe(key, i)
+                .shape("   ", " PP", " PC")
+                .setIngredient('P', Material.PAPER)
+                .setIngredient('C', ItemStack(Material.COAL_BLOCK, 8))
+        )
+
+        key = NamespacedKey(this, "extraction_book")
+        i = ItemStack(Material.ENCHANTED_BOOK)
+        im = (i.itemMeta)
+        (im as EnchantmentStorageMeta).addStoredEnchant(ExtractionEnchantment(), 1, true)
+        im.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Extraction I</gray>").decoration(TextDecoration.ITALIC, false)))
+        i.itemMeta = im
+
+        Bukkit.getServer().addRecipe(
+            ShapedRecipe(key, i)
+                .shape("   ", " PP", " PL")
+                .setIngredient('P', Material.PAPER)
+                .setIngredient('L', ItemStack(Material.LAPIS_BLOCK, 10))
+        )
+
+        key = NamespacedKey(this, "lumberjack_book")
+        i = ItemStack(Material.ENCHANTED_BOOK)
+        im = (i.itemMeta)
+        (im as EnchantmentStorageMeta).addStoredEnchant(LumberjackEnchantment(), 1, true)
+        im.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Lumberjack I</gray>").decoration(TextDecoration.ITALIC, false)))
+        i.itemMeta = im
+
+        Bukkit.getServer().addRecipe(
+            ShapedRecipe(key, i)
+                .shape("   ", " PP", " PL")
+                .setIngredient('P', Material.PAPER)
+                .setIngredient('L', ItemStack(Material.OAK_LOG, 64))
+        )
+    }
+
     override fun enable() {
         instance = this
         log = Bukkit.getLogger()
@@ -53,6 +108,7 @@ class Malloy : ExtendedJavaPlugin() {
         claimHandler = ClaimHandler()
 
         EnchantmentWrapperHandler.instance.register()
+        registerRecipes()
 
         Bukkit.getServer().pluginManager.registerEvents(ScoreboardFeature(), this)
         Bukkit.getServer().pluginManager.registerEvents(ClaimListener(), this)
