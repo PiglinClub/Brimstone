@@ -16,11 +16,11 @@ class BalanceCommand : CommandExecutor {
         label: String,
         args: Array<out String>
     ): Boolean {
-        if (sender !is Player) {
-            Chat.sendMessage(sender, "You can't use this command as you are not a player!")
-            return false
-        }
         if (args.isEmpty()) {
+            if (sender !is Player) {
+                Chat.sendMessage(sender, "You can't use this command as you are not a player!")
+                return false
+            }
             val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
             if (profile == null) {
                 Chat.sendMessage(sender, "&cCouldn't seem to find your profile...")
