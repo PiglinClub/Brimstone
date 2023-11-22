@@ -48,7 +48,8 @@ class Profile(
     var slaughtering: Double = 0.0,
     var scavenging: Double = 0.0,
     var angler: Double = 0.0,
-    var job: String? = null
+    var job: String? = null,
+    var votes: Int = 0
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId

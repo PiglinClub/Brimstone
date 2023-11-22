@@ -38,6 +38,7 @@ class PlayerListener : Listener {
             val profile = Malloy.instance.profileHandler.lookupProfile(player.uniqueId).get()
             profile.addExp(25.0)
             profile.gold += 1500
+            profile.votes++
             Malloy.instance.profileHandler.saveProfile(profile)
             if (existedBefore) Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green><blue>[Vote]</blue> <yellow>${player.name}</yellow> voted for the server and got <aqua>25 xp</aqua> and <color:#ffd417>1500g</color>."))
         }
