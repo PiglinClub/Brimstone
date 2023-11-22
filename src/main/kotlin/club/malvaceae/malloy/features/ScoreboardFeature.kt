@@ -96,7 +96,7 @@ class ScoreboardFeature : Listener {
                         " ",
                         " ${ChatColor.GREEN}${town.name}${ChatColor.RESET}:",
                         "  ${ChatColor.RESET}Members: ${ChatColor.of("#ff5100")}${town.members.size} ${ChatColor.GRAY}(${onlinePlayers} online)",
-                        "  ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.getClaims().get().size} ${ChatColor.GRAY}(${ChatColor.of("#fff7b8")}${town.getClaimsInWorld(Bukkit.getWorld("world_the_end")!!).get().size} ${ChatColor.DARK_GRAY}/ ${ChatColor.of("#3dff4a")}${town.getClaimsInWorld(Bukkit.getWorld("world")!!).get().size} ${ChatColor.DARK_GRAY}/ ${ChatColor.RED}${town.getClaimsInWorld(Bukkit.getWorld("world_nether")!!).get().size} ${ChatColor.GRAY})",
+                        "  ${ChatColor.RESET}Claims: ${ChatColor.of("#ff5100")}${town.getClaims().get().size} ${ChatColor.GRAY}(${ChatColor.of("#fff7b8")}${town.getClaimsInWorld(Bukkit.getWorld("world_the_end")!!).get().size} ${ChatColor.DARK_GRAY}/ ${ChatColor.of("#3dff4a")}${town.getClaimsInWorld(Bukkit.getWorld("world")!!).get().size} ${ChatColor.DARK_GRAY}/ ${ChatColor.RED}${town.getClaimsInWorld(Bukkit.getWorld("world_nether")!!).get().size}${ChatColor.GRAY})",
                         "  ${ChatColor.RESET}Balance: ${ChatColor.of("#ffd417")}${floor(town.gold)}g",
                         "  ${ChatColor.RESET}Power: ${ChatColor.of("#ff365e")}☄ ${floor(town.power).toInt()}",
                         " "

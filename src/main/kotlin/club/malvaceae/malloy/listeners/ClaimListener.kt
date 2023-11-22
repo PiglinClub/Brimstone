@@ -27,7 +27,7 @@ class ClaimListener : Listener {
     init {
         Schedulers.sync().runRepeating(Runnable {
             for (player in Bukkit.getOnlinePlayers()) {
-                val claim = Malloy.instance.claimHandler.getClaimAt(player.chunk.x, player.chunk.z).get()
+                val claim = Malloy.instance.claimHandler.getClaimAt(player.world.name, player.chunk.x, player.chunk.z).get()
                 if (claimMap[player.uniqueId] == null) {
                     if (claim != null) {
                         val town = Malloy.instance.townHandler.getTown(claim.townUniqueId)
@@ -63,7 +63,7 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
-        claimMap[e.player.uniqueId] = Malloy.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z).get()
+        claimMap[e.player.uniqueId] = Malloy.instance.claimHandler.getClaimAt(e.player.world.name, e.player.chunk.x, e.player.chunk.z).get()
     }
 
     /**
@@ -72,7 +72,7 @@ class ClaimListener : Listener {
      * - the Town at that chunk, or null if the chunk is not claimed by a town
      */
     fun getChunkAccessAndTown(player: Player, x: Int, z: Int): Pair<Boolean, Town?> { // the return type of this should be a sealed class but i don't care enough to make it one meaning you have to throw on a !! when accessing the town
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(x, z)
+        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(player.world.name, x, z)
         if (claim.get() != null) {
             val claimTown = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(claim.get()!!.townUniqueId)!!
             val playerTown = club.malvaceae.malloy.Malloy.instance.townHandler.getPlayerTown(player)
@@ -127,8 +127,8 @@ class ClaimListener : Listener {
             return
         }
         if (source.lowercase() == "sculk_catalyst") {
-            val fromClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z).get()
-            val toClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.source.chunk.x, e.source.chunk.z).get()
+            val fromClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.world.name, e.block.chunk.x, e.block.chunk.z).get()
+            val toClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.source.world.name, e.source.chunk.x, e.source.chunk.z).get()
             if (fromClaim == null && toClaim != null) {
                 e.isCancelled = true
                 return
@@ -158,7 +158,7 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onBlockBurn(e: BlockBurnEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
+        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.world.name, e.block.chunk.x, e.block.chunk.z)
         if (claim.get() != null) {
             e.isCancelled = true
         }
@@ -167,9 +167,9 @@ class ClaimListener : Listener {
     @EventHandler
     fun onBlockFertilize(e: BlockFertilizeEvent) {
         val allowed = ArrayList(e.blocks)
-        val sourceClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z).get()
+        val sourceClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.world.name, e.block.chunk.x, e.block.chunk.z).get()
         for (block in e.blocks) {
-            val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.chunk.x, block.chunk.z).get()
+            val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.world.name, block.chunk.x, block.chunk.z).get()
             if (claim == null && sourceClaim == null) {
                 return
             }
@@ -203,8 +203,8 @@ class ClaimListener : Listener {
         var movingClaim: Claim?
         var claim: Claim?
         val b = e.block.getRelative(e.direction)
-        claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.chunk.x, b.chunk.z).get()
-        movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.getRelative(e.direction).chunk.x, b.getRelative(e.direction).chunk.z).get()
+        claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.world.name, b.chunk.x, b.chunk.z).get()
+        movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.getRelative(e.direction).world.name, b.getRelative(e.direction).chunk.x, b.getRelative(e.direction).chunk.z).get()
         if (claim == null && movingClaim != null) {
             e.isCancelled = true
             return
@@ -222,8 +222,8 @@ class ClaimListener : Listener {
         }
         if (e.blocks.isNotEmpty()) {
             for (b in e.blocks) {
-                claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.chunk.x, b.chunk.z).get()
-                movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.getRelative(e.direction).chunk.x, b.getRelative(e.direction).chunk.z).get()
+                claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.world.name, b.chunk.x, b.chunk.z).get()
+                movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.getRelative(e.direction).world.name, b.getRelative(e.direction).chunk.x, b.getRelative(e.direction).chunk.z).get()
                 if (claim == null && movingClaim != null) {
                     e.isCancelled = true
                     return
@@ -246,8 +246,8 @@ class ClaimListener : Listener {
     @EventHandler
     fun onPistonRetract(e: BlockPistonRetractEvent) {
         val block = if (e.isSticky) e.block.getRelative(e.direction.oppositeFace) else e.block.getRelative(e.direction)
-        var movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.chunk.x, block.chunk.z).get()
-        var claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z).get()
+        var movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.world.name, block.chunk.x, block.chunk.z).get()
+        var claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.world.name, e.block.chunk.x, e.block.chunk.z).get()
         if (claim == null && movingClaim != null) {
             e.isCancelled = true
             return
@@ -268,8 +268,8 @@ class ClaimListener : Listener {
             return
         }
         for (b in blocks) {
-            claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.chunk.x, b.chunk.z).get()
-            movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.getRelative(e.direction).chunk.x, b.getRelative(e.direction).chunk.z).get()
+            claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.world.name, b.chunk.x, b.chunk.z).get()
+            movingClaim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(b.getRelative(e.direction).world.name, b.getRelative(e.direction).chunk.x, b.getRelative(e.direction).chunk.z).get()
             if (claim == null && movingClaim != null) {
                 e.isCancelled = true
                 return
@@ -290,7 +290,7 @@ class ClaimListener : Listener {
 
     @EventHandler
     fun onBlockForm(e: EntityBlockFormEvent) {
-        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.chunk.x, e.block.chunk.z)
+        val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.block.world.name, e.block.chunk.x, e.block.chunk.z)
         if (e.entity is Player) {
             val (access, town) = getChunkAccessAndTown(e.entity as Player, e.block.chunk.x, e.block.chunk.z)
             if (!access) {
@@ -309,7 +309,7 @@ class ClaimListener : Listener {
         if (e.blockList().isNotEmpty()) {
             val newList = ArrayList(e.blockList())
             for (block in e.blockList()) {
-                val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.chunk.x, block.chunk.z).get()
+                val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.world.name, block.chunk.x, block.chunk.z).get()
                 if (claim != null) {
                     newList.remove(block)
                 }
