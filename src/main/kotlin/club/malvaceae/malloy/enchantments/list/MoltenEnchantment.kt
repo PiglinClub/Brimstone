@@ -217,6 +217,7 @@ class MoltenEnchantment : Enchantment(NamespacedKey.minecraft("molten")), Listen
         if (e.player.inventory.itemInMainHand == null) return
         if (!e.player.equipment.itemInMainHand.hasItemMeta()) return
         if (!e.player.inventory.itemInMainHand.containsEnchantment(MoltenEnchantment())) return
+        if (!e.player.isSneaking) return
         when (e.block.type) {
             Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE -> {
                 e.isCancelled = true

@@ -129,7 +129,7 @@ class LumberjackEnchantment : Enchantment(NamespacedKey.minecraft("lumberjack"))
             Material.WARPED_STEM
         )
         if (logs.contains(e.block.type)) {
-            timberTree(e.block.location, e.block.type, e.player, e.player.equipment.itemInMainHand.getEnchantmentLevel(this))
+            timberTree(e.block.location, e.block.type, e.player, e.player.equipment.itemInMainHand.getEnchantmentLevel(LumberjackEnchantment()))
         }
     }
 }
