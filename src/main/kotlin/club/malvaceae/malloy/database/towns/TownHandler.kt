@@ -56,9 +56,9 @@ class ClaimHandler {
         }
     }
 
-    fun getClaimAt(x: Int, z: Int): Promise<Claim?> {
+    fun getClaimAt(world: String, x: Int, z: Int): Promise<Claim?> {
         for (claim in this.claimsMap.asMap().values) {
-            if (claim.x == x && claim.z == z) {
+            if (claim.x == x && claim.z == z && claim.world == world) {
                 return Promise.completed(claim)
             }
         }
@@ -67,7 +67,8 @@ class ClaimHandler {
                 with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
                     val filter = Filters.and(
                         Filters.eq("x", x),
-                        Filters.eq("z", z)
+                        Filters.eq("z", z),
+                        Filters.eq("world", world)
                     )
                     val document = this.find(filter).first()
                     if (document != null) {
