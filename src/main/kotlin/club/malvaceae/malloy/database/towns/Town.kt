@@ -240,7 +240,7 @@ class Town(
                     val filter = Filters.and(
                         Filters.eq("x", chunk.x),
                         Filters.eq("z", chunk.z),
-                        Filters.eq("world", chunk.world)
+                        Filters.eq("world", chunk.world.name)
                     )
                     val documents = this.find(filter)
                     if (documents.toList().isNotEmpty()) {
