@@ -221,6 +221,7 @@ class Town(
                     if (documents.first()!!["townUniqueId"] != uniqueId) {
                         return@supply false
                     }
+                    Malloy.instance.claimHandler.claimsMap.invalidate(documents.first()!!["uuid"] as UUID)
                     this.findOneAndDelete(filter)
                     power -= 450
                     Malloy.instance.townHandler.saveTown(this@Town)
@@ -263,7 +264,7 @@ class Town(
                         .append("health", claim.health)
                         .append("world", claim.world)
                         .append("townUniqueId", claim.townUniqueId)
-
+                    Malloy.instance.claimHandler.saveClaim(claim)
                     this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
                     power += Random.nextInt(200, 450)
                     club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this@Town)

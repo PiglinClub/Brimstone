@@ -28,18 +28,20 @@ class UnclaimCommand : CommandExecutor {
             Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
             return false
         }
-        if (args[0].lowercase() == "all") {
-            val claims = town.getClaims().get()
-            var accum = 0
-            for (claim in claims) {
-                val chunk = Bukkit.getWorld(claim.world)!!.getChunkAt(claim.x, claim.z)
-                val cost = ((750) + ((claims.size - 1) * 250))
-                town.gold += cost
-                accum += cost
-                town.unclaimChunk(chunk)
+        if (args.isNotEmpty()) {
+            if (args[0].lowercase() == "all") {
+                val claims = town.getClaims().get()
+                var accum = 0
+                for (claim in claims) {
+                    val chunk = Bukkit.getWorld(claim.world)!!.getChunkAt(claim.x, claim.z)
+                    val cost = ((750) + ((claims.size - 1) * 250))
+                    town.gold += cost
+                    accum += cost
+                    town.unclaimChunk(chunk)
+                }
+                town.sendMessage("<green><yellow>${sender.name}</yellow> unclaimed all chunks for your town and got back <color:#ffd417>${accum}g</color>!")
+                return true
             }
-            town.sendMessage("<green><yellow>${sender.name}</yellow> unclaimed all chunks for your town and got back <color:#ffd417>${accum}g</color>!")
-            return true
         }
         val chunk = sender.location.chunk
         if (town.doWeOwnChunk(chunk.world.name, chunk.x, chunk.z).get() == false) {
