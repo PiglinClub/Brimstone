@@ -300,6 +300,7 @@ class ShopHandler {
             addEntry(Material.EMERALD, ShopCategory.MINERALS, 150.0, 75.0)
             addEntry(Material.COPPER_INGOT, ShopCategory.MINERALS, 25.0, 10.0)
             addEntry(Material.FLINT, ShopCategory.MINERALS, 5.0, 2.5)
+            addEntry(Material.QUARTZ, ShopCategory.MINERALS, 250.0, 25.0)
 
             addEntry(Material.APPLE, ShopCategory.FOOD, 20.0, 10.0)
             addEntry(Material.GOLDEN_APPLE, ShopCategory.FOOD, 150.0, 75.0)
