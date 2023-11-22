@@ -1,9 +1,14 @@
 package club.malvaceae.malloy.listeners
 
+import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.database.towns.Claim
 import club.malvaceae.malloy.database.towns.Town
 import club.malvaceae.malloy.utils.Chat
-import org.bukkit.Material
+import me.lucko.helper.Schedulers
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.title.Title
+import org.bukkit.Bukkit
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -11,11 +16,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.*
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.hanging.HangingBreakByEntityEvent
-import org.bukkit.event.player.PlayerBucketEmptyEvent
-import org.bukkit.event.player.PlayerBucketFillEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerTakeLecternBookEvent
+import org.bukkit.event.player.*
 import java.util.*
 
 class ClaimListener : Listener {
@@ -23,9 +24,46 @@ class ClaimListener : Listener {
         val claimMap = hashMapOf<UUID, Claim?>()
     }
 
+    init {
+        Schedulers.sync().runRepeating(Runnable {
+            for (player in Bukkit.getOnlinePlayers()) {
+                val claim = Malloy.instance.claimHandler.getClaimAt(player.chunk.x, player.chunk.z).get()
+                if (claimMap[player.uniqueId] == null) {
+                    if (claim != null) {
+                        val town = Malloy.instance.townHandler.getTown(claim.townUniqueId)
+                        if (town != null) {
+                            player.showTitle(Title.title(
+                                Component.text(" "),
+                                MiniMessage.miniMessage().deserialize("<reset>Now entering: <yellow>${town.name}</yellow>")
+                            ))
+                        }
+                    }
+                } else {
+                    if (claim != null) {
+                        if (claim.townUniqueId != claimMap[player.uniqueId]!!.townUniqueId) {
+                            val town = Malloy.instance.townHandler.getTown(claim.townUniqueId)
+                            if (town != null) {
+                                player.showTitle(Title.title(
+                                    Component.text(" "),
+                                    MiniMessage.miniMessage().deserialize("<reset>Now entering: <yellow>${town.name}</yellow>")
+                                ))
+                            }
+                        }
+                    } else {
+                        player.showTitle(Title.title(
+                            Component.text(" "),
+                            MiniMessage.miniMessage().deserialize("<reset>Now entering: <dark_green>Wilderness</dark_green>")
+                        ))
+                    }
+                }
+                claimMap[player.uniqueId] = claim
+            }
+        }, 0L, 20L)
+    }
+
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
-        claimMap[e.player.uniqueId] = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z).get()
+        claimMap[e.player.uniqueId] = Malloy.instance.claimHandler.getClaimAt(e.player.chunk.x, e.player.chunk.z).get()
     }
 
     /**
