@@ -4,11 +4,6 @@ import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.database.towns.Claim
 import club.malvaceae.malloy.database.towns.Town
 import club.malvaceae.malloy.utils.Chat
-import me.lucko.helper.Schedulers
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.title.Title
-import org.bukkit.Bukkit
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -24,7 +19,7 @@ class ClaimListener : Listener {
         val claimMap = hashMapOf<UUID, Claim?>()
     }
 
-    init {
+    /*init {
         Schedulers.sync().runRepeating(Runnable {
             for (player in Bukkit.getOnlinePlayers()) {
                 val claim = Malloy.instance.claimHandler.getClaimAt(player.world.name, player.chunk.x, player.chunk.z).get()
@@ -59,7 +54,7 @@ class ClaimListener : Listener {
                 claimMap[player.uniqueId] = claim
             }
         }, 0L, 20L)
-    }
+    }*/
 
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
