@@ -2,11 +2,14 @@ package club.malvaceae.malloy.features
 
 import club.malvaceae.malloy.Malloy
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Bukkit
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
@@ -15,7 +18,7 @@ class CombatTag(val player: Player) : BukkitRunnable() {
     override fun run() {
         timer -= 1
         if (timer == 0) {
-            player.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>You are free to use /home again."))
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>You are free to log out."))
             cancel()
             CombatTagListener.tags[player.uniqueId] = null
         }
@@ -25,6 +28,23 @@ class CombatTag(val player: Player) : BukkitRunnable() {
 class CombatTagListener : Listener {
     companion object {
         val tags = HashMap<UUID, CombatTag?>()
+        val toDie = arrayListOf<UUID>()
+    }
+
+    @EventHandler
+    fun onPlayerCombatQuit(e: PlayerQuitEvent) {
+        if (tags[e.player.uniqueId] != null) {
+            toDie.add(e.player.uniqueId)
+            Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<red><yellow>${e.player.name}</yellow> will die the next time they log on."))
+        }
+    }
+
+    @EventHandler
+    fun onPlayerCombatJoin(e: PlayerJoinEvent) {
+        if (toDie.contains(e.player.uniqueId)) {
+            toDie.remove(e.player.uniqueId)
+            e.player.damage(e.player.health * 800)
+        }
     }
 
     @EventHandler

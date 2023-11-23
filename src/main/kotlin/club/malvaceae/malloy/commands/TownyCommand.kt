@@ -102,7 +102,7 @@ class TownyCommand : CommandExecutor {
                 }
                 "home" -> {
                     if (CombatTagListener.tags[sender.uniqueId] != null) {
-                        Chat.sendMessage(sender, "<red>You currently have a pending combat tag, you may not use this command yet.")
+                        Chat.sendComponent(sender, "<red>You currently have a pending combat tag, you may not use this command yet.")
                         return false
                     }
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
