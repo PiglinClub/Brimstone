@@ -37,8 +37,8 @@ class MessageCommand : CommandExecutor {
             return false
         }
 
-        Chat.sendComponent(sender, "<dark_gray>[<blue>✉→ ${target.name}</blue>] <white>$message</white>")
-        Chat.sendComponent(target, "<dark_gray>[<blue>→✉ ${sender.name}</blue>] <white>$message</white>")
+        Chat.sendComponent(sender, "<dark_gray>[<color:#3bffba>✉→ ${target.name}</color>] <white>$message</white>")
+        Chat.sendComponent(target, "<dark_gray>[<color:#3bffba>→✉ ${sender.name}</color>] <white>$message</white>")
 
         MessageHandler.replies[target.uniqueId] = sender.uniqueId
         MessageHandler.replies[sender.uniqueId] = target.uniqueId
@@ -69,8 +69,8 @@ class ReplyCommand : CommandExecutor {
             return false
         }
 
-        Chat.sendComponent(sender, "<dark_gray>[<blue>✉→ ${target.name}</blue>] <white>$message</white>")
-        Chat.sendComponent(target, "<dark_gray>[<blue>→✉ ${sender.name}</blue>] <white>$message</white>")
+        Chat.sendComponent(sender, "<dark_gray>[<color:#3bffba>✉→ ${target.name}</color] <white>$message</white>")
+        Chat.sendComponent(target, "<dark_gray>[<color:#3bffba>→✉ ${sender.name}</color>] <white>$message</white>")
 
         MessageHandler.replies[target.uniqueId] = sender.uniqueId
         MessageHandler.replies[sender.uniqueId] = target.uniqueId

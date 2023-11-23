@@ -27,8 +27,8 @@ class ClaimCommand : CommandExecutor {
             Chat.sendMessage(sender, "&cYou do not have a high enough town role to use this command.")
             return false
         }
-        val claims = town.getClaims()
-        val cost = if (!town.adminOnly) ((750) + (claims.get().size * 250)) else 0
+        val claims = town.getClaimsInWorld(sender.location.world).get()
+        val cost = if (!town.adminOnly) ((750) + (town.getClaims().get().size * 250)) else 0
         if (town.gold < cost) {
             Chat.sendMessage(sender, "&cYour town can't afford to purchase this chunk. The town is short by ${ChatColor.of("#ffd417")}${Math.ceil(cost - town.gold)}g&c.")
             return false
@@ -39,20 +39,20 @@ class ClaimCommand : CommandExecutor {
         val east = chunk.world.getChunkAt(chunk.x + 1, chunk.z)
         val south = chunk.world.getChunkAt(chunk.x, chunk.z + 1)
 
-        if (claims.get().isNotEmpty()) {
+        if (claims.isNotEmpty()) {
             if (
-                town.doWeOwnChunk(north.x, north.z).get() == false &&
-                town.doWeOwnChunk(west.x, west.z).get() == false &&
-                town.doWeOwnChunk(east.x, east.z).get() == false &&
-                town.doWeOwnChunk(south.x, south.z).get() == false
+                town.doWeOwnChunk(sender.location.world.name, north.x, north.z).get() == false &&
+                town.doWeOwnChunk(sender.location.world.name, west.x, west.z).get() == false &&
+                town.doWeOwnChunk(sender.location.world.name, east.x, east.z).get() == false &&
+                town.doWeOwnChunk(sender.location.world.name, south.x, south.z).get() == false
             ) {
                 Chat.sendMessage(sender, "&cYou must own an adjacent chunk to claim this chunk.")
                 return false
             }
         }
-        val claim = town.claimChunk(chunk)
-        if (claim.get() == null) {
-            if (town.doWeOwnChunk(chunk.x, chunk.z).get() == true) {
+        val claim = town.claimChunk(chunk).get()
+        if (claim == null) {
+            if (town.doWeOwnChunk(chunk.world.name, chunk.x, chunk.z).get() == true) {
                 Chat.sendMessage(sender, "&cWe already own this claim.")
                 return true
             }

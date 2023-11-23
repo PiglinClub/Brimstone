@@ -11,6 +11,7 @@ import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.OfflinePlayer
+import org.bukkit.World
 import org.bukkit.entity.Player
 import java.util.*
 import kotlin.random.Random
@@ -123,26 +124,71 @@ class Town(
         club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this)
     }
 
-    fun getClaims(): Promise<List<Document>> {
+    fun getClaimsInWorld(world: World): Promise<ArrayList<Claim>> {
         return Schedulers.async().supply {
             with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
                 try {
-                    val filter = Filters.eq("townUniqueId", uniqueId)
-                    return@supply find(filter).toList()
+                    val filter = Filters.and(
+                        Filters.eq("world", world.name),
+                        Filters.eq("townUniqueId", uniqueId)
+                    )
+                    val list = arrayListOf<Claim>()
+                    for (document in find(filter).toList()) {
+                        val claim = Claim(
+                            document["uuid"] as UUID,
+                            document["claimedAt"] as Long,
+                            document["x"] as Int,
+                            document["z"] as Int,
+                            document["health"] as Int,
+                            document["world"] as String,
+                            document["townUniqueId"] as UUID
+                        )
+                        list.add(claim)
+                    }
+                    return@supply list
                 } catch (e: MongoException) {
-                    return@supply listOf()
+                    e.printStackTrace()
+                    return@supply arrayListOf()
                 }
             }
         }
     }
 
-    fun doWeOwnChunk(x: Int, z: Int) : Promise<Boolean> {
+    fun getClaims(): Promise<ArrayList<Claim>> {
+        return Schedulers.async().supply {
+            with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
+                try {
+                    val filter = Filters.eq("townUniqueId", uniqueId)
+                    val list = arrayListOf<Claim>()
+                    for (document in find(filter).toList()) {
+                        val claim = Claim(
+                            document["uuid"] as UUID,
+                            document["claimedAt"] as Long,
+                            document["x"] as Int,
+                            document["z"] as Int,
+                            document["health"] as Int,
+                            document["world"] as String,
+                            document["townUniqueId"] as UUID
+                        )
+                        list.add(claim)
+                    }
+                    return@supply list
+                } catch (e: MongoException) {
+                    e.printStackTrace()
+                    return@supply arrayListOf()
+                }
+            }
+        }
+    }
+
+    fun doWeOwnChunk(world: String, x: Int, z: Int) : Promise<Boolean> {
         return Schedulers.async().supply {
             with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("claims")) {
                 try {
                     val filter = Filters.and(
                         Filters.eq("x", x),
                         Filters.eq("z", z),
+                        Filters.eq("world", world),
                         Filters.eq("townUniqueId", uniqueId)
                     )
                     val documents = this.find(filter).toList()
@@ -165,7 +211,8 @@ class Town(
                 try {
                     val filter = Filters.and(
                         Filters.eq("x", chunk.x),
-                        Filters.eq("z", chunk.z)
+                        Filters.eq("z", chunk.z),
+                        Filters.eq("world", chunk.world.name)
                     )
                     val documents = this.find(filter)
                     if (documents.toList().isEmpty()) {
@@ -174,6 +221,7 @@ class Town(
                     if (documents.first()!!["townUniqueId"] != uniqueId) {
                         return@supply false
                     }
+                    Malloy.instance.claimHandler.claimsMap.invalidate(documents.first()!!["uuid"] as UUID)
                     this.findOneAndDelete(filter)
                     power -= 450
                     Malloy.instance.townHandler.saveTown(this@Town)
@@ -192,7 +240,8 @@ class Town(
                 try {
                     val filter = Filters.and(
                         Filters.eq("x", chunk.x),
-                        Filters.eq("z", chunk.z)
+                        Filters.eq("z", chunk.z),
+                        Filters.eq("world", chunk.world.name)
                     )
                     val documents = this.find(filter)
                     if (documents.toList().isNotEmpty()) {
@@ -215,7 +264,7 @@ class Town(
                         .append("health", claim.health)
                         .append("world", claim.world)
                         .append("townUniqueId", claim.townUniqueId)
-
+                    Malloy.instance.claimHandler.saveClaim(claim)
                     this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
                     power += Random.nextInt(200, 450)
                     club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(this@Town)

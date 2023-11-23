@@ -1,6 +1,7 @@
 package club.malvaceae.malloy.enchantments.list
 
 import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
+import club.malvaceae.malloy.utils.BlockUtils
 import io.papermc.paper.enchantments.EnchantmentRarity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
@@ -216,12 +217,19 @@ class MoltenEnchantment : Enchantment(NamespacedKey.minecraft("molten")), Listen
         if (e.player.inventory.itemInMainHand == null) return
         if (!e.player.equipment.itemInMainHand.hasItemMeta()) return
         if (!e.player.inventory.itemInMainHand.containsEnchantment(MoltenEnchantment())) return
+        if (!e.player.isSneaking) return
         when (e.block.type) {
             Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE -> {
                 e.isCancelled = true
                 e.block.type = Material.AIR
                 e.block.location.world.spawn(e.block.location, ExperienceOrb::class.java).experience = 1
                 e.block.location.world.dropItemNaturally(e.block.location, ItemStack(Material.IRON_INGOT))
+            }
+            Material.GOLD_ORE, Material.DEEPSLATE_GOLD_ORE -> {
+                e.isCancelled = true
+                e.block.type = Material.AIR
+                e.block.location.world.spawn(e.block.location, ExperienceOrb::class.java).experience = 1
+                e.block.location.world.dropItemNaturally(e.block.location, ItemStack(Material.GOLD_INGOT))
             }
             Material.RAW_IRON_BLOCK -> {
                 e.isCancelled = true
@@ -246,12 +254,6 @@ class MoltenEnchantment : Enchantment(NamespacedKey.minecraft("molten")), Listen
                 e.block.type = Material.AIR
                 (e.block.location.world.spawn(e.block.location, ExperienceOrb::class.java) as ExperienceOrb).experience = 10
                 e.block.location.world.dropItemNaturally(e.block.location, ItemStack(Material.NETHERITE_SCRAP))
-            }
-            Material.GOLD_ORE, Material.NETHER_GOLD_ORE -> {
-                e.isCancelled = true
-                e.block.type = Material.AIR
-                (e.block.location.world.spawn(e.block.location, ExperienceOrb::class.java) as ExperienceOrb).experience = 1
-                e.block.location.world.dropItemNaturally(e.block.location, ItemStack(Material.GOLD_ORE))
             }
             Material.CACTUS -> {
                 e.isCancelled = true
@@ -325,7 +327,8 @@ class MoltenEnchantment : Enchantment(NamespacedKey.minecraft("molten")), Listen
                 (e.block.location.world.spawn(e.block.location, ExperienceOrb::class.java) as ExperienceOrb).experience = 1
                 e.block.location.world.dropItemNaturally(e.block.location, ItemStack(Material.GLASS))
             }
-            else -> {}
+            else -> { return }
         }
+        BlockUtils.degradeDurability(e.player)
     }
 }

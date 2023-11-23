@@ -47,7 +47,9 @@ class Profile(
     var harvesting: Double = 0.0,
     var slaughtering: Double = 0.0,
     var scavenging: Double = 0.0,
-    var angler: Double = 0.0
+    var angler: Double = 0.0,
+    var job: String? = null,
+    var votes: Int = 0
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
@@ -174,7 +176,6 @@ class Profile(
                 }
             }
         }
-        club.malvaceae.malloy.Malloy.instance.profileHandler.saveProfile(this)
     }
 
     fun addExp(amount: Double) {
@@ -197,7 +198,6 @@ class Profile(
                 val t = club.malvaceae.malloy.Malloy.instance.townHandler.getTown(town!!)
                 if (t != null) {
                     t.power += Random.nextInt(0, 100)
-                    club.malvaceae.malloy.Malloy.instance.townHandler.saveTown(t)
                 }
             }
         }

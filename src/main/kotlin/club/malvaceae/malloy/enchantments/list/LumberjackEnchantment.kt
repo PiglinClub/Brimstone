@@ -115,7 +115,7 @@ class LumberjackEnchantment : Enchantment(NamespacedKey.minecraft("lumberjack"))
     fun onBlockBreak(e: BlockBreakEvent) {
         if (e.player.inventory.itemInMainHand == null) return
         if (!e.player.equipment.itemInMainHand.hasItemMeta()) return
-        if (!e.player.inventory.itemInMainHand.containsEnchantment(this)) return
+        if (!e.player.inventory.itemInMainHand.containsEnchantment(LumberjackEnchantment())) return
         val logs = listOf(
             Material.OAK_LOG,
             Material.BIRCH_LOG,
@@ -129,7 +129,7 @@ class LumberjackEnchantment : Enchantment(NamespacedKey.minecraft("lumberjack"))
             Material.WARPED_STEM
         )
         if (logs.contains(e.block.type)) {
-            timberTree(e.block.location, e.block.type, e.player, e.player.equipment.itemInMainHand.getEnchantmentLevel(this))
+            timberTree(e.block.location, e.block.type, e.player, e.player.equipment.itemInMainHand.getEnchantmentLevel(LumberjackEnchantment()))
         }
     }
 }

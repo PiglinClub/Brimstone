@@ -25,7 +25,7 @@ class SkillsGUI : Menu() {
             }
 
             override fun getDescription(var1: Player?): List<Component> {
-                val levelUpExp = floor(250 * (3.5).pow(profile.combatSkillLevel - 1))
+                val levelUpExp = floor(250 * (1.15).pow(profile.combatSkillLevel - 1))
                 val percentage = round(((profile.combatSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
                     "<aqua><bold>██████████"
@@ -69,7 +69,7 @@ class SkillsGUI : Menu() {
             }
 
             override fun getDescription(var1: Player?): List<Component> {
-                val levelUpExp = floor(250 * (3.5).pow(profile.miningSkillLevel - 1))
+                val levelUpExp = floor(250 * (1.15).pow(profile.miningSkillLevel - 1))
                 val percentage = round(((profile.miningSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
                     "<aqua><bold>██████████"
@@ -113,7 +113,7 @@ class SkillsGUI : Menu() {
             }
 
             override fun getDescription(var1: Player?): List<Component> {
-                val levelUpExp = floor(250 * (3.5).pow(profile.farmingSkillLevel - 1))
+                val levelUpExp = floor(250 * (1.15).pow(profile.farmingSkillLevel - 1))
                 val percentage = round(((profile.farmingSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
                     "<aqua><bold>██████████"
@@ -157,7 +157,7 @@ class SkillsGUI : Menu() {
             }
 
             override fun getDescription(var1: Player?): List<Component> {
-                val levelUpExp = floor(250 * (3.5).pow(profile.fishingSkillLevel - 1))
+                val levelUpExp = floor(250 * (1.15).pow(profile.fishingSkillLevel - 1))
                 val percentage = round(((profile.fishingSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
                     "<aqua><bold>██████████"
@@ -201,7 +201,7 @@ class SkillsGUI : Menu() {
             }
 
             override fun getDescription(var1: Player?): List<Component> {
-                val levelUpExp = floor(250 * (3.5).pow(profile.loggingSkillLevel - 1))
+                val levelUpExp = floor(250 * (1.15).pow(profile.loggingSkillLevel - 1))
                 val percentage = round(((profile.loggingSkillExp / levelUpExp) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
                     "<aqua><bold>██████████"
