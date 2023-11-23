@@ -48,7 +48,7 @@ class TeleportCheck : Listener {
             if (TeleportFeature.tasks[player.uniqueId] != null) {
                 TeleportFeature.tasks[player.uniqueId]!!.cancel()
                 TeleportFeature.tasks[player.uniqueId] = null
-                Chat.sendComponent(player, "<blue>[Teleport]</blue> <red>You moved! Cancelling teleportation.</red>")
+                Chat.sendComponent(player, "<blue>[Teleport]</blue> <red>You took damage! Cancelling teleportation.</red>")
             }
         }
     }
