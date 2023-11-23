@@ -69,7 +69,7 @@ class ReplyCommand : CommandExecutor {
             return false
         }
 
-        Chat.sendComponent(sender, "<dark_gray>[<color:#3bffba>✉→ ${target.name}</color] <white>$message</white>")
+        Chat.sendComponent(sender, "<dark_gray>[<color:#3bffba>✉→ ${target.name}</color>] <white>$message</white>")
         Chat.sendComponent(target, "<dark_gray>[<color:#3bffba>→✉ ${sender.name}</color>] <white>$message</white>")
 
         MessageHandler.replies[target.uniqueId] = sender.uniqueId
