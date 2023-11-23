@@ -303,8 +303,8 @@ class ShopHandler {
             addEntry(Material.QUARTZ, ShopCategory.MINERALS, 250.0, 25.0)
 
             addEntry(Material.APPLE, ShopCategory.FOOD, 20.0, 10.0)
-            addEntry(Material.GOLDEN_APPLE, ShopCategory.FOOD, 150.0, 75.0)
-            addEntry(Material.ENCHANTED_GOLDEN_APPLE, ShopCategory.FOOD, 75000.0, 25000.0)
+            addEntry(Material.GOLDEN_APPLE, ShopCategory.FOOD, 5000.0, 75.0)
+            addEntry(Material.ENCHANTED_GOLDEN_APPLE, ShopCategory.FOOD, 75000.0, 25000.0, true, false)
             addEntry(Material.SWEET_BERRIES, ShopCategory.FOOD, 10.0, 4.5)
             addEntry(Material.GLOW_BERRIES, ShopCategory.FOOD, 15.0, 5.5)
             addEntry(Material.GOLDEN_CARROT, ShopCategory.FOOD, 50.0, 25.5)
