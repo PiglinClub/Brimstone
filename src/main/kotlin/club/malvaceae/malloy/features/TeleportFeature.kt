@@ -4,9 +4,11 @@ import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
@@ -35,6 +37,18 @@ class TeleportCheck : Listener {
                 TeleportFeature.tasks[e.player.uniqueId]!!.cancel()
                 TeleportFeature.tasks[e.player.uniqueId] = null
                 Chat.sendComponent(e.player, "<blue>[Teleport]</blue> <red>You moved! Cancelling teleportation.</red>")
+            }
+        }
+    }
+
+    @EventHandler
+    fun onPlayerDamage(e: EntityDamageEvent) {
+        if (e.entityType == EntityType.PLAYER) {
+            val player = e.entity as Player;
+            if (TeleportFeature.tasks[player.uniqueId] != null) {
+                TeleportFeature.tasks[player.uniqueId]!!.cancel()
+                TeleportFeature.tasks[player.uniqueId] = null
+                Chat.sendComponent(player, "<blue>[Teleport]</blue> <red>You moved! Cancelling teleportation.</red>")
             }
         }
     }
