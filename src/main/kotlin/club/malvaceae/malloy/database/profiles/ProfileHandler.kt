@@ -96,6 +96,7 @@ class ProfileHandler {
                 .append("angler", profile.angler)
                 .append("job", profile.job)
                 .append("votes", profile.votes)
+                .append("discordId", profile.discordId)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -148,7 +149,8 @@ class ProfileHandler {
                             (document["scavenging"] as Double?) ?: 0.0,
                             (document["angler"] as Double?) ?: 0.0,
                             (document["job"] as String?),
-                            (document["votes"] as Int?) ?: 0
+                            (document["votes"] as Int?) ?: 0,
+                            (document["discordId"] as String?)
                             )
                     } else {
                         p = Profile(

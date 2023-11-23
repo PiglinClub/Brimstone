@@ -4,6 +4,7 @@ import club.malvaceae.malloy.commands.*
 import club.malvaceae.malloy.database.profiles.ProfileHandler
 import club.malvaceae.malloy.database.towns.ClaimHandler
 import club.malvaceae.malloy.database.towns.TownHandler
+import club.malvaceae.malloy.discord.SlashCommandListener
 import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
 import club.malvaceae.malloy.enchantments.list.ExtractionEnchantment
 import club.malvaceae.malloy.enchantments.list.LumberjackEnchantment
@@ -22,6 +23,11 @@ import com.mongodb.MongoClient
 import com.mongodb.MongoClientException
 import com.mongodb.MongoClientURI
 import me.lucko.helper.plugin.ExtendedJavaPlugin
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.interactions.commands.build.Commands
+import net.dv8tion.jda.api.requests.GatewayIntent
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -32,6 +38,7 @@ import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.logging.Logger
+
 
 class Malloy : ExtendedJavaPlugin() {
     companion object {
@@ -44,6 +51,7 @@ class Malloy : ExtendedJavaPlugin() {
     lateinit var dataSource: MongoClient
     lateinit var profileHandler: ProfileHandler
     lateinit var townHandler: TownHandler
+    lateinit var jda: JDA
     lateinit var claimHandler: ClaimHandler
 
     override fun load() {
@@ -110,6 +118,18 @@ class Malloy : ExtendedJavaPlugin() {
         EnchantmentWrapperHandler.instance.register()
         registerRecipes()
 
+        jda = JDABuilder.createDefault(Settings.data.getString("discord.token"),
+            GatewayIntent.GUILD_MEMBERS,
+            GatewayIntent.GUILD_VOICE_STATES
+        )
+            .addEventListeners(SlashCommandListener())
+            .setActivity(Activity.playing("piglin.club"))
+            .build()
+
+        jda.updateCommands().addCommands(
+            Commands.slash("verify", "Get a code to link your Discord account to your Minecraft account.")
+        ).queue()
+
         Bukkit.getServer().pluginManager.registerEvents(ScoreboardFeature(), this)
         Bukkit.getServer().pluginManager.registerEvents(ClaimListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(SkillListener(), this)
@@ -132,6 +152,7 @@ class Malloy : ExtendedJavaPlugin() {
         this.getCommand("wilderness")!!.setExecutor(WildernessCommand())
         this.getCommand("skills")!!.setExecutor(SkillsCommand())
         this.getCommand("shop")!!.setExecutor(ShopCommand())
+        this.getCommand("verify")!!.setExecutor(VerifyCommand())
         this.getCommand("baltop")!!.setExecutor(BaltopCommand())
         this.getCommand("twitter")!!.setExecutor(TwitterCommand())
         this.getCommand("discord")!!.setExecutor(DiscordCommand())

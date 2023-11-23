@@ -21,6 +21,8 @@ commands:
     description: View the top balances on the server.
     aliases:
       - bt
+  verify:
+    description: Verify yourself on discord using the provided code.
   pay:
     description: Command to send money to other players.
     aliases:

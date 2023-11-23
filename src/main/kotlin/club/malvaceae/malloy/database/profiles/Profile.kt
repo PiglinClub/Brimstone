@@ -1,6 +1,8 @@
 package club.malvaceae.malloy.database.profiles
 
+import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.utils.Chat
+import net.dv8tion.jda.api.entities.User
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -49,10 +51,16 @@ class Profile(
     var scavenging: Double = 0.0,
     var angler: Double = 0.0,
     var job: String? = null,
-    var votes: Int = 0
+    var votes: Int = 0,
+    var discordId: String? = null
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
+    }
+
+    fun getDiscord(): User? {
+        if (discordId == null) return null
+        return Malloy.instance.jda.getUserById(discordId!!)
     }
 
     fun addSkillExp(skill: Skill, amount: Double) {
