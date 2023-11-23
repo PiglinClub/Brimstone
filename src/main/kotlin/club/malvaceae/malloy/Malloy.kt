@@ -9,6 +9,7 @@ import club.malvaceae.malloy.enchantments.EnchantmentWrapperHandler
 import club.malvaceae.malloy.enchantments.list.ExtractionEnchantment
 import club.malvaceae.malloy.enchantments.list.LumberjackEnchantment
 import club.malvaceae.malloy.enchantments.list.MoltenEnchantment
+import club.malvaceae.malloy.features.CombatTagListener
 import club.malvaceae.malloy.features.InfoFeature
 import club.malvaceae.malloy.features.ScoreboardFeature
 import club.malvaceae.malloy.features.TeleportCheck
@@ -136,6 +137,7 @@ class Malloy : ExtendedJavaPlugin() {
         Bukkit.getServer().pluginManager.registerEvents(WildernessMovementCheck(), this)
         Bukkit.getServer().pluginManager.registerEvents(TeleportCheck(), this)
         Bukkit.getServer().pluginManager.registerEvents(PlayerListener(), this)
+        Bukkit.getServer().pluginManager.registerEvents(CombatTagListener(), this)
         Bukkit.getServer().pluginManager.registerEvents(ServerListPingListener(), this)
 
         InfoFeature().runTaskTimer(this, 0L, 20L)

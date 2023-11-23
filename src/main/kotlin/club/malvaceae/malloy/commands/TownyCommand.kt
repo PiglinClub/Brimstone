@@ -5,6 +5,7 @@ import club.malvaceae.malloy.commands.menus.LeaveTownyGUI
 import club.malvaceae.malloy.commands.menus.TownyMembersGUI
 import club.malvaceae.malloy.database.towns.InviteHandler
 import club.malvaceae.malloy.database.towns.Town
+import club.malvaceae.malloy.features.CombatTagListener
 import club.malvaceae.malloy.features.TeleportFeature
 import club.malvaceae.malloy.utils.Chat
 import com.mongodb.MongoException
@@ -100,6 +101,10 @@ class TownyCommand : CommandExecutor {
                     Chat.broadcast("&a${sender.name} created a new town: &e${name}&a!")
                 }
                 "home" -> {
+                    if (CombatTagListener.tags[sender.uniqueId] != null) {
+                        Chat.sendMessage(sender, "<red>You currently have a pending combat tag, you may not use this command yet.")
+                        return false
+                    }
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
                     if (profile == null) {
                         Chat.sendMessage(sender, "&cThis literally isn't supposed to happen, but you don't have a profile?")

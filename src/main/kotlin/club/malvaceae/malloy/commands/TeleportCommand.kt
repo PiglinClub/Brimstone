@@ -1,6 +1,8 @@
 package club.malvaceae.malloy.commands
 
+import club.malvaceae.malloy.Malloy
 import club.malvaceae.malloy.database.towns.InviteStatus
+import club.malvaceae.malloy.features.CombatTagListener
 import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -24,6 +26,11 @@ class TpaTask(
             TpaHandler.removeInvite(this)
             cancel()
             club.malvaceae.malloy.Malloy.log.info("[Teleports] Request removed because accepted/denied for ${from.name} to ${to.name}.")
+        }
+        if (CombatTagListener.tags[from.uniqueId] != null || CombatTagListener.tags[to.uniqueId] != null) {
+            TpaHandler.removeInvite(this)
+            cancel()
+            Malloy.log.info("[Teleports] Request removed because one entered combat tag for ${from.name} to ${to.name}.")
         }
         if (timer == 0) {
             TpaHandler.removeInvite(this)
@@ -74,6 +81,10 @@ class TeleportCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (args.isEmpty()) {
             Chat.sendComponent(sender, "<red>You need to provide a player to teleport to.")
+            return false
+        }
+        if (CombatTagListener.tags[(sender as Player).uniqueId] != null) {
+            Chat.sendComponent(sender, "<red>You currently have an active combat tag, you may not use this command.")
             return false
         }
         if (args[0] == "accept") {
