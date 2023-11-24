@@ -385,6 +385,36 @@ class ShopHandler {
             addEntry(Material.GHAST_TEAR, ShopCategory.MOB_DROPS, 1000.0, 250.0)
             addEntry(Material.BLAZE_ROD, ShopCategory.MOB_DROPS, 1.0, 500.0, true, false)
 
+            addEntry(Material.PISTON, ShopCategory.REDSTONE, 100.0, 10.0)
+            addEntry(Material.STICKY_PISTON, ShopCategory.REDSTONE, 225.0, 10.0)
+            addEntry(Material.TRIPWIRE_HOOK, ShopCategory.REDSTONE, 125.0, 10.0)
+            addEntry(Material.REDSTONE_TORCH, ShopCategory.REDSTONE, 100.0, 10.0)
+            addEntry(Material.REPEATER, ShopCategory.REDSTONE, 125.0, 10.0)
+            addEntry(Material.COMPARATOR, ShopCategory.REDSTONE, 225.0, 10.0)
+            addEntry(Material.OBSERVER, ShopCategory.REDSTONE, 500.0, 10.0)
+            addEntry(Material.DISPENSER, ShopCategory.REDSTONE, 350.0, 10.0)
+            addEntry(Material.DROPPER, ShopCategory.REDSTONE, 225.0, 10.0)
+            addEntry(Material.NOTE_BLOCK, ShopCategory.REDSTONE, 125.0, 10.0)
+            addEntry(Material.HOPPER, ShopCategory.REDSTONE, 175.0, 10.0)
+            addEntry(Material.DAYLIGHT_DETECTOR, ShopCategory.REDSTONE, 350.0, 10.0)
+            addEntry(Material.LEVER, ShopCategory.REDSTONE, 125.0, 10.0)
+            addEntry(Material.MINECART, ShopCategory.REDSTONE, 550.0, 10.0)
+            addEntry(Material.SCULK_SENSOR, ShopCategory.REDSTONE, 750.0, 10.0)
+            addEntry(Material.CALIBRATED_SCULK_SENSOR, ShopCategory.REDSTONE, 850.0, 10.0)
+            addEntry(Material.RAIL, ShopCategory.REDSTONE, 65.0, 10.0)
+            addEntry(Material.POWERED_RAIL, ShopCategory.REDSTONE, 125.0, 10.0)
+            addEntry(Material.DETECTOR_RAIL, ShopCategory.REDSTONE, 150.0, 10.0)
+            addEntry(Material.ACTIVATOR_RAIL, ShopCategory.REDSTONE, 175.0, 10.0)
+            addEntry(Material.TRAPPED_CHEST, ShopCategory.REDSTONE, 500.0, 10.0)
+            addEntry(Material.TRAPPED_CHEST, ShopCategory.REDSTONE, 500.0, 10.0)
+            addEntry(Material.LIGHT_WEIGHTED_PRESSURE_PLATE, ShopCategory.REDSTONE, 500.0, 10.0)
+            addEntry(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, ShopCategory.REDSTONE, 500.0, 10.0)
+            addEntry(Material.STONE_PRESSURE_PLATE, ShopCategory.REDSTONE, 250.0, 10.0)
+            addEntry(Material.OAK_PRESSURE_PLATE, ShopCategory.REDSTONE, 75.0, 10.0)
+            addEntry(Material.TNT, ShopCategory.REDSTONE, 1250.0, 10.0)
+            addEntry(Material.TARGET, ShopCategory.REDSTONE, 250.0, 10.0)
+
+
         }
     }
 }
