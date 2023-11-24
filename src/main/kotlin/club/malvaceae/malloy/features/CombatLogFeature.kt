@@ -1,6 +1,7 @@
 package club.malvaceae.malloy.features
 
 import club.malvaceae.malloy.Malloy
+import me.lucko.helper.Schedulers
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.entity.Arrow
@@ -42,8 +43,10 @@ class CombatTagListener : Listener {
     @EventHandler
     fun onPlayerCombatJoin(e: PlayerJoinEvent) {
         if (toDie.contains(e.player.uniqueId)) {
-            toDie.remove(e.player.uniqueId)
-            e.player.damage(e.player.health * 800)
+            Schedulers.sync().runLater(Runnable {
+                toDie.remove(e.player.uniqueId)
+                e.player.damage(e.player.health * 800)
+            }, 1000L)
         }
     }
 
