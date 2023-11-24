@@ -7,9 +7,11 @@ import club.malvaceae.malloy.utils.Chat
 import org.bukkit.block.Container
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
 import org.bukkit.event.entity.EntityChangeBlockEvent
+import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.hanging.HangingBreakByEntityEvent
 import org.bukkit.event.player.*
 import java.util.*
@@ -299,8 +301,23 @@ class ClaimListener : Listener {
         }
     }
 
-    @EventHandler
-    fun onExplosion(e: BlockExplodeEvent) {
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    fun onBlockExplosion(e: BlockExplodeEvent) {
+        if (e.blockList().isNotEmpty()) {
+            val newList = ArrayList(e.blockList())
+            for (block in e.blockList()) {
+                val claim = club.malvaceae.malloy.Malloy.instance.claimHandler.getClaimAt(block.world.name, block.chunk.x, block.chunk.z).get()
+                if (claim != null) {
+                    newList.remove(block)
+                }
+            }
+            e.blockList().clear()
+            e.blockList().addAll(newList)
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    fun onEntityExplosion(e: EntityExplodeEvent) {
         if (e.blockList().isNotEmpty()) {
             val newList = ArrayList(e.blockList())
             for (block in e.blockList()) {
