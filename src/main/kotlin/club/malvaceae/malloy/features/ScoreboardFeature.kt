@@ -41,7 +41,7 @@ class ScoreboardFeature : Listener {
                 val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(uuid)!!
                 val percentage = round(((profile.xp / 1000) * 100)).toInt()
                 val progressBar = if (percentage >= 95) {
-                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}██████████"
+                    "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■■■■■■"
                 } else if (percentage >= 90) {
                     "${ChatColor.of("#4fe5ff")}${ChatColor.BOLD}■■■■■■■■■${ChatColor.RESET}${ChatColor.BOLD}■"
                 } else if (percentage >= 80) {

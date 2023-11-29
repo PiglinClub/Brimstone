@@ -3,7 +3,6 @@ package club.malvaceae.malloy.features
 import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -13,18 +12,20 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 import kotlin.math.floor
-import kotlin.math.round
-import kotlin.random.Random
 
 class TeleportFeature {
     companion object {
         val tasks = hashMapOf<UUID, TeleportTask?>()
 
-        fun startTeleport(player: Player, location: Location) {
+        fun startTeleport(player: Player, location: Location, revealLocation: Boolean = true) {
             val task = TeleportTask(player, location)
             tasks[player.uniqueId] = task
             tasks[player.uniqueId]!!.runTaskTimer(club.malvaceae.malloy.Malloy.instance, 0L, 20L)
-            Chat.sendComponent(player, "<blue>[Teleport]</blue> Starting teleportation to <yellow>X: ${floor(location.x)}, Y: ${floor(location.y)}, Z: ${floor(location.z)}</yellow>")
+            if (revealLocation) {
+                Chat.sendComponent(player, "<blue>[Teleport]</blue> Starting teleportation to <yellow>X: ${floor(location.x)}, Y: ${floor(location.y)}, Z: ${floor(location.z)}</yellow>")
+            } else {
+                Chat.sendComponent(player, "<blue>[Teleport]</blue> Starting teleportation...")
+            }
         }
     }
 }
@@ -64,7 +65,6 @@ class TeleportTask(val player: Player, val location: Location) : BukkitRunnable(
             cancel()
             TeleportFeature.tasks[player.uniqueId] = null
             player.teleportAsync(location)
-            Chat.sendComponent(player, "<blue>[Teleport]</blue> <reset>Teleported you to <yellow>X: ${floor(location.x)}, Y: ${floor(location.y)}, Z: ${floor(location.z)}</yellow>.")
         }
     }
 }

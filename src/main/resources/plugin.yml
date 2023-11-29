@@ -23,6 +23,10 @@ commands:
       - bt
   verify:
     description: Verify yourself on discord using the provided code.
+  spawn:
+    description: Teleport to the server's spawn.
+  setspawn:
+    description: Set the server's spawn.
   pay:
     description: Command to send money to other players.
     aliases:

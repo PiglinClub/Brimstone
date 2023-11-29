@@ -297,6 +297,12 @@ class TownyCommand : CommandExecutor {
                                 } else {
                                     town = documents.first()
                                 }
+                                if (town == null) {
+                                    Chat.sendComponent(sender, "<red>Well, something clearly wrong happened here.")
+                                    return@run
+                                }
+                                Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.addPlayer(sender, true)
+                                Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.sendMessage("<green><yellow>${sender.name}</yellow> hijacked into your town!")
                                 return@run
                             }
                         } catch (e: MongoException) {
@@ -305,12 +311,6 @@ class TownyCommand : CommandExecutor {
                             return@run
                         }
                     }
-                    if (town == null) {
-                        Chat.sendComponent(sender, "<red>Well, something clearly wrong happened here.")
-                        return false
-                    }
-                    Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.addPlayer(sender, true)
-                    Malloy.instance.townHandler.getTown(town!!["uuid"] as UUID)!!.sendMessage("<green><yellow>${sender.name}</yellow> hijacked into your town!")
                 }
                 "accept" -> {
                     val profile = club.malvaceae.malloy.Malloy.instance.profileHandler.getProfile(sender.uniqueId)
