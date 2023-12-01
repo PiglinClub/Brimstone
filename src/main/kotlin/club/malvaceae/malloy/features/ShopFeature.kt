@@ -59,6 +59,7 @@ class ShopHandler {
             addEntry(Material.MUD, ShopCategory.BUILDING_BLOCKS, 2.5, 0.5)
             addEntry(Material.MOSS_BLOCK, ShopCategory.BUILDING_BLOCKS, 7.5, 2.5)
             addEntry(Material.COBBLESTONE, ShopCategory.BUILDING_BLOCKS, 0.75, 0.1)
+            addEntry(Material.COBBLED_DEEPSLATE, ShopCategory.BUILDING_BLOCKS, 0.8, 0.15)
             addEntry(Material.GRAVEL, ShopCategory.BUILDING_BLOCKS, 2.0, 0.5)
             addEntry(Material.MOSSY_COBBLESTONE, ShopCategory.BUILDING_BLOCKS, 2.0, 0.5)
             addEntry(Material.STONE, ShopCategory.BUILDING_BLOCKS, 0.75, 0.1)

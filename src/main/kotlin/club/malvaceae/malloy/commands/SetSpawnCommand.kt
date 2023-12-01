@@ -22,6 +22,8 @@ class SetSpawnCommand : CommandExecutor {
         Settings.data.set("spawn.z", sender.location.z)
         Settings.data.set("spawn.yaw", sender.location.yaw)
         Settings.data.set("spawn.pitch", sender.location.pitch)
+        Settings.save()
+        Chat.sendComponent(sender, "<green>Succesfully set the spawn to your location.")
         return true
     }
 }
