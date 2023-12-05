@@ -45,7 +45,7 @@ class WildernessTask(val player: Player) : BukkitRunnable(), Listener {
             var location = Location(
                 player.world,
                 x,
-                player.world.getHighestBlockYAt(x.toInt(), y.toInt()).toDouble(),
+                player.world.getHighestBlockYAt(x.toInt(), y.toInt()).toDouble() + 3.0,
                 y
             )
             player.teleportAsync(location.world.getHighestBlockAt(location).location)
