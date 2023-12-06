@@ -1,5 +1,6 @@
 package club.malvaceae.malloy.database.profiles
 
+import club.malvaceae.malloy.utils.Settings
 import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndReplaceOptions
@@ -9,6 +10,8 @@ import me.lucko.helper.profiles.plugin.external.caffeine.cache.Cache
 import me.lucko.helper.profiles.plugin.external.caffeine.cache.Caffeine
 import me.lucko.helper.promise.Promise
 import org.bson.Document
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -32,6 +35,11 @@ class ProfileHandler {
             .handler { event ->
                 Promise.start()
                     .thenApplySync {
+                        if (!exists(event.player.uniqueId)) {
+                            Schedulers.sync().runLater({
+                                event.player.teleportAsync(Location(Bukkit.getWorld("world"), Settings.data.getDouble("spawn.x"), Settings.data.getDouble("spawn.y"), Settings.data.getDouble("spawn.z"), Settings.data.getDouble("spawn.yaw").toFloat(), Settings.data.getDouble("spawn.pitch").toFloat()))
+                            }, 20L)
+                        }
                         lookupProfile(event.player.uniqueId)
                     }
                     .thenAcceptAsync {
@@ -61,6 +69,27 @@ class ProfileHandler {
                     }
             }
         club.malvaceae.malloy.Malloy.log.info("[Profiles] Now monitoring for profile data.")
+    }
+
+    fun preload(amount: Int = 10000) {
+        Schedulers.async().run {
+            with (club.malvaceae.malloy.Malloy.instance.dataSource.getDatabase("malloy").getCollection("profiles")) {
+                val profiles = this.find().limit(amount)
+                for (profile in profiles) {
+                    val p = lookupProfile(profile["uuid"] as UUID)
+                    saveProfile(p.get())
+                    club.malvaceae.malloy.Malloy.log.info("[Profiles] Successfully preloaded ${p.get().name} (${p.get().uniqueId})")
+                }
+            }
+        }
+    }
+
+    init {
+        preload()
+    }
+
+    fun exists(uniqueId: UUID): Boolean {
+        return (getProfile(uniqueId) != null)
     }
 
     fun saveProfile(profile: Profile) {
