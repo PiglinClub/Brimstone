@@ -30,6 +30,7 @@ class ProfileHandler {
     }
 
     init {
+        val sessions = HashMap<UUID, Long>()
         Events.subscribe(PlayerLoginEvent::class.java, EventPriority.MONITOR)
             .filter { it.result == PlayerLoginEvent.Result.ALLOWED }
             .handler { event ->
@@ -45,26 +46,28 @@ class ProfileHandler {
                     .thenAcceptAsync {
                         it.get().name = event.player.name
                         it.get().lastLogin = System.currentTimeMillis()
+                        sessions[event.player.uniqueId] = System.currentTimeMillis()
                         saveProfile(it.get())
                         updateCache(it.get())
                         club.malvaceae.malloy.Malloy.log.info("[Profiles] ${event.player.name} joined, loading & saving ${event.player.name}'s profile")
                     }
-
             }
         Events.subscribe(PlayerQuitEvent::class.java, EventPriority.MONITOR)
             .handler { event ->
                 Promise.start()
                     .thenApplySync {
-                        lookupProfile(event.player.uniqueId)
+                        lookupProfile(event.player.uniqueId).get()
                     }
                     .thenAcceptAsync {
-                        it.get().name = event.player.name
-                        it.get().lastLoginLocationX = event.player.location.x
-                        it.get().lastLoginLocationY = event.player.location.y
-                        it.get().lastLoginLocationZ = event.player.location.z
-                        it.get().lastLoginWorld = event.player.world.name
-                        saveProfile(it.get())
-                        updateCache(it.get())
+                        it.name = event.player.name
+                        it.lastLoginLocationX = event.player.location.x
+                        it.lastLoginLocationY = event.player.location.y
+                        it.lastLoginLocationZ = event.player.location.z
+                        it.lastLoginWorld = event.player.world.name
+                        it.playtime += System.currentTimeMillis() - sessions[event.player.uniqueId]!!
+                        sessions.remove(event.player.uniqueId)
+                        saveProfile(it)
+                        updateCache(it)
                         club.malvaceae.malloy.Malloy.log.info("[Profiles] ${event.player.name} quit, saving ${event.player.name}'s profile")
                     }
             }
@@ -126,6 +129,7 @@ class ProfileHandler {
                 .append("job", profile.job)
                 .append("votes", profile.votes)
                 .append("discordId", profile.discordId)
+                .append("playtime", profile.playtime)
             this.findOneAndReplace(filter, document, FindOneAndReplaceOptions().upsert(true))
         }
     }
@@ -179,7 +183,8 @@ class ProfileHandler {
                             (document["angler"] as Double?) ?: 0.0,
                             (document["job"] as String?),
                             (document["votes"] as Int?) ?: 0,
-                            (document["discordId"] as String?)
+                            (document["discordId"] as String?),
+                            (document["playtime"] as Long?) ?: 0L
                             )
                     } else {
                         p = Profile(

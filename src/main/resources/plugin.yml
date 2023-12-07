@@ -59,6 +59,8 @@ commands:
       - gold
   claim:
     description: Command for claiming a chunk in a town.
+  playtime:
+    description: View your playtime on the server.
   unclaim:
     description: Command for unclaiming a chunk in a town.
   wilderness:

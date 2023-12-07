@@ -52,7 +52,8 @@ class Profile(
     var angler: Double = 0.0,
     var job: String? = null,
     var votes: Int = 0,
-    var discordId: String? = null
+    var discordId: String? = null,
+    var playtime: Long = 0L
 ) {
     fun getUniqueId(): UUID {
         return this.uniqueId
@@ -71,14 +72,15 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     val percentage = floor((miningSkillExp / levelUpExp) * 100.0) / 100.0
-                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>⛏ Mining $miningSkillLevel (${floor(percentage * 100)}%)</aqua>"))
+                    val left = floor(levelUpExp - miningSkillExp)
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>⛏ Mining $miningSkillLevel ${percentage * 100}% (${left}xp left)</aqua>"))
                 }
             }
             if (miningSkillExp >= levelUpExp) {
                 miningSkillExp -= levelUpExp
                 miningSkillLevel += 1
                 spelunker += 2
-                addExp(Random.nextDouble(10.0, 50.0))
+                addExp(Random.nextDouble(100.0, 175.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
@@ -95,14 +97,15 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     val percentage = floor((farmingSkillExp / levelUpExp) * 100.0) / 100.0
-                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83C\uDF3A Farming $farmingSkillLevel (${percentage * 100}%)</aqua>"))
+                    val left = floor(levelUpExp - farmingSkillExp)
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83C\uDF3A Farming $farmingSkillLevel ${percentage * 100}% (${left}xp left)</aqua>"))
                 }
             }
             if (farmingSkillExp >= levelUpExp) {
                 farmingSkillExp -= levelUpExp
                 farmingSkillLevel += 1
                 harvesting += 2
-                addExp(Random.nextDouble(10.0, 50.0))
+                addExp(Random.nextDouble(100.0, 175.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
@@ -119,14 +122,15 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     val percentage = floor((combatSkillExp / levelUpExp) * 100.0) / 100.0
-                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83D\uDDE1 Combat $combatSkillLevel (${percentage * 100}%)</aqua>"))
+                    val left = floor(levelUpExp - combatSkillExp)
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83D\uDDE1 Combat $combatSkillLevel ${percentage * 100}% (${left}xp left)</aqua>"))
                 }
             }
             if (combatSkillExp >= levelUpExp) {
                 combatSkillExp -= levelUpExp
                 combatSkillLevel += 1
                 slaughtering += 2
-                addExp(Random.nextDouble(10.0, 50.0))
+                addExp(Random.nextDouble(100.0, 175.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
@@ -143,14 +147,15 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     val percentage = floor((loggingSkillExp / levelUpExp) * 100.0) / 100.0
-                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83E\uDE93 Logging $loggingSkillLevel (${percentage * 100}%)</aqua>"))
+                    val left = floor(levelUpExp - loggingSkillExp)
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83E\uDE93 Logging $loggingSkillLevel ${percentage * 100}% (${left}xp left)</aqua>"))
                 }
             }
             if (loggingSkillExp >= levelUpExp) {
                 loggingSkillExp -= levelUpExp
                 loggingSkillLevel += 1
                 scavenging += 2
-                addExp(Random.nextDouble(10.0, 50.0))
+                addExp(Random.nextDouble(100.0, 175.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
@@ -167,14 +172,15 @@ class Profile(
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     val percentage = floor((fishingSkillExp / levelUpExp) * 100.0) / 100.0
-                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83C\uDFA3 Fishing $fishingSkillLevel (${percentage * 100}%)</aqua>"))
+                    val left = floor(levelUpExp - fishingSkillExp)
+                    player.sendActionBar(MiniMessage.miniMessage().deserialize("<aqua>\uD83C\uDFA3 Fishing $fishingSkillLevel ${percentage * 100}% (${left}xp left)</aqua>"))
                 }
             }
             if (fishingSkillExp >= levelUpExp) {
                 fishingSkillExp -= levelUpExp
                 fishingSkillLevel += 1
                 angler += 2
-                addExp(Random.nextDouble(10.0, 50.0))
+                addExp(Random.nextDouble(100.0, 175.0))
                 if (Bukkit.getOfflinePlayer(uniqueId).isOnline) {
                     val player = Bukkit.getOfflinePlayer(uniqueId) as Player
                     player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)

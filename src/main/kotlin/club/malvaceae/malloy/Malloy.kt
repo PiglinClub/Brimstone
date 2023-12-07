@@ -160,6 +160,7 @@ class Malloy : ExtendedJavaPlugin() {
         this.getCommand("baltop")!!.setExecutor(BaltopCommand())
         this.getCommand("twitter")!!.setExecutor(TwitterCommand())
         this.getCommand("discord")!!.setExecutor(DiscordCommand())
+        this.getCommand("playtime")!!.setExecutor(PlaytimeCommand())
 
         club.malvaceae.malloy.Malloy.Companion.log.info("[Malloy] The plugin has successfully loaded.")
     }
