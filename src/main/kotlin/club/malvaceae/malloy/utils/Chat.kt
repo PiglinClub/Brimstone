@@ -3,6 +3,7 @@ package club.malvaceae.malloy.utils
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.command.CommandSender
 
 enum class DefaultFontInfo(val character: Char, val length: Int) {
@@ -88,6 +89,10 @@ class Chat {
 
         fun broadcast(message: String) {
             Bukkit.broadcastMessage(colored(message))
+        }
+
+        fun displayLocation(location: Location, inclWorld: Boolean = false): String {
+            return if (inclWorld) "X: ${location.x}, Y: ${location.y}, Z: ${location.z} in ${location.world.name}" else "X: ${location.x}, Y: ${location.y}, Z: ${location.z}"
         }
 
         fun clear() {

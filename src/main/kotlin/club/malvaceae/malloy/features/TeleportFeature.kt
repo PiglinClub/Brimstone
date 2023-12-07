@@ -1,5 +1,7 @@
 package club.malvaceae.malloy.features
 
+import club.malvaceae.malloy.Malloy
+import club.malvaceae.malloy.commands.BackCommand
 import club.malvaceae.malloy.utils.Chat
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Location
@@ -20,7 +22,7 @@ class TeleportFeature {
         fun startTeleport(player: Player, location: Location, revealLocation: Boolean = true) {
             val task = TeleportTask(player, location)
             tasks[player.uniqueId] = task
-            tasks[player.uniqueId]!!.runTaskTimer(club.malvaceae.malloy.Malloy.instance, 0L, 20L)
+            tasks[player.uniqueId]!!.runTaskTimer(Malloy.instance, 0L, 20L)
             if (revealLocation) {
                 Chat.sendComponent(player, "<blue>[Teleport]</blue> Starting teleportation to <yellow>X: ${floor(location.x)}, Y: ${floor(location.y)}, Z: ${floor(location.z)}</yellow>")
             } else {
@@ -64,7 +66,9 @@ class TeleportTask(val player: Player, val location: Location) : BukkitRunnable(
         if (timer == 0) {
             cancel()
             TeleportFeature.tasks[player.uniqueId] = null
+            BackCommand.locations[player.uniqueId] = player.location
             player.teleportAsync(location)
+            Malloy.log.info("[Teleports] Teleported ${player.name} from ${Chat.displayLocation(BackCommand.locations[player.uniqueId]!!)} to ${Chat.displayLocation(player.location)}")
         }
     }
 }

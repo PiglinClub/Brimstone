@@ -42,6 +42,10 @@ commands:
       - w
       - whisper
       - tell
+  back:
+    description: Command to teleport to your previous location if you used a teleportation command.
+    aliases:
+      - tpback
   reply:
     description: Command to privately message the last player you messaged.
     aliases:
